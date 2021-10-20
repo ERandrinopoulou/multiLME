@@ -1,0 +1,99 @@
+n = 100 #n <- dim(mat1)[1]
+
+K <- 5  # number of planned repeated measurements per subject, per outcome
+t.max <- 10 # maximum follow-up time
+
+################################################
+# parameters for the linear mixed effects model 1
+betaa1 <- c("(Intercept)" = 3.01, "Time1" = 0.47, "Group" = -2)
+sigma1.y <- 1.017671  # measurement error standard deviation
+
+# parameters for the linear mixed effects model
+betaa2 <- c("(Intercept)" = 2.15, "Time1" = 0.91)
+sigma2.y <- 1  # measurement error standard deviation
+
+# association parameter
+alphaa <- 0.5#1.6 # association parameter - value
+
+
+#D <- diag(c(6.9704385, 0.504228129, 1.52211686, 1.063437272))
+
+invDvec <- c(0.9455738,  0.7497205, -2.135328, -0.9877032,
+             0.7497205,  2.6045574, -1.847133, -0.8914816,
+             -2.1353280, -1.8471326,  5.713290,  2.7678937,
+             -0.9877032, -0.8914816,  2.767894,  2.2962598)
+
+
+invDvec <- c(1, 0, 0, 0,
+             0, 1, 0, 0,
+             0, 0, 1, 0,
+             0, 0, 0, 1)
+
+
+invDmat <- matrix(invDvec, 4, 4)
+D <- solve(invDmat)
+
+D = diag(1, nrow=4, ncol=4)
+################################################
+
+
+# design matrices for the area of the 1st longitudinal outcome
+AextraFormY2 <- list(fixed = ~ -1 + year + I(year^2/2),
+                     random = ~ -1 + year + I(year^2/2),
+                     indFixed = 1:2, indRandom = 1:2)
+
+mfXA_derivY2 <- model.frame(terms(AextraFormY2$fixed), data = DF)
+mfZA_derivY2 <- model.frame(terms(AextraFormY2$random), data = DF)
+XAderivY2 <- model.matrix(AextraFormY2$fixed, mfXA_derivY2)
+ZAderivY2 <- model.matrix(AextraFormY2$random, mfZA_derivY2)
+
+################################################
+
+# design matrices for the longitudinal measurement model
+# but this can be easily generalized
+times <- c(replicate(n, c(0, sort(runif(K-1, 0, t.max))))) # at which time points longitudinal measurements are supposed to be taken
+group <- sample(c(0,1), n, replace = TRUE)
+
+DF <- data.frame(year = times, drug = factor(rep(group, each = K)))
+
+X1 <- model.matrix(~ year + drug, data = DF)
+Z1 <- model.matrix(~ year, data = DF)
+
+X2 <- model.matrix(~ year, data = DF)
+Z2 <- model.matrix(~ year, data = DF)
+
+
+
+#simulate random effects
+library(MASS)
+
+b <- mvrnorm(n, rep(0, nrow(D)), D)
+
+
+# simulate longitudinal responses
+id <- rep(1:n, each = K)
+
+
+
+eta.y2 <- as.vector(X2 %*% betaa2 + rowSums(Z2 * b[id, 3:4])) # linear predictor
+y2 <- rnorm(n * K, eta.y2, sigma2.y)
+
+auc.y2 <- as.vector(XAderivY1 %*% betaa1[1:3] + rowSums(ZAderivY1 * b[id, 1:2]))
+
+eta.y1 <- as.vector(X1 %*% betaa1 + rowSums(Z1 * b[id, 1:2])) + alphaa * auc.y2 # slope
+y1 <- rnorm(n * K, eta.y1, sigma1.y)
+
+
+
+dat <- DF[, ]
+dat$id <- id
+dat$y1 <- y1
+dat$y2 <- y2
+
+names(dat) <- c("year", "drug", "id", "y1", "y2")
+
+dat.id <- dat[tapply(row.names(dat), dat$id, tail, 1), ]
+
+
+data <- dat
+data.id <- dat.id

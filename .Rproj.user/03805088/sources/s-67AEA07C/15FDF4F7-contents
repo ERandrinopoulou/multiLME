@@ -1,0 +1,402 @@
+############
+# Packages #
+############
+
+library(JMbayes)
+library(jagsUI)
+library(multiLME)
+
+# source("mv_lme function.R")
+# source("other_functions.R")
+# source("build_JAGS_code.R")
+# 
+# source("DynPred_mv_lme function.R")
+# source("proposal distributions.R")
+# source("posterior_b.R")
+# 
+# source("IndvPred_mvlme.R")
+
+###########################################
+# Scenario 1 - simulate and predict value #
+###########################################
+
+source("simulate2_value.R")
+
+
+set.seed(2021)
+V <- 5
+n <- nrow(data.id)
+splits <- split(data.id$id, sample(rep(seq_len(V), length.out = n)))
+
+
+trainingData <- lapply(splits, function(x) data[!data$id %in% x, ])
+
+formulas <- list(y1 ~ year + drug + (year | id),
+                 y2 ~ year + (year | id))
+families <- c("gaussian", "gaussian")
+hc <- FALSE
+predicted <- FALSE
+assoc_from = 1
+assoc_to = 2
+
+mixed_models <- list()
+for (i in 1:length(trainingData)){
+  print(i)
+  mixed_models[[i]] <- mv_lme(formulas = formulas, 
+                                     data = trainingData[[i]], 
+                                     families = families, 
+                                     hc = hc, predicted = predicted,
+                                     parameters.b = TRUE,
+                                     assoc_from = assoc_from,
+                                     assoc_to = assoc_to)
+}
+
+
+testingData <- lapply(splits, function(x) data[data$id %in% x, ])
+
+
+get_preds <- list()
+for(u in 1:length(testingData)){
+  print(u)
+  dat <- testingData[[u]]
+  predss <- list()
+  for(k in 1:length(unique(dat$id))) {
+    newdataP <- dat[dat$id == dat$id[k], ]
+    preds <- list()
+    for (t in 1:(dim(newdataP)[1]-1)){
+      pred_years <- newdataP$year[(t+1):dim(newdataP)[1]] 
+      preds[[t]] <- DynPred_mv_lme(object = mixed_models[[u]], 
+                                   newdata = newdataP[1:t,], 
+                                   families = families,
+                                   hc = hc,
+                                   timeVar = "year", 
+                                   IdVar = "id", 
+                                   times = pred_years, 
+                                   M = 200, 
+                                   level = 0.95,
+                                   assoc = TRUE,
+                                   assoc_from = assoc_from,
+                                   assoc_to = assoc_to)
+      preds[[t]] <- data.frame(pred1 = unlist(preds[[t]][1]), 
+                          pred2 = unlist(preds[[t]][6]),
+                          measurements_used = length(newdataP[1:t, "year"]),
+                          ID = unique(newdataP$id), 
+                          real_out1 = newdataP$y1[newdataP$year %in% pred_years],
+                          real_out2 = newdataP$y2[newdataP$year %in% pred_years])
+    }
+    predss[[k]] <- do.call(rbind, preds)
+  }
+  get_preds[[u]] <- do.call(rbind, predss)
+}
+
+
+get_final_preds_V_V <- do.call(rbind, get_preds)
+get_final_preds_V_V$mae1 <- abs(get_final_preds_V_V$pred1 - get_final_preds_V_V$real_out1)
+get_final_preds_V_V$mae2 <- abs(get_final_preds_V_V$pred2 - get_final_preds_V_V$real_out2)
+
+p1 <- boxplot(get_final_preds_V_V$mae1 ~ get_final_preds_V_V$measurements_used,
+              xlab = "Measeurements used", 
+              ylab = "Mean absolute error",
+              ylim = c(0, 10))
+p2 <- boxplot(get_final_preds_V_V$mae2 ~ get_final_preds_V_V$measurements_used,
+              xlab = "Measeurements used", 
+              ylab = "Mean absolute error",
+              ylim = c(0, 14))
+
+
+#################################################
+# Scenario 2 - simulate slope and predict value #
+#################################################
+
+
+source("simulate2_slope.R")
+
+
+set.seed(2021)
+V <- 5
+n <- nrow(data.id)
+splits <- split(data.id$id, sample(rep(seq_len(V), length.out = n)))
+
+
+trainingData <- lapply(splits, function(x) data[!data$id %in% x, ])
+
+formulas <- list(y1 ~ year + drug + (year | id),
+                 y2 ~ year + (year | id))
+families <- c("gaussian", "gaussian")
+hc <- FALSE
+predicted <- FALSE
+assoc_from = 1
+assoc_to = 2
+
+mixed_models <- list()
+for (i in 1:length(trainingData)){
+  print(i)
+  mixed_models[[i]] <- mv_lme(formulas = formulas, 
+                              data = trainingData[[i]], 
+                              families = families, 
+                              hc = hc, predicted = predicted,
+                              parameters.b = TRUE,
+                              assoc_from = assoc_from,
+                              assoc_to = assoc_to)
+}
+
+
+testingData <- lapply(splits, function(x) data[data$id %in% x, ])
+
+
+get_preds <- list()
+for(u in 1:length(testingData)){
+  print(u)
+  dat <- testingData[[u]]
+  predss <- list()
+  for(k in 1:length(unique(dat$id))) {
+    newdataP <- dat[dat$id == dat$id[k], ]
+    preds <- list()
+    for (t in 1:(dim(newdataP)[1]-1)){
+      pred_years <- newdataP$year[(t+1):dim(newdataP)[1]] 
+      preds[[t]] <- DynPred_mv_lme(object = mixed_models[[u]], 
+                                   newdata = newdataP[1:t,], 
+                                   families = families,
+                                   hc = hc,
+                                   timeVar = "year", 
+                                   IdVar = "id", 
+                                   times = pred_years, 
+                                   M = 200, 
+                                   level = 0.95,
+                                   assoc = TRUE,
+                                   assoc_from = assoc_from,
+                                   assoc_to = assoc_to)
+      preds[[t]] <- data.frame(pred1 = unlist(preds[[t]][1]), 
+                               pred2 = unlist(preds[[t]][6]),
+                               measurements_used = length(newdataP[1:t, "year"]),
+                               ID = unique(newdataP$id), 
+                               real_out1 = newdataP$y1[newdataP$year %in% pred_years],
+                               real_out2 = newdataP$y2[newdataP$year %in% pred_years])
+    }
+    predss[[k]] <- do.call(rbind, preds)
+  }
+  get_preds[[u]] <- do.call(rbind, predss)
+}
+
+
+get_final_preds_S_V <- do.call(rbind, get_preds)
+get_final_preds_S_V$mae1 <- abs(get_final_preds_S_V$pred1 - get_final_preds_S_V$real_out1)
+get_final_preds_S_V$mae2 <- abs(get_final_preds_S_V$pred2 - get_final_preds_S_V$real_out2)
+
+p1 <- boxplot(get_final_preds_S_V$mae1 ~ get_final_preds_S_V$measurements_used,
+              xlab = "Measeurements used", 
+              ylab = "Mean absolute error",
+              ylim = c(0, 10))
+p2 <- boxplot(get_final_preds_S_V$mae2 ~ get_final_preds_S_V$measurements_used,
+              xlab = "Measeurements used", 
+              ylab = "Mean absolute error",
+              ylim = c(0, 14))
+
+
+################################################
+# Scenario 2 - simulate area and predict value #
+################################################
+
+
+source("simulate2_area.R")
+
+
+set.seed(2021)
+V <- 5
+n <- nrow(data.id)
+splits <- split(data.id$id, sample(rep(seq_len(V), length.out = n)))
+
+
+trainingData <- lapply(splits, function(x) data[!data$id %in% x, ])
+
+formulas <- list(y1 ~ year + drug + (year | id),
+                 y2 ~ year + (year | id))
+families <- c("gaussian", "gaussian")
+hc <- FALSE
+predicted <- FALSE
+assoc_from = 1
+assoc_to = 2
+
+mixed_models <- list()
+for (i in 1:length(trainingData)){
+  print(i)
+  mixed_models[[i]] <- mv_lme(formulas = formulas, 
+                              data = trainingData[[i]], 
+                              families = families, 
+                              hc = hc, predicted = predicted,
+                              parameters.b = TRUE,
+                              assoc_from = assoc_from,
+                              assoc_to = assoc_to)
+}
+
+
+testingData <- lapply(splits, function(x) data[data$id %in% x, ])
+
+
+get_preds <- list()
+for(u in 1:length(testingData)){
+  print(u)
+  dat <- testingData[[u]]
+  predss <- list()
+  for(k in 1:length(unique(dat$id))) {
+    newdataP <- dat[dat$id == dat$id[k], ]
+    preds <- list()
+    for (t in 1:(dim(newdataP)[1]-1)){
+      pred_years <- newdataP$year[(t+1):dim(newdataP)[1]] 
+      preds[[t]] <- DynPred_mv_lme(object = mixed_models[[u]], 
+                                   newdata = newdataP[1:t,], 
+                                   families = families,
+                                   hc = hc,
+                                   timeVar = "year", 
+                                   IdVar = "id", 
+                                   times = pred_years, 
+                                   M = 200, 
+                                   level = 0.95,
+                                   assoc = TRUE,
+                                   assoc_from = assoc_from,
+                                   assoc_to = assoc_to)
+      preds[[t]] <- data.frame(pred1 = unlist(preds[[t]][1]), 
+                               pred2 = unlist(preds[[t]][6]),
+                               measurements_used = length(newdataP[1:t, "year"]),
+                               ID = unique(newdataP$id), 
+                               real_out1 = newdataP$y1[newdataP$year %in% pred_years],
+                               real_out2 = newdataP$y2[newdataP$year %in% pred_years])
+    }
+    predss[[k]] <- do.call(rbind, preds)
+  }
+  get_preds[[u]] <- do.call(rbind, predss)
+}
+
+
+get_final_preds_A_V <- do.call(rbind, get_preds)
+get_final_preds_A_V$mae1 <- abs(get_final_preds_A_V$pred1 - get_final_preds_A_V$real_out1)
+get_final_preds_A_V$mae2 <- abs(get_final_preds_A_V$pred2 - get_final_preds_A_V$real_out2)
+
+p1 <- boxplot(get_final_preds_A_V$mae1 ~ get_final_preds_A_V$measurements_used,
+              xlab = "Measeurements used", 
+              ylab = "Mean absolute error",
+              ylim = c(0, 10))
+p2 <- boxplot(get_final_preds_A_V$mae2 ~ get_final_preds_A_V$measurements_used,
+              xlab = "Measeurements used", 
+              ylab = "Mean absolute error",
+              ylim = c(0, 14))
+
+
+
+
+###################
+# Combine results #
+###################
+
+par(mfrow = c(2, 3))
+boxplot(get_final_preds_V_V$mae1 ~ 
+          get_final_preds_V_V$measurements_used,
+        xlab = "Measeurements used", 
+        ylab = "Mean absolute error",
+        ylim = c(0, 14),
+        main = "Outcome 1: sim-value, pred-value")
+boxplot(get_final_preds_S_V$mae1 ~ 
+          get_final_preds_S_V$measurements_used,
+        xlab = "Measeurements used", 
+        ylab = "Mean absolute error",
+        ylim = c(0, 14),
+        main = "Outcome 1: sim-slope, pred-value")
+boxplot(get_final_preds_A_V$mae1 ~ 
+          get_final_preds_A_V$measurements_used,
+        xlab = "Measeurements used", 
+        ylab = "Mean absolute error",
+        ylim = c(0, 14),
+        main = "Outcome 1: sim-area, pred-value")
+
+boxplot(get_final_preds_V_V$mae2 ~ 
+          get_final_preds_V_V$measurements_used,
+        xlab = "Measeurements used", 
+        ylab = "Mean absolute error",
+        ylim = c(0, 14),
+        main = "Outcome 2: sim-value, pred-value")
+boxplot(get_final_preds_S_V$mae2 ~ 
+          get_final_preds_S_V$measurements_used,
+        xlab = "Measeurements used", 
+        ylab = "Mean absolute error",
+        ylim = c(0, 14),
+        main = "Outcome 2: sim-slope, pred-value")
+boxplot(get_final_preds_A_V$mae2 ~ 
+          get_final_preds_A_V$measurements_used,
+        xlab = "Measeurements used", 
+        ylab = "Mean absolute error",
+        ylim = c(0, 14),
+        main = "Outcome 2: sim-area, pred-value")
+
+################################################
+# Scenario 3 - simulate value predict RE assoc #
+################################################
+
+source("simulate2.R")
+
+
+set.seed(2021)
+V <- 5
+n <- nrow(data.id)
+splits <- split(data.id$id, sample(rep(seq_len(V), length.out = n)))
+
+
+trainingData <- lapply(splits, function(x) data[!data$id %in% x, ])
+
+formulas <- list(y1 ~ year + drug + (year | id),
+                 y2 ~ year + (year | id))
+families <- c("gaussian", "gaussian")
+hc <- FALSE
+predicted <- FALSE
+assoc_from = 1
+assoc_to = 2
+
+mixed_models<- list()
+for (i in 1:length(trainingData)){
+  print(i)
+  mixed_models[[i]] <- mvglmer(formulas, data = trainingData[[i]],
+                               families = list(gaussian, gaussian))
+}
+
+
+testingData <- lapply(splits, function(x) data[data$id %in% x, ])
+
+
+get_preds <- list()
+for(u in 1:length(testingData)){
+  print(u)
+  dat <- testingData[[u]]
+  predss <- list()
+  for(k in 1:length(unique(dat$id))) {
+    newdataP <- dat[dat$id == dat$id[k], ]
+    preds <- list()
+    for (t in 1:(dim(newdataP)[1]-1)){
+      pred_years <- newdataP$year[(t+1):dim(newdataP)[1]] 
+      preds[[t]] <- IndvPred_mvlme(mixed_models[[u]], newdata = newdataP[1:t,], 
+                                   timeVar = c("year", "year"), idVar = "id", 
+                                   times = list(pred_years, pred_years), 
+                                   M = 200L, interval = c("confidence"), 
+                                   all_times = FALSE, 
+                                   level = 0.95, return_data = FALSE, seed = 1L)
+      preds[[t]] <- data.frame(pred1 = preds[[t]][preds[[t]]$Outcomes == "y1",4], 
+                               pred2 = preds[[t]][preds[[t]]$Outcomes == "y2",4],
+                               measurements_used = length(newdataP[1:t, "year"]),
+                               ID = unique(newdataP$id), 
+                               real_out1 = newdataP$y1[newdataP$year %in% pred_years],
+                               real_out2 = newdataP$y2[newdataP$year %in% pred_years])
+    }
+    predss[[k]] <- do.call(rbind, preds)
+  }
+  get_preds[[u]] <- do.call(rbind, predss)
+}
+
+
+get_final_preds <- do.call(rbind, get_preds)
+get_final_preds$mae1 <- abs(get_final_preds$pred1 - get_final_preds$real_out1)
+get_final_preds$mae2 <- abs(get_final_preds$pred2 - get_final_preds$real_out2)
+
+p1 <- boxplot(get_final_preds$mae1 ~ get_final_preds$measurements_used,
+              xlab = "Measeurements used", ylab = "Mean absolute error")
+p2 <- boxplot(get_final_preds$mae2 ~ get_final_preds$measurements_used,
+              xlab = "Measeurements used", ylab = "Mean absolute error")
+
+
