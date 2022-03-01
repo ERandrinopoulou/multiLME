@@ -34,8 +34,8 @@ JAGSmodel <- function(families, hc, predicted,
 
       if (k %in% assoc_from) {
         if (!is.null(extraForm)){
-          paramtr <- paste0(myt(3), "f_derivY", assoc_from, "[j] <- betas", assoc_from, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
-                            Data1$RE_ind2[extraForm$indFixed], "] * ZderivY[j,]\n")
+          paramtr <- paste0(myt(3), "f_derivY", k, "[j] <- betas", k, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
+                            eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indFixed]"))), "] * ZderivY[j,]\n")
         }
        }
 
@@ -57,8 +57,8 @@ JAGSmodel <- function(families, hc, predicted,
 
       if (k %in% assoc_from) {
         if (!is.null(extraForm)){
-          paramtr <- paste0(myt(3), "f_derivY", assoc_from, "[j] <- betas", assoc_from, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
-                            Data1$RE_ind2[extraForm$indFixed], "] * ZderivY[j,]\n")
+          paramtr <- paste0(myt(3), "f_derivY", k, "[j] <- betas", k, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
+                            eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indFixed]"))), "] * ZderivY[j,]\n")
         }
       }
 
@@ -83,8 +83,8 @@ JAGSmodel <- function(families, hc, predicted,
 
         if (k %in% assoc_from) {
           if (!is.null(extraForm)){
-            paramtr <- paste0(myt(3), "f_derivY", assoc_from, "[j] <- betas", assoc_from, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
-                              Data1$RE_ind2[extraForm$indFixed], "] * ZderivY[j,]\n")
+            paramtr <- paste0(myt(3), "f_derivY", k, "[j] <- betas", k, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
+                              eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indFixed]"))), "] * ZderivY[j,]\n")
           }
         }
 
@@ -106,8 +106,8 @@ JAGSmodel <- function(families, hc, predicted,
 
       if (k %in% assoc_from) {
         if (!is.null(extraForm)){
-          paramtr <- paste0(myt(3), "f_derivY", assoc_from, "[j] <- betas", assoc_from, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
-                            Data1$RE_ind2[extraForm$indFixed], "] * ZderivY[j,]\n")
+          paramtr <- paste0(myt(3), "f_derivY", k, "[j] <- betas", k, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
+                            eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indFixed]"))), "] * ZderivY[j,]\n")
         }
       }
 
