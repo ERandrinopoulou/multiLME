@@ -1,6 +1,5 @@
-
 JAGSmodel <- function(families, hc, predicted,
-                      assoc, assoc_from, assoc_to){
+                      assoc, assoc_from, assoc_to, extraForm, Data1){
 
 
     K <- length(families)
@@ -32,21 +31,45 @@ JAGSmodel <- function(families, hc, predicted,
       long2 <- paste0(myt(3), "muy", k, "[j] <- inprod(", paste0(long_betas(k), collapse = " + "), ", Xc", k, "[j, 1:ncx", k, "]) +\n", myt(4),
                       " inprod(", paste0(long_b(k), sep = "", collapse = " + "), ", Z", k, "[j, 1:ncz", k, "])\n")
       if (assoc == TRUE) {
+
+      if (k %in% assoc_from) {
+        if (!is.null(extraForm)){
+          paramtr <- paste0(myt(3), "f_derivY", assoc_from, "[j] <- betas", assoc_from, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
+                            Data1$RE_ind2[extraForm$indFixed], "] * ZderivY[j,]\n")
+        }
+       }
+
         if (k %in% assoc_to) {
+
+          if (!is.null(extraForm)){
+            mu_alpha <- paste0(" * f_derivY", assoc_from, "[j]")
+          } else {
+            mu_alpha <- paste0(" * muy", assoc_from, "[j]")
+          }
+
           long2 <- paste0(myt(3), "muy", k, "[j] <- inprod(", paste0(long_betas(k), collapse = " + "), ", Xc", k, "[j, 1:ncx", k, "]) +\n", myt(4),
                           " inprod(", paste0(long_b(k), sep = "", collapse = " + "), ", Z", k, "[j, 1:ncz", k, "])")
-          alphast <- paste0(" + alpha", k, assoc_from, " * muy", assoc_from, "[j]")
+          alphast <- paste0(" + alpha", k, assoc_from, mu_alpha)
           alphast <- paste0(alphast, collapse = "")
-          long2 <- paste0(long2, alphast, "\n")
+          long2 <- paste0(long2, if(!is.null(extraForm) & (k %in% assoc_from) ){ paste0(paramtr, collapse = "") }, alphast, "\n")
         }
       }
+
+      if (k %in% assoc_from) {
+        if (!is.null(extraForm)){
+          paramtr <- paste0(myt(3), "f_derivY", assoc_from, "[j] <- betas", assoc_from, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
+                            Data1$RE_ind2[extraForm$indFixed], "] * ZderivY[j,]\n")
+        }
+      }
+
       long2hier <- paste0(myt(3), "muy", k, "[j] <- inprod(", paste0(long_u(k), sep = "", collapse = " + "), ", Z", k, "[j, 1:ncz", k, "])\n")
 
       long3 <- paste0(myt(3), "y", k, "[j] ~ dnorm(muy", k, "[j], tau", k, ")\n")
       long3_pred <- paste0(myt(3), "y", k, "_pred[j] ~ dnorm(muy", k, "[j], tau", k, ")\n")
 
       longEnd <- paste0(myt(1), "}\n")
-      paste0(longStart1, longStart2, if (hc == "TRUE") {paste0(long2hier)} else {paste0(long2)}, long3,
+      paste0(longStart1, longStart2, if (hc == "TRUE") {paste0(long2hier)} else {paste0(long2)}, if(!is.null(extraForm) & (k %in% assoc_from) ){ paste0(paramtr, collapse = "") },
+             long3,
              if (predicted == TRUE) {long3_pred}, myt(2), "}\n", myt(1), "}\n")
     }
 
@@ -57,20 +80,44 @@ JAGSmodel <- function(families, hc, predicted,
       long2 <- paste0(myt(3), "muy", k, "[j] <- inprod(", paste0(long_betas(k), collapse = " + "), ", Xc", k, "[j, 1:ncx", k, "]) +\n", myt(4),
                       " inprod(", paste0(long_b(k), sep = "", collapse = " + "), ", Z", k, "[j, 1:ncz", k, "])\n")
       if (assoc == TRUE) {
+
+        if (k %in% assoc_from) {
+          if (!is.null(extraForm)){
+            paramtr <- paste0(myt(3), "f_derivY", assoc_from, "[j] <- betas", assoc_from, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
+                              Data1$RE_ind2[extraForm$indFixed], "] * ZderivY[j,]\n")
+          }
+        }
+
         if (k %in% assoc_to) {
+
+          if (!is.null(extraForm)){
+            mu_alpha <- paste0(" * f_derivY", assoc_from, "[j]")
+          } else {
+            mu_alpha <- paste0(" * muy", assoc_from, "[j]")
+          }
+
           long2 <- paste0(myt(3), "muy", k, "[j] <- inprod(", paste0(long_betas(k), collapse = " + "), ", Xc", k, "[j, 1:ncx", k, "]) +\n", myt(4),
                           " inprod(", paste0(long_b(k), sep = "", collapse = " + "), ", Z", k, "[j, 1:ncz", k, "])")
-          alphast <- paste0(" + alpha", k, assoc_from, " * muy", assoc_from, "[j]")
+          alphast <- paste0(" + alpha", k, assoc_from, mu_alpha)
           alphast <- paste0(alphast, collapse = "")
-          long2 <- paste0(long2, alphast, collapse = " ")
+          long2 <- paste0(long2, if (!is.null(extraForm) & (k %in% assoc_from) ){ paste0(paramtr, collapse = "") }, alphast, collapse = " ")
         }
       }
+
+      if (k %in% assoc_from) {
+        if (!is.null(extraForm)){
+          paramtr <- paste0(myt(3), "f_derivY", assoc_from, "[j] <- betas", assoc_from, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
+                            Data1$RE_ind2[extraForm$indFixed], "] * ZderivY[j,]\n")
+        }
+      }
+
       long2hier <- paste0(myt(3), "muy", k, "[j] <- inprod(", paste0(long_u(k), sep = "", collapse = "+ "), ", Z", k, "[j, 1:ncz", k, "] )\n")
 
       long3 <- paste0(myt(3), "Pr", k, "[j] <- max(1.00000E-05, min(0.99999, (exp(muy", k, "[j])/(1 + exp(muy", k, "[j])))))\n")
       long4 <- paste0(myt(3), "y", k, "[j] ~ dbin(Pr", k, "[j], 1)\n")
       long4_pred <- paste0(myt(3), "y", k, "_pred[j] ~ dbin(Pr", k, "[j], 1)\n")
-      paste0(longStart1, longStart2, if (hc == "TRUE") {paste0(long2hier)} else {paste0(long2)}, long3, long4,
+      paste0(longStart1, longStart2, if (hc == "TRUE") {paste0(long2hier)} else {paste0(long2)}, if(!is.null(extraForm) & (k %in% assoc_from) ){ paste0(paramtr, collapse = "") },
+             long3, long4,
              if (predicted == TRUE) {long4_pred}, myt(2), "}\n", myt(1), "}\n")
     }
 

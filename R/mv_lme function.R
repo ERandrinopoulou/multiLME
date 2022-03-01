@@ -4,6 +4,7 @@ mv_lme <- function(formulas, data, families, hc,
                    assoc = TRUE,
                    assoc_from = 2,
                    assoc_to = 1,
+                   extraForm = NULL,
                    control = list(), ...){
 
   ########
@@ -42,6 +43,21 @@ mv_lme <- function(formulas, data, families, hc,
                     SIMPLIFY = FALSE)
   names(RE_inds) <- paste0("RE_ind", seq_along(RE_inds))
   Data1 <- c(Data_data, RE_inds)
+
+  ########################################
+  # Design matrices for parameterization #
+  ########################################
+
+  if (!is.null(extraForm)){
+    mfX_derivY <- model.frame(terms(extraForm$fixed), data = data)
+    mfZ_derivY <- model.frame(terms(extraForm$random), data = data)
+    XderivY <- model.matrix(extraForm$fixed, mfX_derivY)
+    ZderivY <- model.matrix(extraForm$random, mfZ_derivY)
+
+    Data1$XderivY <- XderivY
+    Data1$ZderivY <- ZderivY
+  }
+
 
   ##########
   # Priors #
@@ -267,7 +283,7 @@ mv_lme <- function(formulas, data, families, hc,
   ####################
 
   JAGSmodel(families = families, hc, predicted,
-            assoc, assoc_from, assoc_to)
+            assoc, assoc_from, assoc_to, extraForm, Data1)
 
   #############
   # Fit model #
