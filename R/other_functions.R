@@ -52,16 +52,16 @@ extractFrames <- function (formula, data) {
     which_td <- unname(which(apply(X, 2, check_td, id = id)))
     all_TDterms <- unique(c(timeTerms, which_td))
     baseline <- seq_len(ncol(X))[-all_TDterms]
-    ind_colmns <- c(list(baseline), lapply(colnames(Z)[-1L], find_positions, 
+    ind_colmns <- c(list(baseline), lapply(colnames(Z)[-1L], find_positions,
                                            nams2 = colnames(X)))
     ind_colmns2 <- seq_len(ncol(X))
     ind_colmns2 <- ind_colmns2[!ind_colmns2 %in% unlist(ind_colmns)]
     data.id <- data[!duplicated(id), ]
     Xhc <- if (length(terms.labs_Z)) {
       mfHC <- model.frame(TermsX, data = data.id)
-      which.timevar <- unique(unlist(lapply(terms.labs_Z, 
+      which.timevar <- unique(unlist(lapply(terms.labs_Z,
                                             FUN = function (x) grep(x, names(mfHC), fixed = TRUE))))
-      mfHC[which.timevar] <- lapply(mfHC[which.timevar], 
+      mfHC[which.timevar] <- lapply(mfHC[which.timevar],
                                     function (x) { x[] <- 1; x })
       model.matrix(formYx, mfHC)
     } else {
@@ -69,13 +69,13 @@ extractFrames <- function (formula, data) {
     }
   }
   environment(TermsX) <- environment(TermsZ) <- NULL
-  
+
   Xc = scale(X[, -1], center = TRUE, scale = FALSE) # except intercept
   Xc = cbind(X[,1], Xc)
   Xs = scale(X[, -1], center = TRUE, scale = TRUE)
   Xs = cbind(X[,1], Xs)
-  
-  
+
+
   if (ncol(X) >2) {
     means_X = apply(X[, -1], 2, mean)
     SDs_X = apply(X[, -1], 2, sd)
@@ -84,7 +84,7 @@ extractFrames <- function (formula, data) {
     SDs_X = sd(X[, -1])
   }
   mean_sd_X = means_X/SDs_X
-  
+
   # extract results
   list(N = nrow(Z), n = length(unique(id)), offset = offset, idVar = idVar, respVar = respVar,
        id = id, y = y, X = X, Z = Z, TermsX = TermsX,
@@ -148,16 +148,16 @@ extractFrames_Pred <- function (formula, data) {
     which_td <- unname(which(apply(X, 2, check_td, id = id)))
     all_TDterms <- unique(c(timeTerms, which_td))
     baseline <- seq_len(ncol(X))[-all_TDterms]
-    ind_colmns <- c(list(baseline), lapply(colnames(Z)[-1L], find_positions, 
+    ind_colmns <- c(list(baseline), lapply(colnames(Z)[-1L], find_positions,
                                            nams2 = colnames(X)))
     ind_colmns2 <- seq_len(ncol(X))
     ind_colmns2 <- ind_colmns2[!ind_colmns2 %in% unlist(ind_colmns)]
     data.id <- data[!duplicated(id), ]
     Xhc <- if (length(terms.labs_Z)) {
       mfHC <- model.frame(TermsX, data = data.id)
-      which.timevar <- unique(unlist(lapply(terms.labs_Z, 
+      which.timevar <- unique(unlist(lapply(terms.labs_Z,
                                             FUN = function (x) grep(x, names(mfHC), fixed = TRUE))))
-      mfHC[which.timevar] <- lapply(mfHC[which.timevar], 
+      mfHC[which.timevar] <- lapply(mfHC[which.timevar],
                                     function (x) { x[] <- 1; x })
       model.matrix(formYx, mfHC)
     } else {
@@ -165,9 +165,9 @@ extractFrames_Pred <- function (formula, data) {
     }
   }
   environment(TermsX) <- environment(TermsZ) <- NULL
-  
 
-  
+
+
   # extract results
   list(N = nrow(Z), n = length(unique(id)), offset = offset, idVar = idVar, respVar = respVar,
        id = id, y = y, X = X, Z = Z, TermsX = TermsX,
@@ -260,11 +260,24 @@ summary.mvlme <- function (object, classes, ...) {
           out[[paste0("Outcome", i, j)]] <- rbind(out[[paste0("Outcome", i, j)]], D)
         }
       }
- 
+
 
   }
   class(out) <- "summary.mvlclme"
   out
 }
+
+
+right_rows <- function (data, times, ids, Q_points) {
+  fids <- factor(ids, levels = unique(ids))
+  if (!is.list(Q_points))
+    Q_points <- split(Q_points, row(Q_points))
+  ind <- mapply(findInterval, Q_points, split(times, fids))
+  ind[ind < 1] <- 1
+  rownams_id <- split(row.names(data), fids)
+  ind <- mapply(`[`, rownams_id, split(ind, col(ind)))
+  data[c(ind), ]
+}
+
 
 

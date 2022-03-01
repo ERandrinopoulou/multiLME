@@ -1,29 +1,29 @@
 log_post_b_EB <- function (b_i, y_i, X_i, Z_i, Sigma,
                         betas, invD, alphas, log_dens, Data = Data, assoc = assoc) {
-  
+
   log_post_y <- list()
   eta_y <- list()
   for (o in 1:length(X_i)){
     #marg_part <- paste0("prob_class", seq_len(classes), " * (X_i[[o]] %*% betas$betas", o, seq_len(classes), ")", collapse = " + ")
-    eta_y[[o]] <- as.vector(X_i[[o]] %*% eval(parse(text = paste0("betas$betas", o))) + 
+    eta_y[[o]] <- as.vector(X_i[[o]] %*% eval(parse(text = paste0("betas$betas", o))) +
                        Z_i[[o]] %*% b_i[eval(parse(text = paste0("Data$RE_ind", o, "_pred")))])
   }
-  
+
   if (assoc == TRUE){
     for (o in assoc_from){
       eta_y[[assoc_to]] <- eta_y[[assoc_to]] + eta_y[[o]] * unlist(alphas)
     }
   }
-  
+
   for (o in 1:length(X_i)){
-    log_post_y[[o]] <- log_dens[[o]](y_i[[o]], eta_y[[o]], Sigma = Sigma[[o]]) 
+    log_post_y[[o]] <- log_dens[[o]](y_i[[o]], eta_y[[o]], Sigma = Sigma[[o]])
 
       #c(0.5 * crossprod(b_i, invD) %*% b_i)
   }
-  
+
   -(sum(unlist(log_post_y)) -
     c(0.5 * crossprod(b_i, invD) %*% b_i))
-  
+
 }
 
 
@@ -33,21 +33,21 @@ log_post_b_MCMC <- function (b_i, y_i, X_i, Z_i, Sigma,
   log_post_y <- list()
   eta_y <- list()
   for (o in 1:length(X_i)){
-    eta_y[[o]] <- (X_i[[o]] %*% eval(parse(text = paste0("betas$betas", o))) + 
+    eta_y[[o]] <- (X_i[[o]] %*% eval(parse(text = paste0("betas$betas", o))) +
                        Z_i[[o]] %*% b_i[eval(parse(text = paste0("Data$RE_ind", o, "_pred")))])
   }
-  
+
   if (assoc == TRUE){
     for (o in assoc_from){
       eta_y[[assoc_to]] <- eta_y[[assoc_to]] + eta_y[[o]] * unlist(alphas)
     }
   }
-  
+
   for (o in 1:length(X_i)){
     log_post_y[[o]] <- log_dens[[o]](y_i[[o]], eta_y[[o]], Sigma = Sigma[[o]])
 
   }
-  
+
   (sum(unlist(log_post_y)) -
       c(0.5 * crossprod(b_i, invD) %*% b_i))
 }
@@ -96,16 +96,16 @@ log_post_b_MCMC <- function (b_i, y_i, X_i, Z_i, Sigma,
 #   }
 
 #object$family$linkinv
-#function (eta) 
+#function (eta)
 #  .Call(C_logit_linkinv, eta)
 #<environment: namespace:stats>
 # test_fun<- object$family$linkinv
 # > object$family$linkinv(eta)
-# 866       867       868 
-# 0.1320198 0.1424191 0.1529611 
+# 866       867       868
+# 0.1320198 0.1424191 0.1529611
 # > exp(-1.883217)/(1 + exp(-1.883217))
 # [1] 0.1320198
-# > 
+# >
 
 
 binomial_log_dens = function (y, eta, Sigma = 0) {
@@ -126,15 +126,3 @@ normal_log_dens = function (y, eta, Sigma) {
   #attr(out, "mu_y") <- mu_y
   out
 }
-
-right_rows <- function (data, times, ids, Q_points) {
-  fids <- factor(ids, levels = unique(ids))
-  if (!is.list(Q_points))
-    Q_points <- split(Q_points, row(Q_points))
-  ind <- mapply(findInterval, Q_points, split(times, fids))
-  ind[ind < 1] <- 1
-  rownams_id <- split(row.names(data), fids)
-  ind <- mapply(`[`, rownams_id, split(ind, col(ind)))
-  data[c(ind), ]
-}
-

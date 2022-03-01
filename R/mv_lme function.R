@@ -79,7 +79,7 @@ mv_lme <- function(formulas, data, families, hc,
     datatau <- paste0(datatau, sep = "", collapse = ", ")
   }
 
-  # CGANCE
+  # GHANCE
   # databetVar <- "string"
   # m <- 1
   # for (k in 1:K) {
