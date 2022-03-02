@@ -1,17 +1,35 @@
 log_post_b_EB <- function (b_i, y_i, X_i, Z_i, Sigma,
-                        betas, invD, alphas, log_dens, Data = Data, assoc = assoc) {
+                        betas, invD, alphas, log_dens, Data = Data, assoc = assoc,
+                        extraForm, XderivY_i, ZderivY_i) {
 
   log_post_y <- list()
   eta_y <- list()
+  deriv_eta_y <- list()
   for (o in 1:length(X_i)){
     #marg_part <- paste0("prob_class", seq_len(classes), " * (X_i[[o]] %*% betas$betas", o, seq_len(classes), ")", collapse = " + ")
     eta_y[[o]] <- as.vector(X_i[[o]] %*% eval(parse(text = paste0("betas$betas", o))) +
                        Z_i[[o]] %*% b_i[eval(parse(text = paste0("Data$RE_ind", o, "_pred")))])
+
+    if (!is.null(extraForm)){
+      if (o %in% assoc_from) {
+        deriv_eta_y[[o]] <- as.vector(XderivY_i$deriv_fixed %*% eval(parse(text = paste0("betas$betas", o, "[", extraForm$indFixed, "]" ))) +
+                                      ZderivY_i$deriv_random %*% b_i[eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indFixed]")))])
+      }
+    }
+
+
   }
 
+
   if (assoc == TRUE){
-    for (o in assoc_from){
-      eta_y[[assoc_to]] <- eta_y[[assoc_to]] + eta_y[[o]] * unlist(alphas)
+    if (!is.null(extraForm)){
+      for (o in assoc_from){
+        eta_y[[assoc_to]] <- eta_y[[assoc_to]] + deriv_eta_y[[o]] * unlist(alphas)
+      }
+    } else{
+      for (o in assoc_from){
+        eta_y[[assoc_to]] <- eta_y[[assoc_to]] + eta_y[[o]] * unlist(alphas)
+      }
     }
   }
 
@@ -29,17 +47,36 @@ log_post_b_EB <- function (b_i, y_i, X_i, Z_i, Sigma,
 
 
 log_post_b_MCMC <- function (b_i, y_i, X_i, Z_i, Sigma,
-                        betas, invD, alphas, log_dens, Data, assoc = assoc) {
+                        betas, invD, alphas, log_dens, Data, assoc = assoc,
+                        extraForm, XderivY_i, ZderivY_i) {
   log_post_y <- list()
   eta_y <- list()
+  deriv_eta_y <- list()
   for (o in 1:length(X_i)){
-    eta_y[[o]] <- (X_i[[o]] %*% eval(parse(text = paste0("betas$betas", o))) +
-                       Z_i[[o]] %*% b_i[eval(parse(text = paste0("Data$RE_ind", o, "_pred")))])
+    #marg_part <- paste0("prob_class", seq_len(classes), " * (X_i[[o]] %*% betas$betas", o, seq_len(classes), ")", collapse = " + ")
+    eta_y[[o]] <- as.vector(X_i[[o]] %*% eval(parse(text = paste0("betas$betas", o))) +
+                              Z_i[[o]] %*% b_i[eval(parse(text = paste0("Data$RE_ind", o, "_pred")))])
+
+    if (!is.null(extraForm)){
+      if (o %in% assoc_from) {
+        deriv_eta_y[[o]] <- as.vector(XderivY_i$deriv_fixed %*% eval(parse(text = paste0("betas$betas", o, "[", extraForm$indFixed, "]" ))) +
+                                        ZderivY_i$deriv_random %*% b_i[eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indFixed]")))])
+      }
+    }
+
+
   }
 
+
   if (assoc == TRUE){
-    for (o in assoc_from){
-      eta_y[[assoc_to]] <- eta_y[[assoc_to]] + eta_y[[o]] * unlist(alphas)
+    if (!is.null(extraForm)){
+      for (o in assoc_from){
+        eta_y[[assoc_to]] <- eta_y[[assoc_to]] + deriv_eta_y[[o]] * unlist(alphas)
+      }
+    } else{
+      for (o in assoc_from){
+        eta_y[[assoc_to]] <- eta_y[[assoc_to]] + eta_y[[o]] * unlist(alphas)
+      }
     }
   }
 

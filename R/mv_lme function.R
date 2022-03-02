@@ -1,5 +1,5 @@
 mv_lme <- function(formulas, data, families, hc,
-                   predicted, engine = "JAGS",
+                   predicted = FALSE, engine = "JAGS",
                    parameters.b = FALSE,
                    assoc = TRUE,
                    assoc_from = 2,
