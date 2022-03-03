@@ -4,7 +4,7 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
                              assoc = TRUE,
                              assoc_from = assoc_from,
                              assoc_to = assoc_to,
-                             extraForm = extraForm){
+                             extraForm = NULL){
 
     #newdata$id <- newdata[[IdVar]]
     #K <- length(families)
@@ -466,6 +466,7 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
                 pred <- paste0("der_eta", k, "[[m]] <- ", marg_part, " + rowSums(Data$newMatR",k , "_pred * b[[m]][rep(1, dim(Data$newMatR",k , "_pred)[1]), Data$RE_ind", k, ", drop = FALSE])")
 
               }
+              eval(parse(text = pred))
             }
             eval(parse(text = pred))
           }
@@ -473,7 +474,7 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
           if (families[[k]] == "binomial"){
             marg_part <- paste0("(Data$newMatF", k, "_pred %*% mcmc$betas", k, "[m,])", collapse = " + ")
             pred2 <- paste0("eta_binom <- ", marg_part, " + rowSums(Data$newMatR",k , "_pred * b[[m]][rep(1, dim(Data$newMatR",k , "_pred)[1]), Data$RE_ind", k, ", drop = FALSE])")
-
+            eval(parse(text = pred))
 
             if (!is.null(extraForm)){
               marg_part <- paste0("(Data$new_deriv_fixed", " %*% mcmc$betas", k,"[m,", extraForm$indFixed, "])", collapse = " + ")
