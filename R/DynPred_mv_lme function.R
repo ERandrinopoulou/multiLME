@@ -271,7 +271,7 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
              if (!is.null(extraForm)) {
                pred_mean <- paste0("new_pred_y", k, " <- c(Data$new_deriv_fixed %*% object$postMeans$betas", k, "[", extraForm$indFixed, "]",
                                    " + rowSums(Data$new_deriv_random", " * EBs$post_modes[rep(1, dim(Data$new_deriv_random", ")[1]), ",
-                                   "Data1$RE_ind", k, "[extraForm$indRandom]]))")
+                                   "Data$RE_ind", k, "[extraForm$indRandom]]))")
              } else {
              pred_mean <- paste0("new_pred_y", k, " <- c(", marg_part, ") + rowSums(Data$newMatR", k,
                                  "_pred * EBs$post_modes[rep(1, dim(Data$newMatR", k, "_pred)[1]), Data$RE_ind", k, "])")
