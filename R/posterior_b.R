@@ -13,7 +13,7 @@ log_post_b_EB <- function (b_i, y_i, X_i, Z_i, Sigma,
     if (!is.null(extraForm)){
       if (o %in% assoc_from) {
         deriv_eta_y[[o]] <- as.vector(XderivY_i$deriv_fixed %*% eval(parse(text = paste0("betas$betas", o, "[", extraForm$indFixed, "]" ))) +
-                                      ZderivY_i$deriv_random %*% b_i[eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indFixed]")))])
+                                      ZderivY_i$deriv_random %*% b_i[eval(parse(text = paste0("Data$RE_ind", k, "[extraForm$indFixed]")))])
       }
     }
 
@@ -60,7 +60,7 @@ log_post_b_MCMC <- function (b_i, y_i, X_i, Z_i, Sigma,
     if (!is.null(extraForm)){
       if (o %in% assoc_from) {
         deriv_eta_y[[o]] <- as.vector(XderivY_i$deriv_fixed %*% eval(parse(text = paste0("betas$betas", o, "[", extraForm$indFixed, "]" ))) +
-                                        ZderivY_i$deriv_random %*% b_i[eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indFixed]")))])
+                                        ZderivY_i$deriv_random %*% b_i[eval(parse(text = paste0("Data$RE_ind", k, "[extraForm$indFixed]")))])
       }
     }
 
