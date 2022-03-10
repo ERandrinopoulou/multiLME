@@ -15,10 +15,10 @@ log_post_b_EB <- function (b_i, y_i, X_i, Z_i, Sigma,
         # deriv_eta_y[[o]] <- as.vector(XderivY_i$deriv_fixed %*% eval(parse(text = paste0("betas$betas", o, "[", extraForm$indFixed, "]" ))) +
         #                               ZderivY_i$deriv_random %*% b_i[eval(parse(text = paste0("Data$RE_ind", o, "[extraForm$indFixed]")))])
 
-        indtest <- if (length( eval(parse(text = paste0("Data$RE_ind", k, "[extraForm$indRandom]")))) > 1) {
-          ind <- eval(parse(text = paste0("Data$RE_ind", k, "[extraForm$indRandom]")))
+        indtest <- if (length( eval(parse(text = paste0("Data$RE_ind", o, "[extraForm$indRandom]")))) > 1) {
+          ind <- eval(parse(text = paste0("Data$RE_ind", o, "[extraForm$indRandom]")))
           paste0("c(", paste0(ind, collapse = ","), ")" )
-        } else { eval(parse(text = paste0("Data$RE_ind", k, "[extraForm$indRandom]"))) }
+        } else { eval(parse(text = paste0("Data$RE_ind", o, "[extraForm$indRandom]"))) }
         deriv_eta_y[[o]] <- as.vector(XderivY_i$deriv_fixed %*% eval(parse(text = paste0("betas$betas", o, "[", if (length(  extraForm$indFixed) > 1) {
           paste0("c(", paste0(extraForm$indFixed, collapse = ","), ")" )
         } else { extraForm$indFixed }, "]" ))) +
@@ -71,10 +71,10 @@ log_post_b_MCMC <- function (b_i, y_i, X_i, Z_i, Sigma,
       if (o %in% assoc_from) {
         # deriv_eta_y[[o]] <- as.vector(XderivY_i$deriv_fixed %*% eval(parse(text = paste0("betas$betas", o, "[", extraForm$indFixed, "]" ))) +
         #                                 ZderivY_i$deriv_random %*% b_i[eval(parse(text = paste0("Data$RE_ind", o, "[extraForm$indFixed]")))])
-        indtest <- if (length( eval(parse(text = paste0("Data$RE_ind", k, "[extraForm$indRandom]")))) > 1) {
-          ind <- eval(parse(text = paste0("Data$RE_ind", k, "[extraForm$indRandom]")))
+        indtest <- if (length( eval(parse(text = paste0("Data$RE_ind", o, "[extraForm$indRandom]")))) > 1) {
+          ind <- eval(parse(text = paste0("Data$RE_ind", o, "[extraForm$indRandom]")))
           paste0("c(", paste0(ind, collapse = ","), ")" )
-        } else { eval(parse(text = paste0("Data$RE_ind", k, "[extraForm$indRandom]"))) }
+        } else { eval(parse(text = paste0("Data$RE_ind", o, "[extraForm$indRandom]"))) }
         deriv_eta_y[[o]] <- as.vector(XderivY_i$deriv_fixed %*% eval(parse(text = paste0("betas$betas", o, "[", if (length(  extraForm$indFixed) > 1) {
           paste0("c(", paste0(extraForm$indFixed, collapse = ","), ")" )
         } else { extraForm$indFixed }, "]" ))) +
