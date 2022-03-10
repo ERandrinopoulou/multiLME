@@ -269,7 +269,11 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
 
            if (k %in% assoc_from){
              if (!is.null(extraForm)) {
-               pred_mean <- paste0("new_pred_y", k, " <- c(Data$new_deriv_fixed %*% object$postMeans$betas", k, "[", extraForm$indFixed, "]",
+               pred_mean <- paste0("new_pred_y", k, " <- c(Data$new_deriv_fixed %*% object$postMeans$betas", k, "[",
+                                   if (length(  extraForm$indFixed) > 1) {
+                                       paste0("c(", paste0(extraForm$indFixed, collapse = ","), ")" )
+                                    } else { extraForm$indFixed }
+               , "]",
                                    " + rowSums(Data$new_deriv_random", " * EBs$post_modes[rep(1, dim(Data$new_deriv_random", ")[1]), ",
                                    "Data$RE_ind", k, "[extraForm$indRandom]]))")
              } else {
@@ -459,7 +463,11 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
 
             if (k %in% assoc_from){
               if (!is.null(extraForm)){
-                marg_part <- paste0("(Data$new_deriv_fixed", " %*% mcmc$betas", k,"[m,", extraForm$indFixed, "])", collapse = " + ")
+                marg_part <- paste0("(Data$new_deriv_fixed", " %*% mcmc$betas", k,"[m,",
+                                          if (length(  extraForm$indFixed) > 1) {
+                                            paste0("c(", paste0(extraForm$indFixed, collapse = ","), ")" )
+                                          } else { extraForm$indFixed }
+                                  , "])", collapse = " + ")
                 pred <- paste0("der_eta", k, "[[m]] <- ", marg_part, " + rowSums(Data$new_deriv_random", " * b[[m]][rep(1, dim(Data$new_deriv_random", ")[1]), Data$RE_ind", k, "[extraForm$indRandom]",", drop = FALSE])")
               } else {
                 marg_part <- paste0("(Data$newMatF", k, "_pred %*% mcmc$betas", k,"[m,])", collapse = " + ")
@@ -477,7 +485,11 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
             eval(parse(text = pred))
 
             if (!is.null(extraForm)){
-              marg_part <- paste0("(Data$new_deriv_fixed", " %*% mcmc$betas", k,"[m,", extraForm$indFixed, "])", collapse = " + ")
+              marg_part <- paste0("(Data$new_deriv_fixed", " %*% mcmc$betas", k,"[m,",
+                                        if (length(  extraForm$indFixed) > 1) {
+                                          paste0("c(", paste0(extraForm$indFixed, collapse = ","), ")" )
+                                        } else { extraForm$indFixed }
+                                  , "])", collapse = " + ")
               pred2 <- paste0("der_eta", k, "[[m]] <- ", marg_part, " + rowSums(Data$new_deriv_random", " * b[[m]][rep(1, dim(Data$new_deriv_random", ")[1]), Data$RE_ind", k, "[extraForm$indRandom]",", drop = FALSE])")
             } else {
               marg_part <- paste0("(Data$newMatF", k, "_pred %*% mcmc$betas", k,"[m,])", collapse = " + ")

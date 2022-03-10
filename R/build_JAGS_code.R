@@ -57,8 +57,16 @@ JAGSmodel <- function(families, hc, predicted,
 
       if (k %in% assoc_from) {
         if (!is.null(extraForm)){
-          paramtr <- paste0(myt(3), "f_derivY", k, "[j] <- betas", k, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
-                            eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indFixed]"))), "] * ZderivY[j,]\n")
+          # paramtr <- paste0(myt(3), "f_derivY", k, "[j] <- betas", k, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
+          #                   eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indFixed]"))), "] * ZderivY[j,]\n")
+          paramtr <- paste0(myt(3), "f_derivY", k, "[j] <- betas", k, "[", if (length(  extraForm$indFixed) > 1) {
+            paste0("c(", paste0(extraForm$indFixed, collapse = ","), ")" )
+          } else { extraForm$indFixed }, "] %*% XderivY[j, ] + b[i, ",
+          if (length( eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indRandom]")))) > 1) {
+            ind <- eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indRandom]")))
+            paste0("c(", paste0(ind, collapse = ","), ")" )
+          } else { eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indRandom]"))) }  , "] %*% ZderivY[j,]\n")
+
         }
       }
 
@@ -83,8 +91,16 @@ JAGSmodel <- function(families, hc, predicted,
 
         if (k %in% assoc_from) {
           if (!is.null(extraForm)){
-            paramtr <- paste0(myt(3), "f_derivY", k, "[j] <- betas", k, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
-                              eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indFixed]"))), "] * ZderivY[j,]\n")
+          #   paramtr <- paste0(myt(3), "f_derivY", k, "[j] <- betas", k, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
+          #                     eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indFixed]"))), "] * ZderivY[j,]\n")
+            paramtr <- paste0(myt(3), "f_derivY", k, "[j] <- betas", k, "[", if (length(  extraForm$indFixed) > 1) {
+              paste0("c(", paste0(extraForm$indFixed, collapse = ","), ")" )
+            } else { extraForm$indFixed }, "] %*% XderivY[j, ] + b[i, ",
+            if (length( eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indRandom]")))) > 1) {
+              ind <- eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indRandom]")))
+              paste0("c(", paste0(ind, collapse = ","), ")" )
+            } else { eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indRandom]"))) }  , "] %*% ZderivY[j,]\n")
+
           }
         }
 
