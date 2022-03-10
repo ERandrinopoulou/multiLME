@@ -277,6 +277,7 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
                                    " + rowSums(Data$new_deriv_random", " * EBs$post_modes[rep(1, dim(Data$new_deriv_random", ")[1]), ",
                                    "Data$RE_ind", k, "[extraForm$indRandom]]))")
              } else {
+             marg_part <- paste0("Data$newMatF", k, "_pred %*% object$postMeans$betas", k)
              pred_mean <- paste0("new_pred_y", k, " <- c(", marg_part, ") + rowSums(Data$newMatR", k,
                                  "_pred * EBs$post_modes[rep(1, dim(Data$newMatR", k, "_pred)[1]), Data$RE_ind", k, "])")
              }
@@ -458,7 +459,8 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
         # marg_part <- paste0("prob_class", seq_len(classes), " * (Data$newMatF", k, "_pred %*% mcmc$betas", k, seq_len(classes), "[m,])", collapse = " + ")
           if (families[[k]] == "gaussian"){
             marg_part <- paste0("(Data$newMatF", k, "_pred %*% mcmc$betas", k,"[m,])", collapse = " + ")
-            pred <- paste0("eta", k, "[[m]] <- ", marg_part, " + rowSums(Data$newMatR",k , "_pred * b[[m]][rep(1, dim(Data$newMatR",k , "_pred)[1]), Data$RE_ind", k, ", drop = FALSE])")
+            pred <- paste0("eta", k, "[[m]] <- ", marg_part, " + rowSums(Data$newMatR",k ,
+                           "_pred * b[[m]][rep(1, dim(Data$newMatR",k , "_pred)[1]), Data$RE_ind", k, ", drop = FALSE])")
             eval(parse(text = pred))
 
             if (k %in% assoc_from){
@@ -471,12 +473,13 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
                 pred <- paste0("der_eta", k, "[[m]] <- ", marg_part, " + rowSums(Data$new_deriv_random", " * b[[m]][rep(1, dim(Data$new_deriv_random", ")[1]), Data$RE_ind", k, "[extraForm$indRandom]",", drop = FALSE])")
               } else {
                 marg_part <- paste0("(Data$newMatF", k, "_pred %*% mcmc$betas", k,"[m,])", collapse = " + ")
-                pred <- paste0("der_eta", k, "[[m]] <- ", marg_part, " + rowSums(Data$newMatR",k , "_pred * b[[m]][rep(1, dim(Data$newMatR",k , "_pred)[1]), Data$RE_ind", k, ", drop = FALSE])")
+                pred <- paste0("der_eta", k, "[[m]] <- ", marg_part, " + rowSums(Data$newMatR",k ,
+                               "_pred * b[[m]][rep(1, dim(Data$newMatR",k , "_pred)[1]), Data$RE_ind", k, ", drop = FALSE])")
 
               }
               eval(parse(text = pred))
             }
-            eval(parse(text = pred))
+
           }
 
           if (families[[k]] == "binomial"){
@@ -500,7 +503,6 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
             eval(parse(text = pred2))
             pred <- paste0("eta", k, "[[m]] <- exp(eta_binom)/(1 + exp(eta_binom))")
             }
-          eval(parse(text = pred))
       }
 
       if (assoc == TRUE){
