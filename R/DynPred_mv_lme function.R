@@ -508,7 +508,7 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
       if (assoc == TRUE){
         for (u in assoc_to){
           for (o in assoc_from){
-            pred22 <- paste0("eta", u, "[[m]] <- eta", u, "[[m]] + der_eta", o, "[[m]] * unlist(alphas)")
+            pred22 <- paste0("eta", u, "[[m]] <- eta", u, "[[m]] + der_eta", o, "[[m]] * mcmc$alpha", u, o, "[[m]]")
             eval(parse(text = pred22))
           }
         }
