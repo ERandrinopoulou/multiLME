@@ -436,9 +436,9 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
       #                 lapply(dmvt_proposed, "[", m))
 
       #alphas <- min(exp(log_post_b_new + unlist(lapply(dmvt_proposed, "[", m)) - log_post_b_current - unlist(dmvt_current)), 1) WRONG??
-      alphas <- min(exp(log_post_b_new + unlist(dmvt_current) - log_post_b_current - unlist(lapply(dmvt_proposed, "[", m))), 1)
+      accept_ratio <- min(exp(log_post_b_new + unlist(dmvt_current) - log_post_b_current - unlist(lapply(dmvt_proposed, "[", m))), 1)
 
-      alphas <- min(exp(log_post_b_new - log_post_b_current), 1)
+      accept_ratio <- min(exp(log_post_b_new - log_post_b_current), 1)
 
       #min(exp(log_post_b_new + dmvt_current - log_post_b_current - dmvt_proposed), 1)
       # calc_alpha <- function (log_post_new, log_post_old) {
@@ -446,7 +446,7 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
       # }
       # alphas <- mapply(calc_alpha, log_post_b_new, log_post_b_current)
 
-      keep_ind <- runif(length(alphas)) <= alphas
+      keep_ind <- runif(length(accept_ratio)) <= accept_ratio
       if (any(keep_ind)) {
         b_current[keep_ind] <- b_new[keep_ind]
         dmvt_current[keep_ind] <- lapply(dmvt_proposed, "[", m)[keep_ind]
