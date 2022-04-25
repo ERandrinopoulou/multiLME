@@ -1,4 +1,4 @@
-JAGSmodel <- function(families, hc, predicted,
+JAGSmodel <- function(families, hc, predicted, corr_RE,
                       assoc, assoc_from, assoc_to, extraForm, Data1){
 
 
@@ -265,12 +265,16 @@ JAGSmodel <- function(families, hc, predicted,
                          myt(2), "priorR.D[l, l] ~ dgamma(0.5, 0.01)\n",
                          myt(), "}\n")
 
+    prior.invD_uncorr <- paste0(myt(), "for (l in 1:n_RE) {\n",
+                         myt(2), "inv.D[l, l] ~ dgamma(0.01, 0.01)\n",
+                         myt(), "}\n")
 
     if (assoc == TRUE){
       priors <- function(k) {
         prior.betas <- paste0(prior.betas, collapse = "")
         prior.alpha <- paste0(prior.alpha, collapse = "")
-        prior.invD <-  paste0(prior.invD, collapse = "")
+        prior.invD <-  if (corr_RE == TRUE) {paste0(prior.invD, collapse = "")
+        } else {paste0(prior.invD_uncorr, collapse = "")}
         paste0(prior.betas, prior.alpha, prior.tau, prior.sigma, prior.invD)
       }
     } else {

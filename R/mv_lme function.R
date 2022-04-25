@@ -282,7 +282,7 @@ mv_lme <- function(formulas, data, families, hc,
   # Build JAGS model #
   ####################
 
-  JAGSmodel(families = families, hc, predicted,
+  JAGSmodel(families = families, hc, predicted, corr_RE,
             assoc, assoc_from, assoc_to, extraForm, Data1)
 
   #############
