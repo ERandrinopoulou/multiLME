@@ -280,7 +280,8 @@ JAGSmodel <- function(families, hc, predicted, corr_RE,
     } else {
       priors <- function(k) {
         prior.betas <- paste0(prior.betas, collapse = "")
-        prior.invD <-  paste0(prior.invD, collapse = "")
+        prior.invD <-  if (corr_RE == TRUE) {paste0(prior.invD, collapse = "")
+        } else {paste0(prior.invD_uncorr, collapse = "")}
         paste0(prior.betas, prior.tau, prior.sigma, prior.invD)
       }
     }
