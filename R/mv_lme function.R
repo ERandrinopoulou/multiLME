@@ -48,7 +48,7 @@ mv_lme <- function(formulas, data, families, hc,
 
   # Add matrix inv.D for uncorrelated random effects.
   if (corr_RE == FALSE) {
-    Data1$inv.D <- matrix(0, n_RE, n_RE)
+    Data1$inv.D <- matrix(0, RE_inds, RE_inds)
     diag(Data1$inv.D) <- NA
   }
 
