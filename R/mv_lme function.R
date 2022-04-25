@@ -46,6 +46,12 @@ mv_lme <- function(formulas, data, families, hc,
   names(RE_inds) <- paste0("RE_ind", seq_along(RE_inds))
   Data1 <- c(Data_data, RE_inds)
 
+  # Add matrix inv.D for uncorrelated random effects.
+  if (corr_RE == FALSE) {
+    Data1$inv.D <- matrix(0, nb, nb)
+    diag(Data1$inv.D) <- NA
+  }
+
   ########################################
   # Design matrices for parameterization #
   ########################################
