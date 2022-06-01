@@ -288,7 +288,9 @@ mv_lme <- function(formulas, data, families, hc,
   #   ints
   # }
 
-  Data$time_varbl <- data[, time_var]
+  if (norm_area == TRUE) {
+   Data$time_varbl <- data[, time_var]
+  }
   ####################
   # Build JAGS model #
   ####################
