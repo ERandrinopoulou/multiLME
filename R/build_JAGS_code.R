@@ -44,7 +44,7 @@ JAGSmodel <- function(families, hc, predicted, corr_RE,
 
           if (!is.null(extraForm)){
 
-            if (norm_area = TRUE){
+            if (norm_area == TRUE)){
               mu_alpha <- paste0(" * (f_derivY", assoc_from, "[j])/X", assoc_to, "[,'", time_var, "']")
             } else {
               mu_alpha <- paste0(" * f_derivY", assoc_from, "[j]")
@@ -115,7 +115,7 @@ JAGSmodel <- function(families, hc, predicted, corr_RE,
 
           if (!is.null(extraForm)){
 
-            if (norm_area = TRUE){
+            if (norm_area == TRUE){
               mu_alpha <- paste0(" * (f_derivY", assoc_from, "[j])/X", assoc_to, "[,'", time_var, "']")
             } else {
               mu_alpha <- paste0(" * f_derivY", assoc_from, "[j]")
