@@ -118,7 +118,7 @@ JAGSmodel <- function(families, hc, predicted, corr_RE,
           if (!is.null(extraForm)){
 
             if (norm_area == TRUE){
-              ind_time_var <- c(1:dim(X1)[2])[colnames(Data1$X1) == time_var]
+              ind_time_var <- c(1:dim(Data1$X1)[2])[colnames(Data1$X1) == time_var]
               mu_alpha <- paste0(" * (f_derivY", assoc_from, "[j]/(X", assoc_to, "[j,", ind_time_var, "]+0.01))")
             } else {
               mu_alpha <- paste0(" * f_derivY", assoc_from, "[j]")
