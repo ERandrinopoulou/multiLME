@@ -288,6 +288,7 @@ mv_lme <- function(formulas, data, families, hc,
   #   ints
   # }
 
+  Data1$data <- data
   ####################
   # Build JAGS model #
   ####################
