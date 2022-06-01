@@ -1,6 +1,6 @@
 JAGSmodel <- function(families, hc, predicted, corr_RE,
                       assoc, assoc_from, assoc_to, extraForm, Data1,
-                      norm_area, time_var, data){
+                      norm_area, ind_time_var){
 
 
     K <- length(families)
@@ -46,8 +46,7 @@ JAGSmodel <- function(families, hc, predicted, corr_RE,
 
             if (norm_area == TRUE){
 
-              ind_time_var <- c(1:dim(Data1$X1)[2])[colnames(data) == time_var]
-              mu_alpha <- paste0(" * (f_derivY", assoc_from, "[j]/(data[j,", ind_time_var, "]+0.01))")
+              mu_alpha <- paste0(" * (f_derivY", assoc_from, "[j]/(data_var[j,", ind_time_var, "]+0.01))")
             } else {
               mu_alpha <- paste0(" * f_derivY", assoc_from, "[j]")
             }
@@ -118,8 +117,8 @@ JAGSmodel <- function(families, hc, predicted, corr_RE,
           if (!is.null(extraForm)){
 
             if (norm_area == TRUE){
-              ind_time_var <- c(1:dim(Data1$X1)[2])[colnames(Data1$X1) == time_var]
-              mu_alpha <- paste0(" * (f_derivY", assoc_from, "[j]/(data[j,", ind_time_var, "]+0.01))")
+
+              mu_alpha <- paste0(" * (f_derivY", assoc_from, "[j]/(data_var[j,", ind_time_var, "]+0.01))")
             } else {
               mu_alpha <- paste0(" * f_derivY", assoc_from, "[j]")
             }

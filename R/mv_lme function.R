@@ -288,13 +288,13 @@ mv_lme <- function(formulas, data, families, hc,
   #   ints
   # }
 
-  Data1$data <- data
+  Data$ind_time_var <- c(1:dim(data)[2])[colnames(data) == time_var]
   ####################
   # Build JAGS model #
   ####################
 
   JAGSmodel(families = families, hc, predicted, corr_RE,
-            assoc, assoc_from, assoc_to, extraForm, Data1, norm_area, time_var, data)
+            assoc, assoc_from, assoc_to, extraForm, Data, norm_area)
 
   #############
   # Fit model #
