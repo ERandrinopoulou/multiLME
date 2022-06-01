@@ -288,7 +288,7 @@ mv_lme <- function(formulas, data, families, hc,
   #   ints
   # }
 
-  Data$ind_time_var <- c(1:dim(data)[2])[colnames(data) == time_var]
+  Data$time_varbl <- data[, time_var]
   ####################
   # Build JAGS model #
   ####################
