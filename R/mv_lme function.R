@@ -7,6 +7,8 @@ mv_lme <- function(formulas, data, families, hc,
                    assoc_from = 2,
                    assoc_to = 1,
                    extraForm = NULL,
+                   norm_area = FALSE,
+                   time_var,
                    control = list(), ...){
 
   ########
@@ -291,7 +293,7 @@ mv_lme <- function(formulas, data, families, hc,
   ####################
 
   JAGSmodel(families = families, hc, predicted, corr_RE,
-            assoc, assoc_from, assoc_to, extraForm, Data1)
+            assoc, assoc_from, assoc_to, extraForm, Data1, norm_area, time_var)
 
   #############
   # Fit model #
