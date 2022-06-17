@@ -4,7 +4,8 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
                              assoc = TRUE,
                              assoc_from = assoc_from,
                              assoc_to = assoc_to,
-                             extraForm = NULL){
+                             extraForm = NULL,
+                             extraForm_tr = NULL){
 
     #newdata$id <- newdata[[IdVar]]
     #K <- length(families)
@@ -153,6 +154,25 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
 
     }
 
+    if (!is.null(extraForm_tr)){
+
+      mfX_derivY_tr <- model.frame(terms(extraForm_tr$fixed), data = newdata)
+      mfZ_derivY_tr <- model.frame(terms(extraForm_tr$random), data = newdata)
+      XderivY_tr <- model.matrix(extraForm_tr$fixed, mfX_derivY_tr)
+      ZderivY_tr <- model.matrix(extraForm_tr$random, mfZ_derivY_tr)
+
+      Data$deriv_fixed <- XderivY - XderivY_tr
+      Data$deriv_random <- ZderivY - ZderivY_tr
+
+      mfX_derivY_new_tr <- model.frame(terms(extraForm_tr$fixed), data = newdata_pred)
+      mfZ_derivY_new_tr <- model.frame(terms(extraForm_tr$random), data = newdata_pred)
+      XderivY_new_tr <- model.matrix(extraForm_tr$fixed, mfX_derivY_new_tr)
+      ZderivY_new_tr <- model.matrix(extraForm_tr$random, mfZ_derivY_new_tr)
+
+      Data$new_deriv_fixed <- XderivY_new - XderivY_new_tr
+      Data$new_deriv_random <- ZderivY_new - ZderivY_new_tr
+
+    }
 
     #####################
     # Obtain parameters #
