@@ -7,6 +7,7 @@ mv_lme <- function(formulas, data, families, hc,
                    assoc_from = 2,
                    assoc_to = 1,
                    extraForm = NULL,
+                   extraForm_tr = NULL,
                    norm_area = FALSE,
                    time_var,
                    control = list(), ...){
@@ -66,6 +67,18 @@ mv_lme <- function(formulas, data, families, hc,
 
     Data1$XderivY <- XderivY
     Data1$ZderivY <- ZderivY
+  }
+
+  if (!is.null(extraForm_tr)){
+
+    mfX_derivY_tr <- model.frame(terms(extraForm_tr$fixed), data = data)
+    mfZ_derivY_tr <- model.frame(terms(extraForm_tr$random), data = data)
+    XderivY_tr <- model.matrix(extraForm_tr$fixed, mfX_derivY_tr)
+    ZderivY_tr <- model.matrix(extraForm_tr$random, mfZ_derivY_tr)
+
+    Data1$XderivY <- XderivY - XderivY_tr
+    Data1$ZderivY <- ZderivY - ZderivY_tr
+
   }
 
 
