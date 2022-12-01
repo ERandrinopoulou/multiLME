@@ -99,6 +99,12 @@ mv_lme <- function(formulas, data, families, hc,
   datainvD <- paste0("priorR.D = priorR.D,
                       priorK.D = (ncZ + 1)")
 
+  # datainvD1 <- paste0("priorR.D1 = priorR.D1,
+  #                     priorK.D1 = (ncZ1 + 1)")
+  #
+  # datainvD2 <- paste0("priorR.D1 = priorR.D2,
+  #                     priorK.D2 = (ncZ2 + 1)")
+
   databet <- "string"
   m <- 1
   for (k in 1:K) {
@@ -157,6 +163,12 @@ mv_lme <- function(formulas, data, families, hc,
 
   priorR.D = matrix(0, ncZ, ncZ)
   diag(priorR.D) = priorD
+
+  # priorR.D1 = matrix(0, ncZ1, ncZ1)
+  # diag(priorR.D1) = priorD1
+  #
+  # priorR.D2 = matrix(0, ncZ2, ncZ2)
+  # diag(priorR.D2) = priorD2
 
   nX <- Data1[grep("ncx", names(Data1), fixed = TRUE)]
   betas <- lapply(nX, function(x) rep(0, x))
