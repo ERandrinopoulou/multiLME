@@ -103,6 +103,16 @@ mv_lme <- function(formulas, data, families, hc,
 
   datamu <- paste0(datamu, sep = "", collapse = ", ")
 
+  # INDEPENDENT RE NEW
+  if (corr_RE == FALSE) {
+    ind <- paste0("", seq_along(1:length(RE_inds)))
+    datamu <- paste0("mu0", ind, " = mu", ind, sep = ", ", collapse = "")
+    datamu <- paste0(datamu, sep = "", collapse = "")
+
+  }
+
+
+
   ncZ <- Data1$n_RE
 
 
@@ -172,6 +182,16 @@ mv_lme <- function(formulas, data, families, hc,
   mu_s <- paste0("mu", " <- ", mu)
   mu_s <- paste0(mu_s, sep = "; ", collapse = "")
   eval(parse(text = mu_s))
+
+  # INDEPENDENT RE NEW
+  if (corr_RE == FALSE) {
+    nZ <- Data1[grep("ncz", names(Data1), fixed = TRUE)]
+    mu <- paste0("rep(0, Data1$ncz", ind, ")")
+    mu_s <- paste0("mu", ind, " <- ", "c(", paste0(mu), ")")
+    mu_s <- paste0(mu_s, sep = "; ", collapse = "")
+    eval(parse(text = mu_s))
+  }
+
 
   priorD <- "NA"
   priorD_s <- paste0("priorD", " <- ", priorD)
