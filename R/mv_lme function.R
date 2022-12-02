@@ -55,6 +55,17 @@ mv_lme <- function(formulas, data, families, hc,
     diag(Data1$inv.D) <- NA
   }
 
+  # INDEPENDENT RE NEW
+  if (corr_RE == FALSE) {
+    indD <- paste0("RE_ind", seq_along(RE_inds))
+    ind <- paste0("", seq_along(1:length(RE_inds)))
+    inv.D_text <- paste0("Data1$inv.D", ind, " <- matrix(0, length(Data1$", indD,
+                         "), length(Data1$", indD, "))")
+    inv.D_text <- paste0(inv.D_text, sep = "; ", collapse = "")
+    eval(parse(text = inv.D_text))
+  }
+
+
   ########################################
   # Design matrices for parameterization #
   ########################################
@@ -99,11 +110,17 @@ mv_lme <- function(formulas, data, families, hc,
   datainvD <- paste0("priorR.D = priorR.D,
                       priorK.D = (ncZ + 1)")
 
-  # datainvD1 <- paste0("priorR.D1 = priorR.D1,
-  #                     priorK.D1 = (ncZ1 + 1)")
-  #
-  # datainvD2 <- paste0("priorR.D1 = priorR.D2,
-  #                     priorK.D2 = (ncZ2 + 1)")
+
+  # INDEPENDENT RE NEW
+  if (corr_RE == FALSE) {
+    ind <- paste0("", seq_along(1:length(RE_inds)))
+    inv.D_text_param <- paste0("priorR.D", ind, " = priorR.D", ind,
+                               ", priorK.D", ind, " = (Data1$ncz", ind, " + 1)")
+    datainvD <- paste0(inv.D_text_param, sep = "", collapse = ", ")
+  }
+
+
+
 
   databet <- "string"
   m <- 1
@@ -164,11 +181,18 @@ mv_lme <- function(formulas, data, families, hc,
   priorR.D = matrix(0, ncZ, ncZ)
   diag(priorR.D) = priorD
 
-  # priorR.D1 = matrix(0, ncZ1, ncZ1)
-  # diag(priorR.D1) = priorD1
-  #
-  # priorR.D2 = matrix(0, ncZ2, ncZ2)
-  # diag(priorR.D2) = priorD2
+  # INDEPENDENT RE NEW
+  if (corr_RE == FALSE) {
+    ind <- paste0("", seq_along(1:length(RE_inds)))
+    priorR.D_mat <- paste0("priorR.D", ind, " <- matrix(0, Data1$ncz", ind, ", Data1$ncz", ind, ")")
+    eval(parse(text = priorR.D_mat))
+  }
+
+  if (corr_RE == FALSE) {
+    ind <- paste0("", seq_along(1:length(RE_inds)))
+    priorR.D_text <- paste0("diag(priorR.D", ind, ") = priorD")
+    eval(parse(text = priorR.D_text))
+  }
 
   nX <- Data1[grep("ncx", names(Data1), fixed = TRUE)]
   betas <- lapply(nX, function(x) rep(0, x))

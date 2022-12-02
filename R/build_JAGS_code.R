@@ -21,9 +21,24 @@ JAGSmodel <- function(families, hc, predicted, corr_RE,
       longb
     }
 
+    # INDEPENDENT RE NEW
+    if (corr_RE == FALSE){
+      long_b <- function(k){
+        longb <- paste0("b", k, "[i, 1:Data1$ncz", k, "]", sep = "", collapse = "")
+        longb
+      }
+    }
+
     long_u <- function(k){
       longu <- paste0("u", k, "[i, 1:ncz", k, "]", sep = "", collapse = "")
       longu
+    }
+    # INDEPENDENT RE NEW
+    if (corr_RE == FALSE){
+      long_u <- function(k){
+        long_u <- paste0("u", k, "[i, ncz", k, "]", sep = "", collapse = "")
+        long_u
+      }
     }
 
     longCont <- function(k) {
@@ -171,6 +186,16 @@ JAGSmodel <- function(families, hc, predicted, corr_RE,
     beg <- paste0(myt(1), "for (i in 1:n) {\n",  sep = "", collapse = "")
     b <- paste0(beg, prior.b, collapse = "")
 
+
+    # INDEPENDENT RE NEW
+    if (corr_RE == FALSE) {
+      ind <- paste0("", seq_along(1:length(RE_inds)))
+      beg <- paste0(myt(), "for (i in 1:n", ind, ") {\n",  sep = "")
+      prior.b <- paste0(beg, myt(2), "b", ind, "[i, ", "1:n_RE", ind, "] ~ dmnorm(mu0", "[], inv.D", ind, "[, ])\n",  myt(), "} \n")
+      b <- paste0(prior.b, collapse = "")
+    }
+
+
     # #### HC
     # if (hc == TRUE) {
     #
@@ -283,6 +308,16 @@ JAGSmodel <- function(families, hc, predicted, corr_RE,
     prior.invD_uncorr <- paste0(myt(), "for (l in 1:n_RE) {\n",
                          myt(2), "inv.D[l, l] ~ dgamma(0.01, 0.01)\n",
                          myt(), "}\n")
+
+
+    # INDEPENDENT RE NEW
+    if (corr_RE == FALSE) {
+      ind <- paste0("", seq_along(1:length(RE_inds)))
+      beg <- paste0(myt(), "for (i in 1:n_RE", ind, ") {\n",  sep = "")
+      prior.invD_uncorr <- paste0(beg, myt(2), "inv.D", ind, "[l, l] ~ dgamma(0.01, 0.01) }\n",  myt(), "} \n")
+      prior.invD_uncorr <- paste0(prior.invD_uncorr, collapse = "")
+    }
+
 
     if (assoc == TRUE){
       priors <- function(k) {
