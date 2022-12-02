@@ -106,7 +106,7 @@ mv_lme <- function(formulas, data, families, hc,
   # INDEPENDENT RE NEW
   if (corr_RE == FALSE) {
     ind <- paste0("", seq_along(1:length(RE_inds)))
-    datamu <- paste0("mu0", ind, " = mu", ind, sep = ", ", collapse = "")
+    datamu <- paste0("mu0", ind, " = mu", ind, sep = "", collapse = ", ")
     datamu <- paste0(datamu, sep = "", collapse = "")
 
   }
