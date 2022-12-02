@@ -63,6 +63,8 @@ mv_lme <- function(formulas, data, families, hc,
                          "), length(Data1$", indD, "))")
     inv.D_text <- paste0(inv.D_text, sep = "; ", collapse = "")
     eval(parse(text = inv.D_text))
+    inv.D_text <- paste0("diag(Data1$inv.D", ind, ") <- NA")
+    eval(parse(text = inv.D_text))
   }
 
 
