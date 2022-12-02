@@ -305,15 +305,15 @@ JAGSmodel <- function(families, hc, predicted, corr_RE,
                          myt(2), "priorR.D[l, l] ~ dgamma(0.5, 0.01)\n",
                          myt(), "}\n")
 
-    prior.invD_uncorr <- paste0(myt(), "for (l in 1:n_RE) {\n",
-                         myt(2), "inv.D[l, l] ~ dgamma(0.01, 0.01)\n",
-                         myt(), "}\n")
+    # prior.invD_uncorr <- paste0(myt(), "for (l in 1:n_RE) {\n",
+    #                      myt(2), "inv.D[l, l] ~ dgamma(0.01, 0.01)\n",
+    #                      myt(), "}\n")
 
 
     # INDEPENDENT RE NEW
     if (corr_RE == FALSE) {
       ind <- paste0("", seq_along(1:length(RE_inds)))
-      beg <- paste0(myt(), "for (i in 1:n_RE", ind, ") {\n",  sep = "")
+      beg <- paste0(myt(), "for (l in 1:n_RE", ind, ") {\n",  sep = "")
       prior.invD_uncorr <- paste0(beg, myt(2), "inv.D", ind, "[l, l] ~ dgamma(0.01, 0.01) }\n",  myt(), "} \n")
       prior.invD_uncorr <- paste0(prior.invD_uncorr, collapse = "")
     }
