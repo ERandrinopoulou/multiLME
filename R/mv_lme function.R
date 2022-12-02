@@ -309,7 +309,19 @@ mv_lme <- function(formulas, data, families, hc,
     params_betas <- c(params_betas, paste0("tau", which(ind_gs)), paste0("sigma", which(ind_gs)))
   }
   params_b <- paste0('b')
+
+  # INDEPENDENT RE NEW
+  if (corr_RE == FALSE) {
+    ind <- paste0("", seq_along(1:length(RE_inds)))
+    params_b <- paste0('b', ind)
+  }
+
   params_invD <- paste0('inv.D')
+
+  if (corr_RE == FALSE) {
+    ind <- paste0("", seq_along(1:length(RE_inds)))
+    params_invD <- paste0('inv.D', ind)
+  }
 
   if (assoc == TRUE){
     params_alpha <- paste0('alpha', assoc_to, assoc_from)

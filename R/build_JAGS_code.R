@@ -313,8 +313,8 @@ JAGSmodel <- function(families, hc, predicted, corr_RE,
     # INDEPENDENT RE NEW
     if (corr_RE == FALSE) {
       ind <- paste0("", seq_along(1:length(RE_inds)))
-      beg <- paste0(myt(), "for (l in 1:ncz", ind, ") {\n",  sep = "")
-      prior.invD_uncorr <- paste0(beg, myt(2), "inv.D", ind, "[l, l] ~ dgamma(0.01, 0.01) \n",  myt(), "} \n")
+      beg <- paste0(myt(), "for (l", ind, " in 1:ncz", ind, ") {\n",  sep = "")
+      prior.invD_uncorr <- paste0(beg, myt(2), "inv.D", ind, "[l", ind, ", l", ind, "] ~ dgamma(0.01, 0.01) \n",  myt(), "} \n")
       prior.invD_uncorr <- paste0(prior.invD_uncorr, collapse = "")
     }
 
