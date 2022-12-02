@@ -190,8 +190,8 @@ JAGSmodel <- function(families, hc, predicted, corr_RE,
     # INDEPENDENT RE NEW
     if (corr_RE == FALSE) {
       ind <- paste0("", seq_along(1:length(RE_inds)))
-      beg <- paste0(myt(), "for (i in 1:n", ind, ") {\n",  sep = "")
-      prior.b <- paste0(beg, myt(2), "b", ind, "[i, ", "1:ncz", ind, "] ~ dmnorm(mu0", ind, "[], inv.D", ind, "[, ])\n",  myt(), "} \n")
+      beg <- paste0(myt(), "for (i", ind, " in 1:n", ind, ") {\n",  sep = "")
+      prior.b <- paste0(beg, myt(2), "b", ind, "[i", ind, "1:ncz", ind, "] ~ dmnorm(mu0", ind, "[], inv.D", ind, "[, ])\n",  myt(), "} \n")
       b <- paste0(prior.b, collapse = "")
     }
 
