@@ -24,7 +24,7 @@ JAGSmodel <- function(families, hc, predicted, corr_RE,
     # INDEPENDENT RE NEW
     if (corr_RE == FALSE){
       long_b <- function(k){
-        longb <- paste0("b", k, "[i, 1:$ncz", k, "]", sep = "", collapse = "")
+        longb <- paste0("b", k, "[i, 1:ncz", k, "]", sep = "", collapse = "")
         longb
       }
     }
