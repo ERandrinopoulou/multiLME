@@ -104,6 +104,78 @@ JAGSmodel <- function(families, hc, predicted, corr_RE,
              if (predicted == TRUE) {long3_pred}, myt(2), "}\n", myt(1), "}\n")
     }
 
+
+    #######################
+    # For uncorrelated RE #
+    #######################
+
+    if (corr_RE == FALSE){
+      longCont <- function(k) {
+        longStart1 <- paste0(myt(1), "for (i in 1:n", k, ") {\n" )
+        longStart2 <- paste0(myt(2), "for (j in offset", k, "[i]:(offset", k, "[i+1] - 1)) {\n" )
+        long2 <- paste0(myt(3), "muy", k, "[j] <- inprod(", paste0(long_betas(k), collapse = " + "), ", Xc", k, "[j, 1:ncx", k, "]) +\n", myt(4),
+                        " inprod(", paste0(long_b(k), sep = "", collapse = " + "), ", Z", k, "[j, 1:ncz", k, "])\n")
+        if (assoc == TRUE) {
+
+          if (k %in% assoc_from) {
+            if (!is.null(extraForm)){
+              paramtr <- paste0(myt(3), "f_derivY", k, "[j] <- betas", k, "[", extraForm$indFixed, "] * XderivY[j, ] + b", k, "[i, ",
+                                eval(parse(text = paste("extraForm$indFixed"))), "] * ZderivY[j,]\n")
+            }
+          }
+
+          if (k %in% assoc_to) {
+
+            if (!is.null(extraForm)){
+
+              if (norm_area == TRUE){
+
+                mu_alpha <- paste0(" * (f_derivY", assoc_from, "[j]/(time_varbl[j]+0.01))")
+              } else {
+                mu_alpha <- paste0(" * f_derivY", assoc_from, "[j]")
+              }
+
+            } else {
+              mu_alpha <- paste0(" * muy", assoc_from, "[j]")
+            }
+
+            long2 <- paste0(myt(3), "muy", k, "[j] <- inprod(", paste0(long_betas(k), collapse = " + "), ", Xc", k, "[j, 1:ncx", k, "]) +\n", myt(4),
+                            " inprod(", paste0(long_b(k), sep = "", collapse = " + "), ", Z", k, "[j, 1:ncz", k, "])")
+            alphast <- paste0(" + alpha", k, assoc_from, mu_alpha)
+            alphast <- paste0(alphast, collapse = "")
+            long2 <- paste0(long2, if(!is.null(extraForm) & (k %in% assoc_from) ){ paste0(paramtr, collapse = "") }, alphast, "\n")
+          }
+        }
+
+        if (k %in% assoc_from) {
+          if (!is.null(extraForm)){
+            # paramtr <- paste0(myt(3), "f_derivY", k, "[j] <- betas", k, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
+            #                   eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indFixed]"))), "] * ZderivY[j,]\n")
+            paramtr <- paste0(myt(3), "f_derivY", k, "[j] <- betas", k, "[", if (length(  extraForm$indFixed) > 1) {
+              paste0("c(", paste0(extraForm$indFixed, collapse = ","), ")" )
+            } else { extraForm$indFixed }, "] %*% XderivY[j, ] + b", k, "[i, ",
+            if (length( eval(parse(text = paste0("extraForm$indRandom")))) > 1) {
+              ind <- eval(parse(text = paste0("extraForm$indRandom")))
+              paste0("c(", paste0(ind, collapse = ","), ")" )
+            } else { eval(parse(text = paste0("extraForm$indRandom"))) }  , "] %*% ZderivY[j,]\n")
+
+          }
+        }
+
+        long2hier <- paste0(myt(3), "muy", k, "[j] <- inprod(", paste0(long_u(k), sep = "", collapse = " + "), ", Z", k, "[j, 1:ncz", k, "])\n")
+
+        long3 <- paste0(myt(3), "y", k, "[j] ~ dnorm(muy", k, "[j], tau", k, ")\n")
+        long3_pred <- paste0(myt(3), "y", k, "_pred[j] ~ dnorm(muy", k, "[j], tau", k, ")\n")
+
+        longEnd <- paste0(myt(1), "}\n")
+        paste0(longStart1, longStart2, if (hc == "TRUE") {paste0(long2hier)} else {paste0(long2)}, if(!is.null(extraForm) & (k %in% assoc_from) ){ paste0(paramtr, collapse = "") },
+               long3,
+               if (predicted == TRUE) {long3_pred}, myt(2), "}\n", myt(1), "}\n")
+      }
+    }
+    #######################
+
+
     longBin <- function(k) {
       alphast <- " + alpha * muy2[j]"
       longStart1 <- paste0(myt(1), "for (i in 1:n", k, ") {\n" )
@@ -166,6 +238,76 @@ JAGSmodel <- function(families, hc, predicted, corr_RE,
              long3, long4,
              if (predicted == TRUE) {long4_pred}, myt(2), "}\n", myt(1), "}\n")
     }
+
+    #######################
+    # For uncorrelated RE #
+    #######################
+    if (corr_RE == FALSE){
+      longBin <- function(k) {
+        alphast <- " + alpha * muy2[j]"
+        longStart1 <- paste0(myt(1), "for (i in 1:n", k, ") {\n" )
+        longStart2 <- paste0(myt(2), "for (j in offset", k, "[i]:(offset", k, "[i+1] - 1)) {\n" )
+        long2 <- paste0(myt(3), "muy", k, "[j] <- inprod(", paste0(long_betas(k), collapse = " + "), ", Xc", k, "[j, 1:ncx", k, "]) +\n", myt(4),
+                        " inprod(", paste0(long_b(k), sep = "", collapse = " + "), ", Z", k, "[j, 1:ncz", k, "])\n")
+        if (assoc == TRUE) {
+
+          if (k %in% assoc_from) {
+            if (!is.null(extraForm)){
+              #   paramtr <- paste0(myt(3), "f_derivY", k, "[j] <- betas", k, "[", extraForm$indFixed, "] * XderivY[j, ] + b[i, ",
+              #                     eval(parse(text = paste0("Data1$RE_ind", k, "[extraForm$indFixed]"))), "] * ZderivY[j,]\n")
+              paramtr <- paste0(myt(3), "f_derivY", k, "[j] <- betas", k, "[", if (length(  extraForm$indFixed) > 1) {
+                paste0("c(", paste0(extraForm$indFixed, collapse = ","), ")" )
+              } else { extraForm$indFixed }, "] %*% XderivY[j, ] + b", k, "[i, ",
+              if (length( eval(parse(text = paste0("extraForm$indRandom")))) > 1) {
+                ind <- eval(parse(text = paste0("extraForm$indRandom")))
+                paste0("c(", paste0(ind, collapse = ","), ")" )
+              } else { eval(parse(text = paste0("extraForm$indRandom"))) }  , "] %*% ZderivY[j,]\n")
+
+            }
+          }
+
+          if (k %in% assoc_to) {
+
+            if (!is.null(extraForm)){
+
+              if (norm_area == TRUE){
+
+                mu_alpha <- paste0(" * (f_derivY", assoc_from, "[j]/(time_varbl[j,", ind_time_var, "]+0.01))")
+              } else {
+                mu_alpha <- paste0(" * f_derivY", assoc_from, "[j]")
+              }
+
+            } else {
+              mu_alpha <- paste0(" * muy", assoc_from, "[j]")
+            }
+
+            long2 <- paste0(myt(3), "muy", k, "[j] <- inprod(", paste0(long_betas(k), collapse = " + "), ", Xc", k, "[j, 1:ncx", k, "]) +\n", myt(4),
+                            " inprod(", paste0(long_b(k), sep = "", collapse = " + "), ", Z", k, "[j, 1:ncz", k, "])")
+            alphast <- paste0(" + alpha", k, assoc_from, mu_alpha)
+            alphast <- paste0(alphast, collapse = "")
+            long2 <- paste0(long2, if (!is.null(extraForm) & (k %in% assoc_from) ){ paste0(paramtr, collapse = "") }, alphast, collapse = " ")
+          }
+        }
+
+        if (k %in% assoc_from) {
+          if (!is.null(extraForm)){
+            paramtr <- paste0(myt(3), "f_derivY", k, "[j] <- betas", k, "[", extraForm$indFixed, "] * XderivY[j, ] + b", k, "[i, ",
+                              eval(parse(text = paste0("extraForm$indFixed"))), "] * ZderivY[j,]\n")
+          }
+        }
+
+        long2hier <- paste0(myt(3), "muy", k, "[j] <- inprod(", paste0(long_u(k), sep = "", collapse = "+ "), ", Z", k, "[j, 1:ncz", k, "] )\n")
+
+        long3 <- paste0(myt(3), "Pr", k, "[j] <- max(1.00000E-05, min(0.99999, (exp(muy", k, "[j])/(1 + exp(muy", k, "[j])))))\n")
+        long4 <- paste0(myt(3), "y", k, "[j] ~ dbin(Pr", k, "[j], 1)\n")
+        long4_pred <- paste0(myt(3), "y", k, "_pred[j] ~ dbin(Pr", k, "[j], 1)\n")
+        paste0(longStart1, longStart2, if (hc == "TRUE") {paste0(long2hier)} else {paste0(long2)}, if(!is.null(extraForm) & (k %in% assoc_from) ){ paste0(paramtr, collapse = "") },
+               long3, long4,
+               if (predicted == TRUE) {long4_pred}, myt(2), "}\n", myt(1), "}\n")
+      }
+    }
+    #######################
+
 
 
     long <- NULL
