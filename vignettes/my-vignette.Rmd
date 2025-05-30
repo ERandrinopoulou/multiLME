@@ -1,0 +1,156 @@
+---
+title: "multiLME-vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{multiLME-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, warning = FALSE, echo = TRUE, results = 'hide'}
+devtools::install_github("ERandrinopoulou/multiLME", dependencies = FALSE, force = TRUE)
+
+library(JMbayes2)
+library(jagsUI)
+library(multiLME)
+library(lattice)
+```
+
+Let's assume that we want to fit the following multivariate mixed-effects model:
+
+$$
+y_{i2}(t) = x_{i2}^\top (t) \beta_2 + z_{i2}^\top (t) b_{i2} + \epsilon_{i2} = m_{i2}(t) + \epsilon_{i2}(t),\\
+y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} + \epsilon_{i1} = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
+$$
+
+In particular, in includes the underlying value of outcome 2 in the mixed-effects model of outcome 1.
+
+First we simulate some data:
+```{r simulate}
+n = 100 
+
+K <- 10  # number of planned repeated measurements per subject, per outcome
+t.max <- 10 # maximum follow-up time
+
+################################################
+# parameters for the linear mixed effects model 1
+betaa1 <- c("(Intercept)" = 3.01, "Time1" = 0.47, "Group" = -2)
+sigma1.y <- 1.017671  # measurement error standard deviation
+
+# parameters for the linear mixed effects model 
+betaa2 <- c("(Intercept)" = 2.15, "Time1" = 0.91)
+sigma2.y <- 1  # measurement error standard deviation
+
+# association parameter
+alphaa <- 0.9 # association parameter - value
+
+# Variance-covariance matrix for random effects
+invDvec <- c(1, 0, 0, 0,
+             0, 1, 0, 0,
+             0, 0, 1, 0,
+             0, 0, 0, 1)
+
+invDmat <- matrix(invDvec, 4, 4)
+D <- solve(invDmat)
+
+################################################
+# design matrices for the longitudinal measurement model
+times <- c(replicate(n, c(0, sort(runif(K-1, 0, t.max))))) 
+group <- sample(c(0,1), n, replace = TRUE)
+
+DF <- data.frame(year = times, drug = factor(rep(group, each = K)))
+
+X1 <- model.matrix(~ year + drug, data = DF)
+Z1 <- model.matrix(~ year, data = DF)
+
+X2 <- model.matrix(~ year, data = DF)
+Z2 <- model.matrix(~ year, data = DF)
+
+#simulate random effects
+library(MASS)
+
+b <- mvrnorm(n, rep(0, nrow(D)), D)
+
+# simulate longitudinal responses
+id <- rep(1:n, each = K)
+
+eta.y2 <- as.vector(X2 %*% betaa2 + rowSums(Z2 * b[id, 3:4])) 
+y2 <- rnorm(n * K, eta.y2, sigma2.y)
+
+eta.y1 <- as.vector(X1 %*% betaa1 + rowSums(Z1 * b[id, 1:2])) + alphaa * eta.y2 
+y1 <- rnorm(n * K, eta.y1, sigma1.y)
+
+dat <- DF[, ]
+dat$id <- id
+dat$y1 <- y1
+dat$y2 <- y2
+
+names(dat) <- c("year", "drug", "id", "y1", "y2")
+
+dat.id <- dat[tapply(row.names(dat), dat$id, tail, 1), ]
+
+data <- dat
+data.id <- dat.id
+```
+
+Then, we can run the multivariate model as follows:
+```{r model, cache = TRUE}
+extraForm <- NULL
+  
+formulas <- list(y1 ~ year + drug + (year | id),
+                 y2 ~ year + (year | id))
+data <- data
+families <- c("gaussian", "gaussian")
+hc <- FALSE
+predicted <- FALSE
+assoc_from = 2
+assoc_to = 1
+  
+fit <- mv_lme(formulas = formulas, data = data, 
+                     families = families, 
+                     hc = hc, predicted = predicted, corr_RE = FALSE,
+                     parameters.b = FALSE,
+                     assoc = TRUE,
+                     assoc_from = assoc_from,
+                     assoc_to = assoc_to,
+                     extraForm = extraForm)
+```
+
+To obtain results run for example fit$postMeans. 
+
+
+Let's now assume that we want to obtain individualized predictions:
+
+```{r predictions}
+object = fit
+newdata_all = data[data$id == 1, ]
+newdata <- newdata_all[1:6,]
+
+res_pred <- DynPred_mv_lme(object = fit, newdata = newdata, families, hc,
+                           level = 0.95, IdVar = "id", timeVar = "year",
+                           M = 200, times = NULL,
+                           assoc = TRUE,
+                           assoc_from = assoc_from,
+                           assoc_to = assoc_to,
+                           extraForm = extraForm)
+
+
+
+xyplot(res_pred$Mean1 + res_pred$Lower1 + res_pred$Upper1 ~ res_pred$Time,
+       xlim = c(0, 10), 
+       ylim = c(min(y1), max(y1)), 
+       strip = FALSE, xlab = "Year", ylab = "Y1",
+       lwd = c(3, 2, 2), lty = c(1, 3, 3), type = "l", col = 1,
+       panel = function(x, y,  ...) {
+         panel.xyplot(x, y, ...)
+         panel.abline(v = max(newdata$year), col = 2, lty = 2)
+         panel.points(newdata_all$year, newdata_all$y1, pch = 16, cex = 0.8, col = "blue")
+         })
+```
