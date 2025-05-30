@@ -1,14 +1,6 @@
-base
-methods
-datasets
-utils
-grDevices
-graphics
-stats
 survival
 nlme
 GLMMadaptive
-splines
 JMbayes2
 jagsUI
 multiLME
