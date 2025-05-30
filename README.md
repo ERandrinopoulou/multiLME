@@ -5,3 +5,5 @@ This package fits multivariate mixed effects models with association parameters.
 Useful functions:
 - mv_lme: multivariate mixed effects models with association parameters
 - DynPred_mv_lme: dynamic individual predictions
+
+Check examples at <code>browseVignettes("multiLME")</code>
