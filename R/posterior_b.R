@@ -49,8 +49,8 @@ log_post_b_EB <- function (b_i, y_i, X_i, Z_i, Sigma,
       #c(0.5 * crossprod(b_i, invD) %*% b_i)
   }
 
-  return(unique(-(sum(unlist(log_post_y)) -
-    c(0.5 * crossprod(b_i, invD) %*% b_i))))
+  return(as.numeric(-(sum(unlist(log_post_y)) - 0.5 * crossprod(b_i, invD) %*% b_i))
+)
 
 }
 
