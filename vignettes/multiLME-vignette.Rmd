@@ -130,7 +130,7 @@ assoc_from: indicate which longitudinal outcome should be used as covariate (def
 assoc_to: indicate the main longitudinal model that includes the other longitudinal outcomes as covariates (default: 1)
 extraForm: indicate the form of association (dedfault: NULL, for NULL the value is assumed - see below more examples)
 extraForm_tr: the truncated period (defaul: NULL)
-norm_area: TRUE/FALSE whether the normalized area should be used (defaul: FALSE, Note: for prediction this is under construction)
+norm_area: TRUE/FALSE whether the normalized area should be used (defaul: FALSE, Note: under construction)
 time_var: time variable
 
 For control check jagsUI::jags. Defaults are presented below:
