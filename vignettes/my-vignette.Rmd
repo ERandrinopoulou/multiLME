@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, warning = FALSE, echo = TRUE, results = 'hide'}
-devtools::install_github("ERandrinopoulou/multiLME", dependencies = FALSE, force = TRUE)
+devtools::install_github("ERandrinopoulou/multiLME", dependencies = TRUE, force = TRUE)
 
 library(JMbayes2)
 library(jagsUI)
