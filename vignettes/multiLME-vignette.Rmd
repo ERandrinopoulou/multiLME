@@ -116,66 +116,76 @@ fit <- mv_lme(formulas = formulas, data = data,
                      extraForm = NULL)
 ```
 
-A detailed explanation of the arguments is presented below.
-formulas: indicate the formula of the longitudinal models we want to run (without the association)
-data: data
-families: the families of the outcomes (works for "guassian")
-hc: TRUE/FALSE whether hierarchical centering should be applied (default: FALSE, TRUE option under construction)
-predicted: TRUE/FALSE whether the predicted values should be saved (default: FALSE)
-corr_RE: whether correlation between the random effects should be assumed via ac common variance-covariance matrix (default: TRUE)
-engine: only JAGS is supported for now 
-parameters.b: whether the random effects parameters should be saved (default: FALSE)
-assoc: whether an association parameter between the longitudinal outcomesshould be assumed (default: TRUE)
-assoc_from: indicate which longitudinal outcome should be used as covariate (default: 2)
-assoc_to: indicate the main longitudinal model that includes the other longitudinal outcomes as covariates (default: 1)
-extraForm: indicate the form of association (dedfault: NULL, for NULL the value is assumed - see below more examples)
-extraForm_tr: the truncated period (defaul: NULL)
-norm_area: TRUE/FALSE whether the normalized area should be used (defaul: FALSE, Note: under construction)
-time_var: time variable
+A detailed explanation of the arguments is presented below.\
 
-For control check jagsUI::jags. Defaults are presented below:
-n.processors = parallel::detectCores() - 1
-working.directory = getwd()
-clear.model = TRUE
-seed = 1L
-optimize_only = FALSE
-verbose = FALSE
-n.iter = 28000L
-n.burnin = 3000L
-n.thin = 50L
-n.adapt = 3000L
-n.chains = 2L
-seed = 1L
-n.cores = 1L
+<code>formulas</code>: indicate the formula of the longitudinal models we want to run (without the association)\
+<code>data</code>: data\
+<code>families</code>: the families of the outcomes (works for "guassian")\
+<code>hc</code>: TRUE/FALSE whether hierarchical centering should be applied (default: FALSE, TRUE option under construction)\
+<code>predicted</code>: TRUE/FALSE whether the predicted values should be saved (default: FALSE)\
+<code>corr_RE</code>: whether correlation between the random effects should be assumed via ac common variance-covariance matrix (default: TRUE)\
+<code>engine</code>: only JAGS is supported for now \
+<code>parameters.b</code>: whether the random effects parameters should be saved (default: FALSE)\
+<code>assoc</code>: whether an association parameter between the longitudinal outcomesshould be assumed (default: TRUE)\
+<code>assoc_from</code>: indicate which longitudinal outcome should be used as covariate (default: 2)\
+<code>assoc_to</code>: indicate the main longitudinal model that includes the other longitudinal outcomes as covariates (default: 1)\
+<code>extraForm</code>: indicate the form of association (dedfault: NULL, for NULL the value is assumed - see below more examples)\
+<code>extraForm_tr</code>: the truncated period (defaul: NULL)\
+<code>norm_area</code>: TRUE/FALSE whether the normalized area should be used (defaul: FALSE, Note: under construction)\
+<code>time_var</code>: time variable\
+\
+
+For control check <code>jagsUI::jags</code>. Defaults are presented below:\
+<code>n.processors</code>: parallel::detectCores() - 1\
+<code>working.directory</code>: getwd()\
+<code>clear.model</code>: TRUE\
+<code>seed</code>: 1L\
+<code>optimize_only</code>: FALSE\
+<code>verbose</code>: FALSE\
+<code>n.iter</code>: 28000L\
+<code>n.burnin</code>: 3000L\
+<code>n.thin</code>: 50L\
+<code>n.adapt</code>: 3000L\
+<code>n.chains</code>: 2L\
+<code>seed</code>: 1L\
+<code>n.cores</code>: 1L\
 
 To obtain results run for example fit$postMeans. 
 
 
 Let's now assume that we want to obtain individualized predictions:
 
-```{r predictions, cache = TRUE}
+```{r predictions, cache = TRUE, animation.hook='gifski'}
+
+library(gifski)
+
 object = fit
 newdata_all = data[data$id == 1, ]
 newdata <- newdata_all[1:6,]
 
-res_pred <- DynPred_mv_lme(object = fit, newdata = newdata, families, hc,
-                           level = 0.95, IdVar = "id", timeVar = "year",
-                           M = 200, times = NULL,
-                           assoc = TRUE,
-                           assoc_from = 2,
-                           assoc_to = 1,
-                           extraForm = NULL)
+for (i in 1:dim(newdata)[1]){
+  res_pred <- DynPred_mv_lme(object = fit, newdata = newdata[1:i,], families, hc,
+                             level = 0.95, IdVar = "id", timeVar = "year",
+                             M = 200, times = NULL,
+                             assoc = TRUE,
+                             assoc_from = 2,
+                             assoc_to = 1,
+                             extraForm = NULL)
 
 
 
-xyplot(res_pred$Mean1 + res_pred$Lower1 + res_pred$Upper1 ~ res_pred$Time,
-       xlim = c(0, 10), 
-       ylim = c(min(y1), max(y1)), 
-       strip = FALSE, xlab = "Year", ylab = "Y1",
-       lwd = c(3, 2, 2), lty = c(1, 3, 3), type = "l", col = 1,
-       panel = function(x, y,  ...) {
-         panel.xyplot(x, y, ...)
-         panel.abline(v = max(newdata$year), col = 2, lty = 2)
-         panel.points(newdata_all$year, newdata_all$y1, pch = 16, cex = 0.8, col = "blue")
-         })
+  p1 <- xyplot(res_pred$Mean1 + res_pred$Lower1 + res_pred$Upper1 ~ res_pred$Time,
+         xlim = c(0, 10), 
+         ylim = c(min(y1), max(y1)), 
+         strip = FALSE, xlab = "Year", ylab = "Y1",
+         lwd = c(3, 2, 2), lty = c(1, 3, 3), type = "l", col = 1,
+         panel = function(x, y,  ...) {
+           panel.xyplot(x, y, ...)
+           panel.abline(v = max(newdata$year), col = 2, lty = 2)
+           panel.points(newdata_all$year, newdata_all$y1, pch = 16, cex = 0.8, col = "blue")
+           })
+  print(p1)
+}
+
+
 ```
