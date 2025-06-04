@@ -60,7 +60,7 @@ log_post_b_EB <- function (b_i, y_i, X_i, Z_i, Sigma,
 log_post_b_MCMC <- function (b_i, y_i, X_i, Z_i, Sigma,
                         betas, invD, alphas, log_dens, Data,
                         assoc, assoc_to, assoc_from, extraForm, extraForm_tr,
-                        extraForm, XderivY_i, ZderivY_i) {
+                        XderivY_i, ZderivY_i) {
   log_post_y <- list()
   eta_y <- list()
   deriv_eta_y <- list()
