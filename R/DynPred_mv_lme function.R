@@ -420,8 +420,12 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
                                                                 Data$n_RE_pred, Data$n_RE_pred),
                                             Sigma = lapply(mcmc[grep("sigma", names(mcmc), fixed = TRUE)], function(x) x[m]),
                                             alphas = lapply(mcmc[grep("alpha", names(mcmc), fixed = TRUE)], function(x) x[m]),
-                                            log_dens = log_denss, Data = Data, assoc = assoc,
+                                            log_dens = log_denss, Data = Data,
+                                            assoc = assoc,
+                                            assoc_from,
+                                            assoc_to,
                                             extraForm = extraForm,
+                                            extraForm_tr = extraForm_tr,
                                             XderivY_i = Data[grep("deriv_fixed", names(Data), fixed = TRUE)],
                                             ZderivY_i = Data[grep("deriv_random", names(Data), fixed = TRUE)]
                                             )
