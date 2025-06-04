@@ -33,7 +33,7 @@ $$
 In particular, in includes the underlying value of outcome 2 in the mixed-effects model of outcome 1.
 
 First we simulate some data:
-```{r simulate}
+```{r simulate, cache = TRUE}
 n = 100 
 
 K <- 10  # number of planned repeated measurements per subject, per outcome
@@ -128,7 +128,7 @@ To obtain results run for example fit$postMeans.
 
 Let's now assume that we want to obtain individualized predictions:
 
-```{r predictions}
+```{r predictions, cache = TRUE}
 object = fit
 newdata_all = data[data$id == 1, ]
 newdata <- newdata_all[1:6,]
