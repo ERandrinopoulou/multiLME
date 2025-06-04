@@ -1,7 +1,7 @@
 log_post_b_EB <- function (b_i, y_i, X_i, Z_i, Sigma,
-                        betas, invD, alphas, log_dens, Data = Data, assoc = assoc,
-                        extraForm, XderivY_i, ZderivY_i,
-                        assoc, assoc_from, assoc_to, extraForm, extraForm_tr) {
+                        betas, invD, alphas, log_dens, Data = Data,
+                        XderivY_i, ZderivY_i,
+                        assoc, assoc_to, assoc_from, extraForm, extraForm_tr) {
 
   log_post_y <- list()
   eta_y <- list()

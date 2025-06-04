@@ -257,7 +257,11 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
                    log_dens = log_denss,
                    hessian = TRUE,
                    assoc = assoc,
+                   assoc_from = assoc_from,
+                   assoc_to = assoc_to,
                    extraForm = extraForm,
+                   extraForm_tr = extraForm_tr,
+
                    XderivY_i = Data[grep("deriv_fixed", names(Data), fixed = TRUE)],
                    ZderivY_i = Data[grep("deriv_random", names(Data), fixed = TRUE)]
     )
