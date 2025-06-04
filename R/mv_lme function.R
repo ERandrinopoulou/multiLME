@@ -1,4 +1,5 @@
-mv_lme <- function(formulas, data, families, hc,
+mv_lme <- function(formulas, data, families,
+                   hc = FALSE,
                    predicted = FALSE,
                    corr_RE = TRUE,
                    engine = "JAGS",

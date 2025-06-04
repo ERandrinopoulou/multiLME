@@ -102,26 +102,38 @@ data.id <- dat.id
 
 Then, we can run the multivariate model as follows:
 ```{r model, cache = TRUE}
-extraForm <- NULL
-  
 formulas <- list(y1 ~ year + drug + (year | id),
                  y2 ~ year + (year | id))
-data <- data
 families <- c("gaussian", "gaussian")
-hc <- FALSE
-predicted <- FALSE
-assoc_from = 2
-assoc_to = 1
+
   
 fit <- mv_lme(formulas = formulas, data = data, 
                      families = families, 
-                     hc = hc, predicted = predicted, corr_RE = FALSE,
+                     hc = FALSE,
+                     corr_RE = FALSE,
                      parameters.b = FALSE,
                      assoc = TRUE,
-                     assoc_from = assoc_from,
-                     assoc_to = assoc_to,
-                     extraForm = extraForm)
+                     assoc_from = 2,
+                     assoc_to = 1,
+                     extraForm = NULL)
 ```
+
+A detailed explanation of the arguments is presented below.
+formulas: indicate the formula of the longitudinal models we want to run (without the association)
+data: data
+families: the families of the outcomes (works for "guassian")
+hc: TRUE/FALSE whether hierachical centering should be applied (TRUE option under construction)
+predicted: TRUE/FALSE whether the predicted values should be saved
+corr_RE: whether correlation between the random effects should be assumed via ac common variance-covariance matrix
+engine: only JAGS is supported for now
+parameters.b: whether the random effects parameters should be saved
+assoc: whether an association parameter between the longitudinal outcomesshould be assumed
+assoc_from: indicate which longitudinal outcome should be used as covariate
+assoc_to: indicate the main longitudinal model that includes the other longitudinal outcomes as covariates
+extraForm: indicate the form of association (e.g., if NULL then the value is assumed, see below more examples)
+extraForm_tr: whether a trancated structure should be assumed
+norm_area: TRUE/FALSE whether the normalized area should be used (Note: for prediction this is under construction)
+time_var: time variable
 
 To obtain results run for example fit$postMeans. 
 
