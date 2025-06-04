@@ -2,8 +2,8 @@ DynPred_mv_lme <- function(object, newdata, families, hc,
                              level = 0.95, IdVar, timeVar,
                              M = 200, times = NULL,
                              assoc = TRUE,
-                             assoc_from = assoc_from,
-                             assoc_to = assoc_to,
+                             assoc_from,
+                             assoc_to,
                              extraForm = NULL,
                              extraForm_tr = NULL){
 

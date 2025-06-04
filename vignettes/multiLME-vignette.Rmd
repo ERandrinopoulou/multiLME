@@ -109,9 +109,7 @@ families <- c("gaussian", "gaussian")
   
 fit <- mv_lme(formulas = formulas, data = data, 
                      families = families, 
-                     hc = FALSE,
                      corr_RE = FALSE,
-                     parameters.b = FALSE,
                      assoc = TRUE,
                      assoc_from = 2,
                      assoc_to = 1,
@@ -122,18 +120,33 @@ A detailed explanation of the arguments is presented below.
 formulas: indicate the formula of the longitudinal models we want to run (without the association)
 data: data
 families: the families of the outcomes (works for "guassian")
-hc: TRUE/FALSE whether hierachical centering should be applied (TRUE option under construction)
-predicted: TRUE/FALSE whether the predicted values should be saved
-corr_RE: whether correlation between the random effects should be assumed via ac common variance-covariance matrix
-engine: only JAGS is supported for now
-parameters.b: whether the random effects parameters should be saved
-assoc: whether an association parameter between the longitudinal outcomesshould be assumed
-assoc_from: indicate which longitudinal outcome should be used as covariate
-assoc_to: indicate the main longitudinal model that includes the other longitudinal outcomes as covariates
-extraForm: indicate the form of association (e.g., if NULL then the value is assumed, see below more examples)
-extraForm_tr: whether a trancated structure should be assumed
-norm_area: TRUE/FALSE whether the normalized area should be used (Note: for prediction this is under construction)
+hc: TRUE/FALSE whether hierarchical centering should be applied (default: FALSE, TRUE option under construction)
+predicted: TRUE/FALSE whether the predicted values should be saved (default: FALSE)
+corr_RE: whether correlation between the random effects should be assumed via ac common variance-covariance matrix (default: TRUE)
+engine: only JAGS is supported for now 
+parameters.b: whether the random effects parameters should be saved (default: FALSE)
+assoc: whether an association parameter between the longitudinal outcomesshould be assumed (default: TRUE)
+assoc_from: indicate which longitudinal outcome should be used as covariate (default: 2)
+assoc_to: indicate the main longitudinal model that includes the other longitudinal outcomes as covariates (default: 1)
+extraForm: indicate the form of association (dedfault: NULL, for NULL the value is assumed - see below more examples)
+extraForm_tr: the truncated period (defaul: NULL)
+norm_area: TRUE/FALSE whether the normalized area should be used (defaul: FALSE, Note: for prediction this is under construction)
 time_var: time variable
+
+For control check jagsUI::jags. Defaults are presented below:
+n.processors = parallel::detectCores() - 1
+working.directory = getwd()
+clear.model = TRUE
+seed = 1L
+optimize_only = FALSE
+verbose = FALSE
+n.iter = 28000L
+n.burnin = 3000L
+n.thin = 50L
+n.adapt = 3000L
+n.chains = 2L
+seed = 1L
+n.cores = 1L
 
 To obtain results run for example fit$postMeans. 
 
@@ -149,9 +162,9 @@ res_pred <- DynPred_mv_lme(object = fit, newdata = newdata, families, hc,
                            level = 0.95, IdVar = "id", timeVar = "year",
                            M = 200, times = NULL,
                            assoc = TRUE,
-                           assoc_from = assoc_from,
-                           assoc_to = assoc_to,
-                           extraForm = extraForm)
+                           assoc_from = 2,
+                           assoc_to = 1,
+                           extraForm = NULL)
 
 
 
