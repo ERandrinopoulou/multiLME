@@ -340,27 +340,30 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;ERandrinopoulou/multiLME&quot;</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>, <span class="at">force =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co">#&gt; Downloading GitHub repo ERandrinopoulou/multiLME@HEAD</span></span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(JMbayes2)</span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#&gt; Loading required package: survival</span></span>
-<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#&gt; Loading required package: nlme</span></span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#&gt; Loading required package: GLMMadaptive</span></span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co">#&gt; Loading required package: splines</span></span>
-<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="fu">library</span>(jagsUI)</span>
+<div id="load-packages" class="section level2">
+<h2>Load packages</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(JMbayes2)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co">#&gt; Loading required package: survival</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co">#&gt; Loading required package: nlme</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#&gt; Loading required package: GLMMadaptive</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#&gt; Loading required package: splines</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">library</span>(jagsUI)</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;jagsUI&#39;</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:JMbayes2&#39;:</span></span>
 <span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;jagsUI&#39;</span></span>
-<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:JMbayes2&#39;:</span></span>
-<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co">#&gt;     traceplot</span></span>
-<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="fu">library</span>(multiLME)</span>
-<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="fu">library</span>(lattice)</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co">#&gt;     traceplot</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="fu">library</span>(multiLME)</span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="fu">library</span>(lattice)</span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;lattice&#39;</span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:jagsUI&#39;:</span></span>
 <span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;lattice&#39;</span></span>
-<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:jagsUI&#39;:</span></span>
-<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a><span class="co">#&gt;     densityplot</span></span></code></pre></div>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a><span class="co">#&gt;     densityplot</span></span></code></pre></div>
+</div>
+<div id="multivariate-mixed-effects-model" class="section level2">
+<h2>Multivariate mixed-effects model</h2>
+<p><strong>Value parameterization</strong></p>
 <p>Let’s assume that we want to fit the following multivariate
 mixed-effects model:</p>
 <p><span class="math display">\[
@@ -371,71 +374,68 @@ y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} +
 \]</span></p>
 <p>In particular, in includes the underlying value of outcome 2 in the
 mixed-effects model of outcome 1.</p>
+</div>
+<div id="simulation" class="section level2">
+<h2>Simulation</h2>
 <p>First we simulate some data:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span> </span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># number of planned repeated measurements per subject, per outcome</span></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>t.max <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># maximum follow-up time</span></span>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="do">################################################</span></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co"># parameters for the linear mixed effects model 1</span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>betaa1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;(Intercept)&quot;</span> <span class="ot">=</span> <span class="fl">3.01</span>, <span class="st">&quot;Time1&quot;</span> <span class="ot">=</span> <span class="fl">0.47</span>, <span class="st">&quot;Group&quot;</span> <span class="ot">=</span> <span class="sc">-</span><span class="dv">2</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>sigma1.y <span class="ot">&lt;-</span> <span class="fl">1.017671</span>  <span class="co"># measurement error standard deviation</span></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co"># parameters for the linear mixed effects model </span></span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>betaa2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;(Intercept)&quot;</span> <span class="ot">=</span> <span class="fl">2.15</span>, <span class="st">&quot;Time1&quot;</span> <span class="ot">=</span> <span class="fl">0.91</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>sigma2.y <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># measurement error standard deviation</span></span>
-<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co"># association parameter</span></span>
-<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>alphaa <span class="ot">&lt;-</span> <span class="fl">0.9</span> <span class="co"># association parameter - value</span></span>
-<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co"># Variance-covariance matrix for random effects</span></span>
-<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>invDvec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>,</span>
-<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a>             <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>,</span>
-<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>             <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>,</span>
-<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a>             <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a></span>
-<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a>invDmat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(invDvec, <span class="dv">4</span>, <span class="dv">4</span>)</span>
-<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">solve</span>(invDmat)</span>
-<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a></span>
-<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="do">################################################</span></span>
-<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co"># design matrices for the longitudinal measurement model</span></span>
-<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a>times <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">replicate</span>(n, <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">sort</span>(<span class="fu">runif</span>(K<span class="dv">-1</span>, <span class="dv">0</span>, t.max))))) </span>
-<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a>group <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co"># parameters for the linear mixed effects model 1</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>betaa1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;(Intercept)&quot;</span> <span class="ot">=</span> <span class="fl">3.01</span>, <span class="st">&quot;Time1&quot;</span> <span class="ot">=</span> <span class="fl">0.47</span>, <span class="st">&quot;Group&quot;</span> <span class="ot">=</span> <span class="sc">-</span><span class="dv">2</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>sigma1.y <span class="ot">&lt;-</span> <span class="fl">1.017671</span>  <span class="co"># measurement error standard deviation</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co"># parameters for the linear mixed effects model 2</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>betaa2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;(Intercept)&quot;</span> <span class="ot">=</span> <span class="fl">2.15</span>, <span class="st">&quot;Time1&quot;</span> <span class="ot">=</span> <span class="fl">0.91</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>sigma2.y <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># measurement error standard deviation</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co"># association parameter</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>alphaa <span class="ot">&lt;-</span> <span class="fl">0.9</span> <span class="co"># association parameter - value</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co"># Variance-covariance matrix for random effects</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>invDvec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>,</span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>             <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a>             <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>             <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a>invDmat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(invDvec, <span class="dv">4</span>, <span class="dv">4</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">solve</span>(invDmat)</span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co"># design matrices for the longitudinal measurement model</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a>times <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">replicate</span>(n, <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">sort</span>(<span class="fu">runif</span>(K<span class="dv">-1</span>, <span class="dv">0</span>, t.max))))) </span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a>group <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a>DF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">year =</span> times, <span class="at">drug =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(group, <span class="at">each =</span> K)))</span>
 <span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a></span>
-<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a>DF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">year =</span> times, <span class="at">drug =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(group, <span class="at">each =</span> K)))</span>
-<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a></span>
-<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year <span class="sc">+</span> drug, <span class="at">data =</span> DF)</span>
-<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a>Z1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year, <span class="at">data =</span> DF)</span>
-<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a></span>
-<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year, <span class="at">data =</span> DF)</span>
-<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a>Z2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year, <span class="at">data =</span> DF)</span>
-<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a></span>
-<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="co">#simulate random effects</span></span>
-<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year <span class="sc">+</span> drug, <span class="at">data =</span> DF)</span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a>Z1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year, <span class="at">data =</span> DF)</span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year, <span class="at">data =</span> DF)</span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a>Z2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year, <span class="at">data =</span> DF)</span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="co">#simulate random effects</span></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">nrow</span>(D)), D)</span>
 <span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a></span>
-<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">nrow</span>(D)), D)</span>
-<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a></span>
-<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a><span class="co"># simulate longitudinal responses</span></span>
-<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a>id <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="at">each =</span> K)</span>
-<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a></span>
-<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a>eta.y2 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(X2 <span class="sc">%*%</span> betaa2 <span class="sc">+</span> <span class="fu">rowSums</span>(Z2 <span class="sc">*</span> b[id, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>])) </span>
-<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a>y2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n <span class="sc">*</span> K, eta.y2, sigma2.y)</span>
-<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a></span>
-<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a>eta.y1 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(X1 <span class="sc">%*%</span> betaa1 <span class="sc">+</span> <span class="fu">rowSums</span>(Z1 <span class="sc">*</span> b[id, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])) <span class="sc">+</span> alphaa <span class="sc">*</span> eta.y2 </span>
-<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a>y1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n <span class="sc">*</span> K, eta.y1, sigma1.y)</span>
-<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a></span>
-<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a>dat <span class="ot">&lt;-</span> DF[, ]</span>
-<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a>dat<span class="sc">$</span>id <span class="ot">&lt;-</span> id</span>
-<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a>dat<span class="sc">$</span>y1 <span class="ot">&lt;-</span> y1</span>
-<span id="cb2-57"><a href="#cb2-57" tabindex="-1"></a>dat<span class="sc">$</span>y2 <span class="ot">&lt;-</span> y2</span>
-<span id="cb2-58"><a href="#cb2-58" tabindex="-1"></a></span>
-<span id="cb2-59"><a href="#cb2-59" tabindex="-1"></a><span class="fu">names</span>(dat) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;drug&quot;</span>, <span class="st">&quot;id&quot;</span>, <span class="st">&quot;y1&quot;</span>, <span class="st">&quot;y2&quot;</span>)</span>
-<span id="cb2-60"><a href="#cb2-60" tabindex="-1"></a></span>
-<span id="cb2-61"><a href="#cb2-61" tabindex="-1"></a>dat.id <span class="ot">&lt;-</span> dat[<span class="fu">tapply</span>(<span class="fu">row.names</span>(dat), dat<span class="sc">$</span>id, tail, <span class="dv">1</span>), ]</span>
-<span id="cb2-62"><a href="#cb2-62" tabindex="-1"></a></span>
-<span id="cb2-63"><a href="#cb2-63" tabindex="-1"></a>data <span class="ot">&lt;-</span> dat</span>
-<span id="cb2-64"><a href="#cb2-64" tabindex="-1"></a>data.id <span class="ot">&lt;-</span> dat.id</span></code></pre></div>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="co"># simulate longitudinal responses</span></span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a>id <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="at">each =</span> K)</span>
+<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a></span>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a>eta.y2 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(X2 <span class="sc">%*%</span> betaa2 <span class="sc">+</span> <span class="fu">rowSums</span>(Z2 <span class="sc">*</span> b[id, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>])) </span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a>y2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n <span class="sc">*</span> K, eta.y2, sigma2.y)</span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a></span>
+<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a>eta.y1 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(X1 <span class="sc">%*%</span> betaa1 <span class="sc">+</span> <span class="fu">rowSums</span>(Z1 <span class="sc">*</span> b[id, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])) <span class="sc">+</span> alphaa <span class="sc">*</span> eta.y2 </span>
+<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a>y1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n <span class="sc">*</span> K, eta.y1, sigma1.y)</span>
+<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a></span>
+<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a>dat <span class="ot">&lt;-</span> DF[, ]</span>
+<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a>dat<span class="sc">$</span>id <span class="ot">&lt;-</span> id</span>
+<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a>dat<span class="sc">$</span>y1 <span class="ot">&lt;-</span> y1</span>
+<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a>dat<span class="sc">$</span>y2 <span class="ot">&lt;-</span> y2</span>
+<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a></span>
+<span id="cb2-57"><a href="#cb2-57" tabindex="-1"></a><span class="fu">names</span>(dat) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;drug&quot;</span>, <span class="st">&quot;id&quot;</span>, <span class="st">&quot;y1&quot;</span>, <span class="st">&quot;y2&quot;</span>)</span>
+<span id="cb2-58"><a href="#cb2-58" tabindex="-1"></a>data <span class="ot">&lt;-</span> dat</span></code></pre></div>
 <p>Then, we can run the multivariate model as follows:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>formulas <span class="ot">&lt;-</span> <span class="fu">list</span>(y1 <span class="sc">~</span> year <span class="sc">+</span> drug <span class="sc">+</span> (year <span class="sc">|</span> id),</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>                 y2 <span class="sc">~</span> year <span class="sc">+</span> (year <span class="sc">|</span> id))</span>
@@ -448,91 +448,450 @@ mixed-effects model of outcome 1.</p>
 <span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>                     <span class="at">assoc =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>                     <span class="at">assoc_from =</span> <span class="dv">2</span>,</span>
 <span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a>                     <span class="at">assoc_to =</span> <span class="dv">1</span>,</span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>                     <span class="at">extraForm =</span> <span class="cn">NULL</span>)</span></code></pre></div>
-<p>A detailed explanation of the arguments is presented below.<br />
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>                     <span class="at">extraForm =</span> <span class="cn">NULL</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a>                     <span class="at">time_var =</span> <span class="st">&quot;year&quot;</span>)</span></code></pre></div>
+</div>
+<div id="argument-details-mv_lme" class="section level2">
+<h2>Argument Details <code>mv_lme</code></h2>
+<p>Below is a detailed explanation of the function arguments:</p>
+<p><code>formulas</code>: A list of formulas specifying the longitudinal
+submodels (excluding the association structure).</p>
+<p><code>data</code>: The dataset containing all variables used in the
+models.</p>
+<p><code>families</code>: Distributions for the outcomes (currently only
+“gaussian” is supported).</p>
+<p><code>hc</code>: Logical; whether hierarchical centering is applied.
+Default is FALSE. (Note: TRUE option under development)</p>
+<p><code>predicted</code>: Logical; whether to save predicted values.
+Default is FALSE.</p>
+<p><code>corr_RE</code>: Logical; whether to assume correlated random
+effects via a shared variance-covariance matrix. Default is TRUE.</p>
+<p><code>engine</code>: Currently, only “JAGS” is supported.</p>
+<p><code>parameters.b</code>: Logical; whether to save the random
+effects. Default is FALSE.</p>
+<p><code>assoc</code>: Logical; whether to include an association
+parameter between longitudinal outcomes. Default is TRUE.</p>
+<p><code>assoc_from</code>: Index of the longitudinal outcome used as a
+covariate in the association structure.</p>
+<p><code>assoc_to</code>: Index of the longitudinal outcome model to
+which other outcomes are added as covariates.</p>
+<p><code>extraForm</code>: Specifies the functional form of the
+association. Default is NULL. If NULL, the underlying value association
+structure is assumed (see examples below for other structures).</p>
+<p><code>extraForm_tr</code>: Specifies the functional form for the
+truncated period of the association. Default is NULL.</p>
+<p><code>norm_area</code>: Logical; whether to use the normalized area
+under the curve. Default is FALSE. (Note: feature under development for
+predictions)</p>
+<p><code>time_var</code>: The time variable used in the longitudinal
+models.</p>
+<p><br />
 </p>
-<p><code>formulas</code>: indicate the formula of the longitudinal
-models we want to run (without the association)<br />
-<code>data</code>: data<br />
-<code>families</code>: the families of the outcomes (works for
-“guassian”)<br />
-<code>hc</code>: TRUE/FALSE whether hierarchical centering should be
-applied (default: FALSE, TRUE option under construction)<br />
-<code>predicted</code>: TRUE/FALSE whether the predicted values should
-be saved (default: FALSE)<br />
-<code>corr_RE</code>: whether correlation between the random effects
-should be assumed via ac common variance-covariance matrix (default:
-TRUE)<br />
-<code>engine</code>: only JAGS is supported for now<br />
-<code>parameters.b</code>: whether the random effects parameters should
-be saved (default: FALSE)<br />
-<code>assoc</code>: whether an association parameter between the
-longitudinal outcomesshould be assumed (default: TRUE)<br />
-<code>assoc_from</code>: indicate which longitudinal outcome should be
-used as covariate (default: 2)<br />
-<code>assoc_to</code>: indicate the main longitudinal model that
-includes the other longitudinal outcomes as covariates (default:
-1)<br />
-<code>extraForm</code>: indicate the form of association (dedfault:
-NULL, for NULL the value is assumed - see below more examples)<br />
-<code>extraForm_tr</code>: the truncated period (defaul: NULL)<br />
-<code>norm_area</code>: TRUE/FALSE whether the normalized area should be
-used (defaul: FALSE, Note: under construction)<br />
-<code>time_var</code>: time variable<br />
-<br />
+<div id="control-parameters-via-jagsuijags" class="section level3">
+<h3><em>Control Parameters (via <code>jagsUI::jags</code>)</em></h3>
+<p>The following control options can be customized; defaults are:</p>
+<p><code>n.processors</code>: parallel::detectCores() - 1</p>
+<p><code>working.directory</code>: getwd()</p>
+<p><code>clear.model</code>: TRUE</p>
+<p><code>seed</code>: 1L</p>
+<p><code>optimize_only</code>: FALSE</p>
+<p><code>verbose</code>: FALSE</p>
+<p><code>n.iter</code>: 28000L</p>
+<p><code>n.burnin</code>: 3000L</p>
+<p><code>n.thin</code>: 50L</p>
+<p><code>n.adapt</code>: 3000L</p>
+<p><code>n.chains</code>: 2L</p>
+<p><code>n.cores</code>: 1L</p>
+<p><br />
 </p>
-<p>For control check <code>jagsUI::jags</code>. Defaults are presented
-below:<br />
-<code>n.processors</code>: parallel::detectCores() - 1<br />
-<code>working.directory</code>: getwd()<br />
-<code>clear.model</code>: TRUE<br />
-<code>seed</code>: 1L<br />
-<code>optimize_only</code>: FALSE<br />
-<code>verbose</code>: FALSE<br />
-<code>n.iter</code>: 28000L<br />
-<code>n.burnin</code>: 3000L<br />
-<code>n.thin</code>: 50L<br />
-<code>n.adapt</code>: 3000L<br />
-<code>n.chains</code>: 2L<br />
-<code>seed</code>: 1L<br />
-<code>n.cores</code>: 1L<br />
+</div>
+</div>
+<div id="accessing-results" class="section level2">
+<h2><strong>Accessing Results</strong></h2>
+<p>Once the model is fitted, results can be accessed via the fit object.
+For example:</p>
+<p>Posterior means are available through <code>fit$postMeans</code>.</p>
+<p>Corresponding 95% credible intervals, computed from the 2.5th and
+97.5th percentiles of the posterior distributions, can be retrieved
+using <code>fit$CIs</code>.</p>
+<p>Additional output elements, such as mcmc.info, Deviance Information
+Criterion (DIC), effective number of parameters (pD), and convergence
+diagnostics (Rhat), are returned by <code>jagsUI::jags()</code>
+function.</p>
+<p><br />
 </p>
-<p>To obtain results run for example fit$postMeans.</p>
-<p>Let’s now assume that we want to obtain individualized
-predictions:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">library</span>(gifski)</span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>object <span class="ot">=</span> fit</span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>newdata_all <span class="ot">=</span> data[data<span class="sc">$</span>id <span class="sc">==</span> <span class="dv">1</span>, ]</span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> newdata_all[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>,]</span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a></span>
+</div>
+<div id="examples-for-other-association-parameters" class="section level2">
+<h2>Examples for other association parameters</h2>
+<p><strong>Slope parameterization</strong></p>
+<p>Let’s assume that we want to fit the following multivariate
+mixed-effects model:</p>
+<p><span class="math display">\[
+y_{i2}(t) = x_{i2}^\top (t) \beta_2 + z_{i2}^\top (t) b_{i2} +
+\epsilon_{i2} = m_{i2}(t) + \epsilon_{i2}(t),\\
+y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} +
+\epsilon_{i1} = m_{i1}(t) + \alpha \frac{d}{dt}m_{i2}(t) +
+\epsilon_{i1}(t)
+\]</span></p>
+<p>In particular, in includes the derivative of outcome 2 in the
+mixed-effects model of outcome 1.</p>
+<p>First we simulate some data:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span> </span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># number of planned repeated measurements per subject, per outcome</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>t.max <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># maximum follow-up time</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co"># parameters for the linear mixed effects model 1</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>betaa1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;(Intercept)&quot;</span> <span class="ot">=</span> <span class="fl">3.01</span>, <span class="st">&quot;Time1&quot;</span> <span class="ot">=</span> <span class="fl">0.47</span>, <span class="st">&quot;Group&quot;</span> <span class="ot">=</span> <span class="sc">-</span><span class="dv">2</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>sigma1.y <span class="ot">&lt;-</span> <span class="fl">1.017671</span>  <span class="co"># measurement error standard deviation</span></span>
 <span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(newdata)[<span class="dv">1</span>]){</span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>  res_pred <span class="ot">&lt;-</span> <span class="fu">DynPred_mv_lme</span>(<span class="at">object =</span> fit, <span class="at">newdata =</span> newdata[<span class="dv">1</span><span class="sc">:</span>i,], families, hc,</span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>                             <span class="at">level =</span> <span class="fl">0.95</span>, <span class="at">IdVar =</span> <span class="st">&quot;id&quot;</span>, <span class="at">timeVar =</span> <span class="st">&quot;year&quot;</span>,</span>
-<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>                             <span class="at">M =</span> <span class="dv">200</span>, <span class="at">times =</span> <span class="cn">NULL</span>,</span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>                             <span class="at">assoc =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>                             <span class="at">assoc_from =</span> <span class="dv">2</span>,</span>
-<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>                             <span class="at">assoc_to =</span> <span class="dv">1</span>,</span>
-<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>                             <span class="at">extraForm =</span> <span class="cn">NULL</span>)</span>
-<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a></span>
-<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a></span>
-<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a></span>
-<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a>  p1 <span class="ot">&lt;-</span> <span class="fu">xyplot</span>(res_pred<span class="sc">$</span>Mean1 <span class="sc">+</span> res_pred<span class="sc">$</span>Lower1 <span class="sc">+</span> res_pred<span class="sc">$</span>Upper1 <span class="sc">~</span> res_pred<span class="sc">$</span>Time,</span>
-<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a>         <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>), </span>
-<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>         <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fu">min</span>(y1), <span class="fu">max</span>(y1)), </span>
-<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a>         <span class="at">strip =</span> <span class="cn">FALSE</span>, <span class="at">xlab =</span> <span class="st">&quot;Year&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Y1&quot;</span>,</span>
-<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a>         <span class="at">lwd =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">3</span>), <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="dv">1</span>,</span>
-<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a>         <span class="at">panel =</span> <span class="cf">function</span>(x, y,  ...) {</span>
-<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a>           <span class="fu">panel.xyplot</span>(x, y, ...)</span>
-<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a>           <span class="fu">panel.abline</span>(<span class="at">v =</span> <span class="fu">max</span>(newdata<span class="sc">$</span>year), <span class="at">col =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a>           <span class="fu">panel.points</span>(newdata_all<span class="sc">$</span>year, newdata_all<span class="sc">$</span>y1, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.8</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
-<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a>           })</span>
-<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a>  <span class="fu">print</span>(p1)</span>
-<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a>}</span></code></pre></div>
-<p><img role="img" src="data:image/gif;base64,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" /><!-- --></p>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co"># parameters for the linear mixed effects model 2</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>betaa2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;(Intercept)&quot;</span> <span class="ot">=</span> <span class="fl">2.15</span>, <span class="st">&quot;Time1&quot;</span> <span class="ot">=</span> <span class="fl">0.91</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>sigma2.y <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># measurement error standard deviation</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co"># association parameter</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>alphaa <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a>invDvec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>,</span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a>             <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>,</span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a>             <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>,</span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a>             <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a>invDmat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(invDvec, <span class="dv">4</span>, <span class="dv">4</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">solve</span>(invDmat)</span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="co"># design matrices for the longitudinal measurement model</span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a>times <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">replicate</span>(n, <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">sort</span>(<span class="fu">runif</span>(K<span class="dv">-1</span>, <span class="dv">0</span>, t.max))))) </span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a>group <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a></span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a>DF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">year =</span> times, <span class="at">drug =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(group, <span class="at">each =</span> K)))</span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a></span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year <span class="sc">+</span> drug, <span class="at">data =</span> DF)</span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a>Z1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year, <span class="at">data =</span> DF)</span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a></span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year, <span class="at">data =</span> DF)</span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a>Z2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year, <span class="at">data =</span> DF)</span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a></span>
+<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a><span class="co"># design matrices for the slope of the 1st longitudinal outcome</span></span>
+<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a>extraFormY2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">fixed =</span> <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="dv">1</span>,</span>
+<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a>                    <span class="at">random =</span> <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="dv">1</span>,</span>
+<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a>                    <span class="at">indFixed =</span> <span class="dv">2</span>, <span class="at">indRandom =</span> <span class="dv">2</span>)</span>
+<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a></span>
+<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a>mfX_derivY2 <span class="ot">&lt;-</span> <span class="fu">model.frame</span>(<span class="fu">terms</span>(extraFormY2<span class="sc">$</span>fixed), <span class="at">data =</span> DF)</span>
+<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a>mfZ_derivY2 <span class="ot">&lt;-</span> <span class="fu">model.frame</span>(<span class="fu">terms</span>(extraFormY2<span class="sc">$</span>random), <span class="at">data =</span> DF)</span>
+<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a>XderivY2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(extraFormY2<span class="sc">$</span>fixed, mfX_derivY2)</span>
+<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a>ZderivY2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(extraFormY2<span class="sc">$</span>random, mfZ_derivY2)</span>
+<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a></span>
+<span id="cb4-48"><a href="#cb4-48" tabindex="-1"></a><span class="co">#simulate random effects</span></span>
+<span id="cb4-49"><a href="#cb4-49" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb4-50"><a href="#cb4-50" tabindex="-1"></a></span>
+<span id="cb4-51"><a href="#cb4-51" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">nrow</span>(D)), D)</span>
+<span id="cb4-52"><a href="#cb4-52" tabindex="-1"></a></span>
+<span id="cb4-53"><a href="#cb4-53" tabindex="-1"></a><span class="co"># simulate longitudinal responses</span></span>
+<span id="cb4-54"><a href="#cb4-54" tabindex="-1"></a>id <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="at">each =</span> K)</span>
+<span id="cb4-55"><a href="#cb4-55" tabindex="-1"></a></span>
+<span id="cb4-56"><a href="#cb4-56" tabindex="-1"></a>eta.y2 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(X2 <span class="sc">%*%</span> betaa2 <span class="sc">+</span> <span class="fu">rowSums</span>(Z2 <span class="sc">*</span> b[id, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>])) </span>
+<span id="cb4-57"><a href="#cb4-57" tabindex="-1"></a>y2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n <span class="sc">*</span> K, eta.y2, sigma2.y)</span>
+<span id="cb4-58"><a href="#cb4-58" tabindex="-1"></a>deriv.y2 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(XderivY2 <span class="sc">%*%</span> betaa2[<span class="dv">2</span>] <span class="sc">+</span> <span class="fu">rowSums</span>(ZderivY2 <span class="sc">*</span> b[id, <span class="dv">4</span>]))</span>
+<span id="cb4-59"><a href="#cb4-59" tabindex="-1"></a></span>
+<span id="cb4-60"><a href="#cb4-60" tabindex="-1"></a>eta.y1 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(X1 <span class="sc">%*%</span> betaa1 <span class="sc">+</span> <span class="fu">rowSums</span>(Z1 <span class="sc">*</span> b[id, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])) <span class="sc">+</span> alphaa <span class="sc">*</span> deriv.y2 </span>
+<span id="cb4-61"><a href="#cb4-61" tabindex="-1"></a>y1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n <span class="sc">*</span> K, eta.y1, sigma1.y)</span>
+<span id="cb4-62"><a href="#cb4-62" tabindex="-1"></a></span>
+<span id="cb4-63"><a href="#cb4-63" tabindex="-1"></a>dat <span class="ot">&lt;-</span> DF[, ]</span>
+<span id="cb4-64"><a href="#cb4-64" tabindex="-1"></a>dat<span class="sc">$</span>id <span class="ot">&lt;-</span> id</span>
+<span id="cb4-65"><a href="#cb4-65" tabindex="-1"></a>dat<span class="sc">$</span>y1 <span class="ot">&lt;-</span> y1</span>
+<span id="cb4-66"><a href="#cb4-66" tabindex="-1"></a>dat<span class="sc">$</span>y2 <span class="ot">&lt;-</span> y2</span>
+<span id="cb4-67"><a href="#cb4-67" tabindex="-1"></a></span>
+<span id="cb4-68"><a href="#cb4-68" tabindex="-1"></a><span class="fu">names</span>(dat) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;drug&quot;</span>, <span class="st">&quot;id&quot;</span>, <span class="st">&quot;y1&quot;</span>, <span class="st">&quot;y2&quot;</span>)</span>
+<span id="cb4-69"><a href="#cb4-69" tabindex="-1"></a>data <span class="ot">&lt;-</span> dat</span></code></pre></div>
+<p>Then, we can run the multivariate model as follows:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>formulas <span class="ot">&lt;-</span> <span class="fu">list</span>(y1 <span class="sc">~</span> year <span class="sc">+</span> drug <span class="sc">+</span> (year <span class="sc">|</span> id),</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>                 y2 <span class="sc">~</span> year <span class="sc">+</span> (year <span class="sc">|</span> id))</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>families <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;gaussian&quot;</span>, <span class="st">&quot;gaussian&quot;</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>extraForm <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">fixed =</span> <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="dv">1</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>                  <span class="at">random =</span> <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="dv">1</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>                  <span class="at">indFixed =</span> <span class="dv">2</span>, <span class="at">indRandom =</span> <span class="dv">2</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  </span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">mv_lme</span>(<span class="at">formulas =</span> formulas, <span class="at">data =</span> data, </span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>                     <span class="at">families =</span> families, </span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>                     <span class="at">corr_RE =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>                     <span class="at">assoc =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>                     <span class="at">assoc_from =</span> <span class="dv">2</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>                     <span class="at">assoc_to =</span> <span class="dv">1</span>,</span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>                     <span class="at">extraForm =</span> extraForm,</span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>                     <span class="at">time_var =</span> <span class="st">&quot;year&quot;</span>)</span></code></pre></div>
+<p><strong>Truncated area parameterization</strong></p>
+<p>Let’s assume that we want to fit the following multivariate
+mixed-effects model:</p>
+<p><span class="math display">\[
+y_{i2}(t) = x_{i2}^\top (t) \beta_2 + z_{i2}^\top (t) b_{i2} +
+\epsilon_{i2} = m_{i2}(t) + \epsilon_{i2}(t),\\
+y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} +
+\epsilon_{i1} = m_{i1}(t) + \alpha \int_{t-2}^{t}m_{i2}(s)ds +
+\epsilon_{i1}(t)
+\]</span></p>
+<p>In particular, in includes the derivative of outcome 2 in the
+mixed-effects model of outcome 1.</p>
+<p>First we simulate some data:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># number of planned repeated measurements per subject, per outcome</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>t.max <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># maximum follow-up time</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co"># parameters for the linear mixed effects model 1</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>betaa1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;(Intercept)&quot;</span> <span class="ot">=</span> <span class="fl">3.01</span>, <span class="st">&quot;Time1&quot;</span> <span class="ot">=</span> <span class="fl">0.47</span>, <span class="st">&quot;Group&quot;</span> <span class="ot">=</span> <span class="sc">-</span><span class="dv">2</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>sigma1.y <span class="ot">&lt;-</span> <span class="fl">1.017671</span>  <span class="co"># measurement error standard deviation</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co"># parameters for the linear mixed effects model 2</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>betaa2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;(Intercept)&quot;</span> <span class="ot">=</span> <span class="fl">2.15</span>, <span class="st">&quot;Time1&quot;</span> <span class="ot">=</span> <span class="fl">0.91</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>sigma2.y <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># measurement error standard deviation</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co"># association parameter</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>alphaa <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>invDvec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>,</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>             <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>,</span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>             <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>,</span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>             <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a>invDmat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(invDvec, <span class="dv">4</span>, <span class="dv">4</span>)</span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">solve</span>(invDmat)</span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a></span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co"># design matrices for the longitudinal measurement model</span></span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a>times <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">replicate</span>(n, <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">sort</span>(<span class="fu">runif</span>(K<span class="dv">-1</span>, <span class="dv">0</span>, t.max))))) </span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a>group <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a>DF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">year =</span> times, <span class="at">drug =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(group, <span class="at">each =</span> K)))</span>
+<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a></span>
+<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year <span class="sc">+</span> drug, <span class="at">data =</span> DF)</span>
+<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a>Z1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year, <span class="at">data =</span> DF)</span>
+<span id="cb6-34"><a href="#cb6-34" tabindex="-1"></a></span>
+<span id="cb6-35"><a href="#cb6-35" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year, <span class="at">data =</span> DF)</span>
+<span id="cb6-36"><a href="#cb6-36" tabindex="-1"></a>Z2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year, <span class="at">data =</span> DF)</span>
+<span id="cb6-37"><a href="#cb6-37" tabindex="-1"></a></span>
+<span id="cb6-38"><a href="#cb6-38" tabindex="-1"></a><span class="co"># design matrices for the area of the 1st longitudinal outcome</span></span>
+<span id="cb6-39"><a href="#cb6-39" tabindex="-1"></a>AextraFormY2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">fixed =</span> <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> year <span class="sc">+</span> <span class="fu">I</span>(year<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span><span class="dv">2</span>),</span>
+<span id="cb6-40"><a href="#cb6-40" tabindex="-1"></a>                     <span class="at">random =</span> <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> year <span class="sc">+</span> <span class="fu">I</span>(year<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span><span class="dv">2</span>),</span>
+<span id="cb6-41"><a href="#cb6-41" tabindex="-1"></a>                     <span class="at">indFixed =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">indRandom =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span>
+<span id="cb6-42"><a href="#cb6-42" tabindex="-1"></a></span>
+<span id="cb6-43"><a href="#cb6-43" tabindex="-1"></a>mfXA_derivY2 <span class="ot">&lt;-</span> <span class="fu">model.frame</span>(<span class="fu">terms</span>(AextraFormY2<span class="sc">$</span>fixed), <span class="at">data =</span> DF)</span>
+<span id="cb6-44"><a href="#cb6-44" tabindex="-1"></a>mfZA_derivY2 <span class="ot">&lt;-</span> <span class="fu">model.frame</span>(<span class="fu">terms</span>(AextraFormY2<span class="sc">$</span>random), <span class="at">data =</span> DF)</span>
+<span id="cb6-45"><a href="#cb6-45" tabindex="-1"></a>XAderivY2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(AextraFormY2<span class="sc">$</span>fixed, mfXA_derivY2)</span>
+<span id="cb6-46"><a href="#cb6-46" tabindex="-1"></a>ZAderivY2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(AextraFormY2<span class="sc">$</span>random, mfZA_derivY2)</span>
+<span id="cb6-47"><a href="#cb6-47" tabindex="-1"></a></span>
+<span id="cb6-48"><a href="#cb6-48" tabindex="-1"></a></span>
+<span id="cb6-49"><a href="#cb6-49" tabindex="-1"></a>AextraFormY2_tr <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">fixed =</span> <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> <span class="fu">I</span>(year<span class="dv">-2</span>) <span class="sc">+</span> <span class="fu">I</span>((year<span class="dv">-2</span>)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span><span class="dv">2</span>),</span>
+<span id="cb6-50"><a href="#cb6-50" tabindex="-1"></a>                     <span class="at">random =</span> <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> <span class="fu">I</span>(year<span class="dv">-2</span>) <span class="sc">+</span> <span class="fu">I</span>((year<span class="dv">-2</span>)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span><span class="dv">2</span>),</span>
+<span id="cb6-51"><a href="#cb6-51" tabindex="-1"></a>                     <span class="at">indFixed =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">indRandom =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span>
+<span id="cb6-52"><a href="#cb6-52" tabindex="-1"></a></span>
+<span id="cb6-53"><a href="#cb6-53" tabindex="-1"></a>mfXA_derivY2_tr <span class="ot">&lt;-</span> <span class="fu">model.frame</span>(<span class="fu">terms</span>(AextraFormY2_tr<span class="sc">$</span>fixed), <span class="at">data =</span> DF)</span>
+<span id="cb6-54"><a href="#cb6-54" tabindex="-1"></a>mfZA_derivY2_tr <span class="ot">&lt;-</span> <span class="fu">model.frame</span>(<span class="fu">terms</span>(AextraFormY2_tr<span class="sc">$</span>random), <span class="at">data =</span> DF)</span>
+<span id="cb6-55"><a href="#cb6-55" tabindex="-1"></a>XAderivY2_tr <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(AextraFormY2_tr<span class="sc">$</span>fixed, mfXA_derivY2_tr)</span>
+<span id="cb6-56"><a href="#cb6-56" tabindex="-1"></a>ZAderivY2_tr <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(AextraFormY2_tr<span class="sc">$</span>random, mfZA_derivY2_tr)</span>
+<span id="cb6-57"><a href="#cb6-57" tabindex="-1"></a></span>
+<span id="cb6-58"><a href="#cb6-58" tabindex="-1"></a>XAderivY2 <span class="ot">&lt;-</span> XAderivY2 <span class="sc">-</span> XAderivY2_tr</span>
+<span id="cb6-59"><a href="#cb6-59" tabindex="-1"></a>ZAderivY2 <span class="ot">&lt;-</span> ZAderivY2 <span class="sc">-</span> ZAderivY2_tr</span>
+<span id="cb6-60"><a href="#cb6-60" tabindex="-1"></a></span>
+<span id="cb6-61"><a href="#cb6-61" tabindex="-1"></a><span class="co">#simulate random effects</span></span>
+<span id="cb6-62"><a href="#cb6-62" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb6-63"><a href="#cb6-63" tabindex="-1"></a></span>
+<span id="cb6-64"><a href="#cb6-64" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">nrow</span>(D)), D)</span>
+<span id="cb6-65"><a href="#cb6-65" tabindex="-1"></a></span>
+<span id="cb6-66"><a href="#cb6-66" tabindex="-1"></a><span class="co"># simulate longitudinal responses</span></span>
+<span id="cb6-67"><a href="#cb6-67" tabindex="-1"></a>id <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="at">each =</span> K)</span>
+<span id="cb6-68"><a href="#cb6-68" tabindex="-1"></a></span>
+<span id="cb6-69"><a href="#cb6-69" tabindex="-1"></a>eta.y2 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(X2 <span class="sc">%*%</span> betaa2 <span class="sc">+</span> <span class="fu">rowSums</span>(Z2 <span class="sc">*</span> b[id, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>])) </span>
+<span id="cb6-70"><a href="#cb6-70" tabindex="-1"></a>y2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n <span class="sc">*</span> K, eta.y2, sigma2.y)</span>
+<span id="cb6-71"><a href="#cb6-71" tabindex="-1"></a>auc.y2 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(XAderivY2 <span class="sc">%*%</span> betaa2 <span class="sc">+</span> <span class="fu">rowSums</span>(ZAderivY2 <span class="sc">*</span> b[id, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>]))</span>
+<span id="cb6-72"><a href="#cb6-72" tabindex="-1"></a>eta.y1 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(X1 <span class="sc">%*%</span> betaa1 <span class="sc">+</span> <span class="fu">rowSums</span>(Z1 <span class="sc">*</span> b[id, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])) <span class="sc">+</span> alphaa <span class="sc">*</span> (auc.y2) </span>
+<span id="cb6-73"><a href="#cb6-73" tabindex="-1"></a></span>
+<span id="cb6-74"><a href="#cb6-74" tabindex="-1"></a>dat <span class="ot">&lt;-</span> DF[, ]</span>
+<span id="cb6-75"><a href="#cb6-75" tabindex="-1"></a>dat<span class="sc">$</span>id <span class="ot">&lt;-</span> id</span>
+<span id="cb6-76"><a href="#cb6-76" tabindex="-1"></a>dat<span class="sc">$</span>y1 <span class="ot">&lt;-</span> y1</span>
+<span id="cb6-77"><a href="#cb6-77" tabindex="-1"></a>dat<span class="sc">$</span>y2 <span class="ot">&lt;-</span> y2</span>
+<span id="cb6-78"><a href="#cb6-78" tabindex="-1"></a></span>
+<span id="cb6-79"><a href="#cb6-79" tabindex="-1"></a><span class="fu">names</span>(dat) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;drug&quot;</span>, <span class="st">&quot;id&quot;</span>, <span class="st">&quot;y1&quot;</span>, <span class="st">&quot;y2&quot;</span>)</span>
+<span id="cb6-80"><a href="#cb6-80" tabindex="-1"></a>data <span class="ot">&lt;-</span> dat</span></code></pre></div>
+<p>Then, we can run the multivariate model as follows:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>formulas <span class="ot">&lt;-</span> <span class="fu">list</span>(y1 <span class="sc">~</span> year <span class="sc">+</span> drug <span class="sc">+</span> (year <span class="sc">|</span> id),</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>                 y2 <span class="sc">~</span> year <span class="sc">+</span> (year <span class="sc">|</span> id))</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>families <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;gaussian&quot;</span>, <span class="st">&quot;gaussian&quot;</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>extraForm <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">fixed =</span> <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> year <span class="sc">+</span> <span class="fu">I</span>(year<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span><span class="dv">2</span>),</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>                  <span class="at">random =</span> <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> year <span class="sc">+</span> <span class="fu">I</span>(year<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span><span class="dv">2</span>),</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>                  <span class="at">indFixed =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">indRandom =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>extraForm_tr <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">fixed =</span> <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> <span class="fu">I</span>(year<span class="dv">-2</span>) <span class="sc">+</span> <span class="fu">I</span>((year<span class="dv">-2</span>)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span><span class="dv">2</span>),</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>                     <span class="at">random =</span> <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> <span class="fu">I</span>(year<span class="dv">-2</span>) <span class="sc">+</span> <span class="fu">I</span>((year<span class="dv">-2</span>)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span><span class="dv">2</span>),</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>                     <span class="at">indFixed =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">indRandom =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>  </span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">mv_lme</span>(<span class="at">formulas =</span> formulas, <span class="at">data =</span> data, </span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>                     <span class="at">families =</span> families, </span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>                     <span class="at">corr_RE =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>                     <span class="at">assoc =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>                     <span class="at">assoc_from =</span> <span class="dv">2</span>,</span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>                     <span class="at">assoc_to =</span> <span class="dv">1</span>,</span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>                     <span class="at">extraForm =</span> extraForm,</span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>                     <span class="at">extraForm_tr =</span> extraForm_tr,</span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>                     <span class="at">time_var =</span> <span class="st">&quot;year&quot;</span>)</span></code></pre></div>
+<p><strong>Value (polynomials) parameterization</strong></p>
+<p>Let’s assume that we want to fit the following multivariate
+mixed-effects model:</p>
+<p><span class="math display">\[
+y_{i2}(t) = x_{i2}^\top (t) \beta_2 + z_{i2}^\top (t) b_{i2} +
+\epsilon_{i2} = m_{i2}(t) + \epsilon_{i2}(t),\\
+y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} +
+\epsilon_{i1} = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
+\]</span></p>
+<p>In particular, in includes the derivative of outcome 2 in the
+mixed-effects model of outcome 1.</p>
+<p>First we simulate some data:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span> </span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># number of planned repeated measurements per subject, per outcome</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>t.max <span class="ot">&lt;-</span> <span class="dv">10</span> <span class="co"># maximum follow-up time</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co"># parameters for the linear mixed effects model 1</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>betaa1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;(Intercept)&quot;</span> <span class="ot">=</span> <span class="fl">4.2206</span>, <span class="st">&quot;Group1&quot;</span> <span class="ot">=</span> <span class="fl">0.2885</span>, <span class="st">&quot;Time1&quot;</span> <span class="ot">=</span>  <span class="fl">1.3009</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>           <span class="st">&quot;Time2&quot;</span> <span class="ot">=</span> <span class="fl">2.3196</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>sigma1.y <span class="ot">&lt;-</span> <span class="fl">1.017671</span>  <span class="co"># measurement error standard deviation</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co"># parameters for the linear mixed effects model 2</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>betaa2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;(Intercept)&quot;</span> <span class="ot">=</span> <span class="fl">2.15</span>, <span class="st">&quot;Time1&quot;</span> <span class="ot">=</span> <span class="fl">0.91</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>sigma2.y <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># measurement error standard deviation</span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co"># association parameter</span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>alphaa <span class="ot">&lt;-</span> <span class="fl">1.6</span> <span class="co"># association parameter - value</span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>invDvec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, </span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>             <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, </span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a>             <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, </span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a>             <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>, </span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a>             <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a></span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a>invDmat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(invDvec, <span class="dv">5</span>, <span class="dv">5</span>)</span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">solve</span>(invDmat)</span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a></span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="co"># design matrices for the longitudinal measurement model</span></span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a>times <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">replicate</span>(n, <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">sort</span>(<span class="fu">runif</span>(K<span class="dv">-1</span>, <span class="dv">0</span>, t.max))))) </span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a>group <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a></span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a>DF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">year =</span> times, <span class="at">drug =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(group, <span class="at">each =</span> K)))</span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a></span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a>X1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> drug <span class="sc">+</span> year <span class="sc">+</span> <span class="fu">I</span>(year<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> DF)</span>
+<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a>Z1 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year <span class="sc">+</span> <span class="fu">I</span>(year<span class="sc">^</span><span class="dv">2</span>), <span class="at">data =</span> DF)</span>
+<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a></span>
+<span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year, <span class="at">data =</span> DF)</span>
+<span id="cb8-37"><a href="#cb8-37" tabindex="-1"></a>Z2 <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> year, <span class="at">data =</span> DF)</span>
+<span id="cb8-38"><a href="#cb8-38" tabindex="-1"></a></span>
+<span id="cb8-39"><a href="#cb8-39" tabindex="-1"></a><span class="co">#simulate random effects</span></span>
+<span id="cb8-40"><a href="#cb8-40" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb8-41"><a href="#cb8-41" tabindex="-1"></a></span>
+<span id="cb8-42"><a href="#cb8-42" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(n, <span class="fu">rep</span>(<span class="dv">0</span>, <span class="fu">nrow</span>(D)), D)</span>
+<span id="cb8-43"><a href="#cb8-43" tabindex="-1"></a></span>
+<span id="cb8-44"><a href="#cb8-44" tabindex="-1"></a><span class="co"># simulate longitudinal responses</span></span>
+<span id="cb8-45"><a href="#cb8-45" tabindex="-1"></a>id <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="at">each =</span> K)</span>
+<span id="cb8-46"><a href="#cb8-46" tabindex="-1"></a></span>
+<span id="cb8-47"><a href="#cb8-47" tabindex="-1"></a>eta.y2 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(X2 <span class="sc">%*%</span> betaa2 <span class="sc">+</span> <span class="fu">rowSums</span>(Z2 <span class="sc">*</span> b[id, <span class="dv">4</span><span class="sc">:</span><span class="dv">5</span>])) </span>
+<span id="cb8-48"><a href="#cb8-48" tabindex="-1"></a>y2 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n <span class="sc">*</span> K, eta.y2, sigma2.y)</span>
+<span id="cb8-49"><a href="#cb8-49" tabindex="-1"></a></span>
+<span id="cb8-50"><a href="#cb8-50" tabindex="-1"></a>eta.y1 <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(X1 <span class="sc">%*%</span> betaa1 <span class="sc">+</span> <span class="fu">rowSums</span>(Z1 <span class="sc">*</span> b[id, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])) <span class="sc">+</span> alphaa <span class="sc">*</span> eta.y2 </span>
+<span id="cb8-51"><a href="#cb8-51" tabindex="-1"></a>y1 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n <span class="sc">*</span> K, eta.y1, sigma1.y)</span>
+<span id="cb8-52"><a href="#cb8-52" tabindex="-1"></a></span>
+<span id="cb8-53"><a href="#cb8-53" tabindex="-1"></a>dat <span class="ot">&lt;-</span> DF[, ]</span>
+<span id="cb8-54"><a href="#cb8-54" tabindex="-1"></a>dat<span class="sc">$</span>id <span class="ot">&lt;-</span> id</span>
+<span id="cb8-55"><a href="#cb8-55" tabindex="-1"></a>dat<span class="sc">$</span>y1 <span class="ot">&lt;-</span> y1</span>
+<span id="cb8-56"><a href="#cb8-56" tabindex="-1"></a>dat<span class="sc">$</span>y2 <span class="ot">&lt;-</span> y2</span>
+<span id="cb8-57"><a href="#cb8-57" tabindex="-1"></a></span>
+<span id="cb8-58"><a href="#cb8-58" tabindex="-1"></a><span class="fu">names</span>(dat) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;drug&quot;</span>, <span class="st">&quot;id&quot;</span>, <span class="st">&quot;y1&quot;</span>, <span class="st">&quot;y2&quot;</span>)</span>
+<span id="cb8-59"><a href="#cb8-59" tabindex="-1"></a>data <span class="ot">&lt;-</span> dat</span></code></pre></div>
+<p>Then, we can run the multivariate model as follows:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>formulas <span class="ot">&lt;-</span> <span class="fu">list</span>(y1 <span class="sc">~</span> drug <span class="sc">+</span> year <span class="sc">+</span> <span class="fu">I</span>(year<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>                     (  year <span class="sc">+</span> <span class="fu">I</span>(year<span class="sc">^</span><span class="dv">2</span>) <span class="sc">|</span> id),</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>                   y2 <span class="sc">~</span> year <span class="sc">+</span> (year <span class="sc">|</span> id))</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>families <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;gaussian&quot;</span>, <span class="st">&quot;gaussian&quot;</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">mv_lme</span>(<span class="at">formulas =</span> formulas, <span class="at">data =</span> data,</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>                     <span class="at">families =</span> families,</span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>                     <span class="at">corr_RE =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>                     <span class="at">assoc =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>                     <span class="at">assoc_from =</span> <span class="dv">2</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>                     <span class="at">assoc_to =</span> <span class="dv">1</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>                     <span class="at">extraForm =</span> <span class="cn">NULL</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a>                     <span class="at">time_var =</span> <span class="st">&quot;year&quot;</span>)</span></code></pre></div>
+<p><br />
+</p>
+</div>
+<div id="individualized-predictions" class="section level2">
+<h2>Individualized Predictions</h2>
+<p><strong>Value parameterization</strong></p>
+<p>Now, let us consider the scenario where individualized predictions
+are desired:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>object <span class="ot">=</span> fit</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>newdata_all <span class="ot">=</span> data[data<span class="sc">$</span>id <span class="sc">==</span> <span class="dv">1</span>, ]</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> newdata_all[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>,]</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(newdata)[<span class="dv">1</span>]){</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  res_pred <span class="ot">&lt;-</span> <span class="fu">DynPred_mv_lme</span>(<span class="at">object =</span> fit, <span class="at">newdata =</span> newdata[<span class="dv">1</span><span class="sc">:</span>i,], </span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>                             families, </span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>                             <span class="at">level =</span> <span class="fl">0.95</span>, <span class="at">IdVar =</span> <span class="st">&quot;id&quot;</span>, <span class="at">timeVar =</span> <span class="st">&quot;year&quot;</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>                             <span class="at">M =</span> <span class="dv">200</span>, <span class="at">times =</span> <span class="cn">NULL</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>                             <span class="at">assoc =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>                             <span class="at">assoc_from =</span> <span class="dv">2</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a>                             <span class="at">assoc_to =</span> <span class="dv">1</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>                             <span class="at">extraForm =</span> <span class="cn">NULL</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a>  p1 <span class="ot">&lt;-</span> <span class="fu">xyplot</span>(res_pred<span class="sc">$</span>Mean1 <span class="sc">+</span> res_pred<span class="sc">$</span>Lower1 <span class="sc">+</span> res_pred<span class="sc">$</span>Upper1 <span class="sc">~</span> res_pred<span class="sc">$</span>Time,</span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a>         <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>), </span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a>         <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fu">min</span>(y1), <span class="fu">max</span>(y1)), </span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a>         <span class="at">strip =</span> <span class="cn">FALSE</span>, <span class="at">xlab =</span> <span class="st">&quot;Year&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Y1&quot;</span>,</span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a>         <span class="at">lwd =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">2</span>), <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">3</span>), <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="dv">1</span>,</span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a>         <span class="at">panel =</span> <span class="cf">function</span>(x, y,  ...) {</span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a>           <span class="fu">panel.xyplot</span>(x, y, ...)</span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a>           <span class="fu">panel.abline</span>(<span class="at">v =</span> <span class="fu">max</span>(newdata<span class="sc">$</span>year), <span class="at">col =</span> <span class="dv">2</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a>           <span class="fu">panel.points</span>(newdata_all<span class="sc">$</span>year, newdata_all<span class="sc">$</span>y1, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.8</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a>           })</span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a>  <span class="fu">print</span>(p1)</span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a>}</span></code></pre></div>
+<p><img role="img" src="data:image/gif;base64,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" /><!-- --></p>
+</div>
+<div id="argument-details-dynpred_mv_lme" class="section level2">
+<h2>Argument Details <code>DynPred_mv_lme</code></h2>
+<p>Below is a detailed explanation of the function arguments:</p>
+<p><code>object</code>: An <code>mv_glm</code> object.</p>
+<p><code>newdata</code>: The dataset of the new subject to predict.</p>
+<p><code>families</code>: Distributions for the outcomes (currently only
+“gaussian” is supported).</p>
+<p><code>hc</code>: Logical; whether hierarchical centering is applied.
+Default is FALSE. (Note: TRUE option under development)</p>
+<p><code>level</code>: The confidence interval level. Default is
+0.95.</p>
+<p><code>IdVar</code>: The variable name of the Id column.</p>
+<p><code>time_var</code>: The time variable used in the longitudinal
+models.</p>
+<p><code>M</code>: The number of posterior samples. Default is 200.</p>
+<p><code>times</code>: The times to obtain future predictions. Default
+is NULL. In that case the maximum of a sequence of times until the
+maximum time in the whole data set will be assumed.</p>
+<p><code>assoc</code>: Logical; whether to include an association
+parameter between longitudinal outcomes. Default is TRUE.</p>
+<p><code>assoc_from</code>: Index of the longitudinal outcome used as a
+covariate in the association structure.</p>
+<p><code>assoc_to</code>: Index of the longitudinal outcome model to
+which other outcomes are added as covariates.</p>
+<p><code>extraForm</code>: Specifies the functional form of the
+association. Default is NULL. If NULL, the underlying value association
+structure is assumed (see examples below for other structures).</p>
+<p><code>extraForm_tr</code>: Specifies the functional form for the
+truncated period of the association. Default is NULL.</p>
+<p><br />
+</p>
+</div>
 
 
 

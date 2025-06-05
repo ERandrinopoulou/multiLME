@@ -14,14 +14,22 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup, warning = FALSE, echo = TRUE, results = 'hide'}
+```{r setup_package, message = FALSE, echo = FALSE, results='hide'}
 devtools::install_github("ERandrinopoulou/multiLME", dependencies = TRUE, force = TRUE)
+```
 
+## Load packages
+
+```{r setup, warning = FALSE, echo = TRUE, results = 'hide'}
 library(JMbayes2)
 library(jagsUI)
 library(multiLME)
 library(lattice)
 ```
+
+## Multivariate mixed-effects model 
+
+**Value parameterization**
 
 Let's assume that we want to fit the following multivariate mixed-effects model:
 
@@ -32,19 +40,20 @@ $$
 
 In particular, in includes the underlying value of outcome 2 in the mixed-effects model of outcome 1.
 
+## Simulation
+
 First we simulate some data:
-```{r simulate, cache = TRUE}
+```{r simulate_value, cache = TRUE}
 n = 100 
 
 K <- 10  # number of planned repeated measurements per subject, per outcome
 t.max <- 10 # maximum follow-up time
 
-################################################
 # parameters for the linear mixed effects model 1
 betaa1 <- c("(Intercept)" = 3.01, "Time1" = 0.47, "Group" = -2)
 sigma1.y <- 1.017671  # measurement error standard deviation
 
-# parameters for the linear mixed effects model 
+# parameters for the linear mixed effects model 2
 betaa2 <- c("(Intercept)" = 2.15, "Time1" = 0.91)
 sigma2.y <- 1  # measurement error standard deviation
 
@@ -60,7 +69,6 @@ invDvec <- c(1, 0, 0, 0,
 invDmat <- matrix(invDvec, 4, 4)
 D <- solve(invDmat)
 
-################################################
 # design matrices for the longitudinal measurement model
 times <- c(replicate(n, c(0, sort(runif(K-1, 0, t.max))))) 
 group <- sample(c(0,1), n, replace = TRUE)
@@ -93,15 +101,11 @@ dat$y1 <- y1
 dat$y2 <- y2
 
 names(dat) <- c("year", "drug", "id", "y1", "y2")
-
-dat.id <- dat[tapply(row.names(dat), dat$id, tail, 1), ]
-
 data <- dat
-data.id <- dat.id
 ```
 
 Then, we can run the multivariate model as follows:
-```{r model, cache = TRUE}
+```{r model_value, cache = TRUE}
 formulas <- list(y1 ~ year + drug + (year | id),
                  y2 ~ year + (year | id))
 families <- c("gaussian", "gaussian")
@@ -113,58 +117,432 @@ fit <- mv_lme(formulas = formulas, data = data,
                      assoc = TRUE,
                      assoc_from = 2,
                      assoc_to = 1,
-                     extraForm = NULL)
+                     extraForm = NULL,
+                     time_var = "year")
 ```
 
-A detailed explanation of the arguments is presented below.\
+## Argument Details <code>mv_lme</code>
 
-<code>formulas</code>: indicate the formula of the longitudinal models we want to run (without the association)\
-<code>data</code>: data\
-<code>families</code>: the families of the outcomes (works for "guassian")\
-<code>hc</code>: TRUE/FALSE whether hierarchical centering should be applied (default: FALSE, TRUE option under construction)\
-<code>predicted</code>: TRUE/FALSE whether the predicted values should be saved (default: FALSE)\
-<code>corr_RE</code>: whether correlation between the random effects should be assumed via ac common variance-covariance matrix (default: TRUE)\
-<code>engine</code>: only JAGS is supported for now \
-<code>parameters.b</code>: whether the random effects parameters should be saved (default: FALSE)\
-<code>assoc</code>: whether an association parameter between the longitudinal outcomesshould be assumed (default: TRUE)\
-<code>assoc_from</code>: indicate which longitudinal outcome should be used as covariate (default: 2)\
-<code>assoc_to</code>: indicate the main longitudinal model that includes the other longitudinal outcomes as covariates (default: 1)\
-<code>extraForm</code>: indicate the form of association (dedfault: NULL, for NULL the value is assumed - see below more examples)\
-<code>extraForm_tr</code>: the truncated period (defaul: NULL)\
-<code>norm_area</code>: TRUE/FALSE whether the normalized area should be used (defaul: FALSE, Note: under construction)\
-<code>time_var</code>: time variable\
+Below is a detailed explanation of the function arguments:
+
+<code>formulas</code>: A list of formulas specifying the longitudinal submodels (excluding the association structure).
+
+<code>data</code>: The dataset containing all variables used in the models.
+
+<code>families</code>: Distributions for the outcomes (currently only "gaussian" is supported).
+
+<code>hc</code>: Logical; whether hierarchical centering is applied. Default is FALSE. (Note: TRUE option under development)
+
+<code>predicted</code>: Logical; whether to save predicted values. Default is FALSE.
+
+<code>corr_RE</code>: Logical; whether to assume correlated random effects via a shared variance-covariance matrix. Default is TRUE.
+
+<code>engine</code>: Currently, only "JAGS" is supported.
+
+<code>parameters.b</code>: Logical; whether to save the random effects. Default is FALSE.
+
+<code>assoc</code>: Logical; whether to include an association parameter between longitudinal outcomes. Default is TRUE.
+
+<code>assoc_from</code>: Index of the longitudinal outcome used as a covariate in the association structure.
+
+<code>assoc_to</code>: Index of the longitudinal outcome model to which other outcomes are added as covariates. 
+
+<code>extraForm</code>: Specifies the functional form of the association. Default is NULL. If NULL, the underlying value association structure is assumed (see examples below for other structures).
+
+<code>extraForm_tr</code>: Specifies the functional form for the truncated period of the association. Default is NULL.
+
+<code>norm_area</code>: Logical; whether to use the normalized area under the curve. Default is FALSE. (Note: feature under development for predictions)
+
+<code>time_var</code>: The time variable used in the longitudinal models.
+
 \
 
-For control check <code>jagsUI::jags</code>. Defaults are presented below:\
-<code>n.processors</code>: parallel::detectCores() - 1\
-<code>working.directory</code>: getwd()\
-<code>clear.model</code>: TRUE\
-<code>seed</code>: 1L\
-<code>optimize_only</code>: FALSE\
-<code>verbose</code>: FALSE\
-<code>n.iter</code>: 28000L\
-<code>n.burnin</code>: 3000L\
-<code>n.thin</code>: 50L\
-<code>n.adapt</code>: 3000L\
-<code>n.chains</code>: 2L\
-<code>seed</code>: 1L\
-<code>n.cores</code>: 1L\
+### _Control Parameters (via <code>jagsUI::jags</code>)_
 
-To obtain results run for example fit$postMeans. 
+The following control options can be customized; defaults are:
+
+<code>n.processors</code>: parallel::detectCores() - 1
+
+<code>working.directory</code>: getwd()
+
+<code>clear.model</code>: TRUE
+
+<code>seed</code>: 1L
+
+<code>optimize_only</code>: FALSE
+
+<code>verbose</code>: FALSE
+
+<code>n.iter</code>: 28000L
+
+<code>n.burnin</code>: 3000L
+
+<code>n.thin</code>: 50L
+
+<code>n.adapt</code>: 3000L
+
+<code>n.chains</code>: 2L
+
+<code>n.cores</code>: 1L
+
+\
+
+## **Accessing Results**
+
+Once the model is fitted, results can be accessed via the fit object. For example:
+
+Posterior means are available through <code>fit$postMeans</code>.
+
+Corresponding 95% credible intervals, computed from the 2.5th and 97.5th percentiles of the posterior distributions, can be retrieved using <code>fit$CIs</code>.
+
+Additional output elements, such as mcmc.info, Deviance Information Criterion (DIC), effective number of parameters (pD), and convergence diagnostics (Rhat), are returned by <code>jagsUI::jags()</code> function.
+
+\
+
+## Examples for other association parameters
 
 
-Let's now assume that we want to obtain individualized predictions:
+**Slope parameterization**
+
+Let's assume that we want to fit the following multivariate mixed-effects model:
+
+$$
+y_{i2}(t) = x_{i2}^\top (t) \beta_2 + z_{i2}^\top (t) b_{i2} + \epsilon_{i2} = m_{i2}(t) + \epsilon_{i2}(t),\\
+y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} + \epsilon_{i1} = m_{i1}(t) + \alpha \frac{d}{dt}m_{i2}(t) + \epsilon_{i1}(t)
+$$
+
+In particular, in includes the derivative of outcome 2 in the mixed-effects model of outcome 1.
+
+First we simulate some data:
+```{r simulate_slope, cache = TRUE}
+n = 100 
+
+K <- 10  # number of planned repeated measurements per subject, per outcome
+t.max <- 10 # maximum follow-up time
+
+# parameters for the linear mixed effects model 1
+betaa1 <- c("(Intercept)" = 3.01, "Time1" = 0.47, "Group" = -2)
+sigma1.y <- 1.017671  # measurement error standard deviation
+
+# parameters for the linear mixed effects model 2
+betaa2 <- c("(Intercept)" = 2.15, "Time1" = 0.91)
+sigma2.y <- 1  # measurement error standard deviation
+
+# association parameter
+alphaa <- 0.5
+
+invDvec <- c(1, 0, 0, 0,
+             0, 1, 0, 0,
+             0, 0, 1, 0,
+             0, 0, 0, 1)
+
+
+invDmat <- matrix(invDvec, 4, 4)
+D <- solve(invDmat)
+
+# design matrices for the longitudinal measurement model
+times <- c(replicate(n, c(0, sort(runif(K-1, 0, t.max))))) 
+group <- sample(c(0,1), n, replace = TRUE)
+
+DF <- data.frame(year = times, drug = factor(rep(group, each = K)))
+
+X1 <- model.matrix(~ year + drug, data = DF)
+Z1 <- model.matrix(~ year, data = DF)
+
+X2 <- model.matrix(~ year, data = DF)
+Z2 <- model.matrix(~ year, data = DF)
+
+# design matrices for the slope of the 1st longitudinal outcome
+extraFormY2 <- list(fixed = ~ 0 + 1,
+                    random = ~ 0 + 1,
+                    indFixed = 2, indRandom = 2)
+
+mfX_derivY2 <- model.frame(terms(extraFormY2$fixed), data = DF)
+mfZ_derivY2 <- model.frame(terms(extraFormY2$random), data = DF)
+XderivY2 <- model.matrix(extraFormY2$fixed, mfX_derivY2)
+ZderivY2 <- model.matrix(extraFormY2$random, mfZ_derivY2)
+
+#simulate random effects
+library(MASS)
+
+b <- mvrnorm(n, rep(0, nrow(D)), D)
+
+# simulate longitudinal responses
+id <- rep(1:n, each = K)
+
+eta.y2 <- as.vector(X2 %*% betaa2 + rowSums(Z2 * b[id, 3:4])) 
+y2 <- rnorm(n * K, eta.y2, sigma2.y)
+deriv.y2 <- as.vector(XderivY2 %*% betaa2[2] + rowSums(ZderivY2 * b[id, 4]))
+
+eta.y1 <- as.vector(X1 %*% betaa1 + rowSums(Z1 * b[id, 1:2])) + alphaa * deriv.y2 
+y1 <- rnorm(n * K, eta.y1, sigma1.y)
+
+dat <- DF[, ]
+dat$id <- id
+dat$y1 <- y1
+dat$y2 <- y2
+
+names(dat) <- c("year", "drug", "id", "y1", "y2")
+data <- dat
+```
+
+Then, we can run the multivariate model as follows:
+```{r model_slope, cache = TRUE}
+formulas <- list(y1 ~ year + drug + (year | id),
+                 y2 ~ year + (year | id))
+families <- c("gaussian", "gaussian")
+extraForm <- list(fixed = ~ 0 + 1,
+                  random = ~ 0 + 1,
+                  indFixed = 2, indRandom = 2)
+  
+fit <- mv_lme(formulas = formulas, data = data, 
+                     families = families, 
+                     corr_RE = FALSE,
+                     assoc = TRUE,
+                     assoc_from = 2,
+                     assoc_to = 1,
+                     extraForm = extraForm,
+                     time_var = "year")
+```
+
+
+
+**Truncated area parameterization**
+
+Let's assume that we want to fit the following multivariate mixed-effects model:
+
+$$
+y_{i2}(t) = x_{i2}^\top (t) \beta_2 + z_{i2}^\top (t) b_{i2} + \epsilon_{i2} = m_{i2}(t) + \epsilon_{i2}(t),\\
+y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} + \epsilon_{i1} = m_{i1}(t) + \alpha \int_{t-2}^{t}m_{i2}(s)ds + \epsilon_{i1}(t)
+$$
+
+In particular, in includes the derivative of outcome 2 in the mixed-effects model of outcome 1.
+
+First we simulate some data:
+```{r simulate_trun_area, cache = TRUE}
+n = 100
+
+K <- 10  # number of planned repeated measurements per subject, per outcome
+t.max <- 10 # maximum follow-up time
+
+# parameters for the linear mixed effects model 1
+betaa1 <- c("(Intercept)" = 3.01, "Time1" = 0.47, "Group" = -2)
+sigma1.y <- 1.017671  # measurement error standard deviation
+
+# parameters for the linear mixed effects model 2
+betaa2 <- c("(Intercept)" = 2.15, "Time1" = 0.91)
+sigma2.y <- 1  # measurement error standard deviation
+
+# association parameter
+alphaa <- 0.5
+
+invDvec <- c(1, 0, 0, 0,
+             0, 1, 0, 0,
+             0, 0, 1, 0,
+             0, 0, 0, 1)
+
+
+invDmat <- matrix(invDvec, 4, 4)
+D <- solve(invDmat)
+
+# design matrices for the longitudinal measurement model
+times <- c(replicate(n, c(0, sort(runif(K-1, 0, t.max))))) 
+group <- sample(c(0,1), n, replace = TRUE)
+
+DF <- data.frame(year = times, drug = factor(rep(group, each = K)))
+
+X1 <- model.matrix(~ year + drug, data = DF)
+Z1 <- model.matrix(~ year, data = DF)
+
+X2 <- model.matrix(~ year, data = DF)
+Z2 <- model.matrix(~ year, data = DF)
+
+# design matrices for the area of the 1st longitudinal outcome
+AextraFormY2 <- list(fixed = ~ -1 + year + I(year^2/2),
+                     random = ~ -1 + year + I(year^2/2),
+                     indFixed = 1:2, indRandom = 1:2)
+
+mfXA_derivY2 <- model.frame(terms(AextraFormY2$fixed), data = DF)
+mfZA_derivY2 <- model.frame(terms(AextraFormY2$random), data = DF)
+XAderivY2 <- model.matrix(AextraFormY2$fixed, mfXA_derivY2)
+ZAderivY2 <- model.matrix(AextraFormY2$random, mfZA_derivY2)
+
+
+AextraFormY2_tr <- list(fixed = ~ -1 + I(year-2) + I((year-2)^2/2),
+                     random = ~ -1 + I(year-2) + I((year-2)^2/2),
+                     indFixed = 1:2, indRandom = 1:2)
+
+mfXA_derivY2_tr <- model.frame(terms(AextraFormY2_tr$fixed), data = DF)
+mfZA_derivY2_tr <- model.frame(terms(AextraFormY2_tr$random), data = DF)
+XAderivY2_tr <- model.matrix(AextraFormY2_tr$fixed, mfXA_derivY2_tr)
+ZAderivY2_tr <- model.matrix(AextraFormY2_tr$random, mfZA_derivY2_tr)
+
+XAderivY2 <- XAderivY2 - XAderivY2_tr
+ZAderivY2 <- ZAderivY2 - ZAderivY2_tr
+
+#simulate random effects
+library(MASS)
+
+b <- mvrnorm(n, rep(0, nrow(D)), D)
+
+# simulate longitudinal responses
+id <- rep(1:n, each = K)
+
+eta.y2 <- as.vector(X2 %*% betaa2 + rowSums(Z2 * b[id, 3:4])) 
+y2 <- rnorm(n * K, eta.y2, sigma2.y)
+auc.y2 <- as.vector(XAderivY2 %*% betaa2 + rowSums(ZAderivY2 * b[id, 3:4]))
+eta.y1 <- as.vector(X1 %*% betaa1 + rowSums(Z1 * b[id, 1:2])) + alphaa * (auc.y2) 
+
+dat <- DF[, ]
+dat$id <- id
+dat$y1 <- y1
+dat$y2 <- y2
+
+names(dat) <- c("year", "drug", "id", "y1", "y2")
+data <- dat
+```
+
+Then, we can run the multivariate model as follows:
+```{r model_trun_area, cache = TRUE}
+formulas <- list(y1 ~ year + drug + (year | id),
+                 y2 ~ year + (year | id))
+families <- c("gaussian", "gaussian")
+extraForm <- list(fixed = ~ -1 + year + I(year^2/2),
+                  random = ~ -1 + year + I(year^2/2),
+                  indFixed = 1:2, indRandom = 1:2)
+
+extraForm_tr <- list(fixed = ~ -1 + I(year-2) + I((year-2)^2/2),
+                     random = ~ -1 + I(year-2) + I((year-2)^2/2),
+                     indFixed = 1:2, indRandom = 1:2)
+
+  
+fit <- mv_lme(formulas = formulas, data = data, 
+                     families = families, 
+                     corr_RE = FALSE,
+                     assoc = TRUE,
+                     assoc_from = 2,
+                     assoc_to = 1,
+                     extraForm = extraForm,
+                     extraForm_tr = extraForm_tr,
+                     time_var = "year")
+```
+
+
+**Value (polynomials) parameterization**
+
+Let's assume that we want to fit the following multivariate mixed-effects model:
+
+$$
+y_{i2}(t) = x_{i2}^\top (t) \beta_2 + z_{i2}^\top (t) b_{i2} + \epsilon_{i2} = m_{i2}(t) + \epsilon_{i2}(t),\\
+y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} + \epsilon_{i1} = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
+$$
+
+In particular, in includes the derivative of outcome 2 in the mixed-effects model of outcome 1.
+
+First we simulate some data:
+```{r simulate_poly_value, cache = TRUE}
+n = 100 
+
+K <- 10  # number of planned repeated measurements per subject, per outcome
+t.max <- 10 # maximum follow-up time
+
+# parameters for the linear mixed effects model 1
+betaa1 <- c("(Intercept)" = 4.2206, "Group1" = 0.2885, "Time1" =  1.3009,
+           "Time2" = 2.3196)
+sigma1.y <- 1.017671  # measurement error standard deviation
+
+# parameters for the linear mixed effects model 2
+betaa2 <- c("(Intercept)" = 2.15, "Time1" = 0.91)
+sigma2.y <- 1  # measurement error standard deviation
+
+# association parameter
+alphaa <- 1.6 # association parameter - value
+
+invDvec <- c(1, 0, 0, 0, 0, 
+             0, 1, 0, 0, 0, 
+             0, 0, 1, 0, 0, 
+             0, 0, 0, 1, 0, 
+             0, 0, 0, 0, 1)
+
+invDmat <- matrix(invDvec, 5, 5)
+D <- solve(invDmat)
+
+# design matrices for the longitudinal measurement model
+times <- c(replicate(n, c(0, sort(runif(K-1, 0, t.max))))) 
+group <- sample(c(0,1), n, replace = TRUE)
+
+DF <- data.frame(year = times, drug = factor(rep(group, each = K)))
+
+X1 <- model.matrix(~ drug + year + I(year^2), data = DF)
+Z1 <- model.matrix(~ year + I(year^2), data = DF)
+
+X2 <- model.matrix(~ year, data = DF)
+Z2 <- model.matrix(~ year, data = DF)
+
+#simulate random effects
+library(MASS)
+
+b <- mvrnorm(n, rep(0, nrow(D)), D)
+
+# simulate longitudinal responses
+id <- rep(1:n, each = K)
+
+eta.y2 <- as.vector(X2 %*% betaa2 + rowSums(Z2 * b[id, 4:5])) 
+y2 <- rnorm(n * K, eta.y2, sigma2.y)
+
+eta.y1 <- as.vector(X1 %*% betaa1 + rowSums(Z1 * b[id, 1:3])) + alphaa * eta.y2 
+y1 <- rnorm(n * K, eta.y1, sigma1.y)
+
+dat <- DF[, ]
+dat$id <- id
+dat$y1 <- y1
+dat$y2 <- y2
+
+names(dat) <- c("year", "drug", "id", "y1", "y2")
+data <- dat
+```
+
+Then, we can run the multivariate model as follows:
+```{r model_poly_value, cache = TRUE}
+formulas <- list(y1 ~ drug + year + I(year^2) +
+                     (  year + I(year^2) | id),
+                   y2 ~ year + (year | id))
+families <- c("gaussian", "gaussian")
+
+
+fit <- mv_lme(formulas = formulas, data = data,
+                     families = families,
+                     corr_RE = FALSE,
+                     assoc = TRUE,
+                     assoc_from = 2,
+                     assoc_to = 1,
+                     extraForm = NULL,
+                     time_var = "year")
+```
+
+
+
+\
+
+## Individualized Predictions
+
+**Value parameterization**
+
+Now, let us consider the scenario where individualized predictions are desired:
+
+
+```{r animation_library, echo = FALSE}
+library(gifski)
+```
 
 ```{r predictions, cache = TRUE, animation.hook='gifski'}
-
-library(gifski)
-
 object = fit
 newdata_all = data[data$id == 1, ]
 newdata <- newdata_all[1:6,]
 
 for (i in 1:dim(newdata)[1]){
-  res_pred <- DynPred_mv_lme(object = fit, newdata = newdata[1:i,], families, hc,
+  res_pred <- DynPred_mv_lme(object = fit, newdata = newdata[1:i,], 
+                             families, 
                              level = 0.95, IdVar = "id", timeVar = "year",
                              M = 200, times = NULL,
                              assoc = TRUE,
@@ -186,6 +564,39 @@ for (i in 1:dim(newdata)[1]){
            })
   print(p1)
 }
-
-
 ```
+
+## Argument Details <code>DynPred_mv_lme</code>
+
+Below is a detailed explanation of the function arguments:
+
+<code>object</code>: An <code>mv_glm</code> object.
+
+<code>newdata</code>: The dataset of the new subject to predict.
+
+<code>families</code>: Distributions for the outcomes (currently only "gaussian" is supported).
+
+<code>hc</code>: Logical; whether hierarchical centering is applied. Default is FALSE. (Note: TRUE option under development)
+
+<code>level</code>: The confidence interval level. Default is 0.95.
+
+<code>IdVar</code>: The variable name of the Id column.
+
+<code>time_var</code>: The time variable used in the longitudinal models.
+
+<code>M</code>: The number of posterior samples. Default is 200.
+
+<code>times</code>: The times to obtain future predictions. Default is NULL. In that case the maximum of a sequence of times until the maximum time in the whole data set will be assumed.
+
+<code>assoc</code>: Logical; whether to include an association parameter between longitudinal outcomes. Default is TRUE.
+
+<code>assoc_from</code>: Index of the longitudinal outcome used as a covariate in the association structure.
+
+<code>assoc_to</code>: Index of the longitudinal outcome model to which other outcomes are added as covariates. 
+
+<code>extraForm</code>: Specifies the functional form of the association. Default is NULL. If NULL, the underlying value association structure is assumed (see examples below for other structures).
+
+<code>extraForm_tr</code>: Specifies the functional form for the truncated period of the association. Default is NULL.
+
+
+\
