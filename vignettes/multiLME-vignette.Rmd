@@ -394,7 +394,7 @@ y_{i2}(t) = x_{i2}^\top (t) \beta_2 + z_{i2}^\top (t) b_{i2} + \epsilon_{i2} = m
 y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} + \epsilon_{i1} = m_{i1}(t) + \alpha \int_{t-2}^{t}m_{i2}(s)ds + \epsilon_{i1}(t)
 $$
 
-In particular, in includes the derivative of outcome 2 in the mixed-effects model of outcome 1.
+In particular, in includes the truncated area under the curve of outcome 2 in the mixed-effects model of outcome 1.
 
 First we simulate some data:
 ```{r simulate_trun_area, cache = TRUE}
@@ -515,7 +515,7 @@ y_{i2}(t) = x_{i2}^\top (t) \beta_2 + z_{i2}^\top (t) b_{i2} + \epsilon_{i2} = m
 y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} + \epsilon_{i1} = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
 $$
 
-In particular, in includes the derivative of outcome 2 in the mixed-effects model of outcome 1.
+In particular, in includes the underlying value of outcome 2 in the mixed-effects model of outcome 1.
 
 First we simulate some data:
 ```{r simulate_poly_value, cache = TRUE}
