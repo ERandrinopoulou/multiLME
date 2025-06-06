@@ -211,13 +211,13 @@ Now, let us consider the scenario where individualized predictions are desired:
 library(gifski)
 ```
 
-```{r predictions, cache = TRUE, animation.hook='gifski', dev='png'}
+```{r predictions, cache = TRUE}
 object = fit
 newdata_all = data[data$id == 1, ]
 newdata <- newdata_all[1:6,]
 
-for (i in 1:dim(newdata)[1]){
-  res_pred <- DynPred_mv_lme(object = fit, newdata = newdata[1:i,], 
+
+res_pred <- DynPred_mv_lme(object = fit, newdata = newdata[1:i,], 
                              families, 
                              level = 0.95, IdVar = "id", timeVar = "year",
                              M = 200, times = NULL,
@@ -228,7 +228,7 @@ for (i in 1:dim(newdata)[1]){
 
 
 
-  p1 <- xyplot(res_pred$Mean1 + res_pred$Lower1 + res_pred$Upper1 ~ res_pred$Time,
+p1 <- xyplot(res_pred$Mean1 + res_pred$Lower1 + res_pred$Upper1 ~ res_pred$Time,
          xlim = c(0, 10), 
          ylim = c(min(y1), max(y1)), 
          strip = FALSE, xlab = "Year", ylab = "Y1",
@@ -238,8 +238,7 @@ for (i in 1:dim(newdata)[1]){
            panel.abline(v = max(newdata$year), col = 2, lty = 2)
            panel.points(newdata_all$year, newdata_all$y1, pch = 16, cex = 0.8, col = "blue")
            })
-  print(p1)
-}
+
 ```
 
 ## Argument Details <code>DynPred_mv_lme</code>
