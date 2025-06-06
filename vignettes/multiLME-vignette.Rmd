@@ -217,7 +217,7 @@ newdata_all = data[data$id == 1, ]
 newdata <- newdata_all[1:6,]
 
 
-res_pred <- DynPred_mv_lme(object = fit, newdata = newdata[1:i,], 
+res_pred <- DynPred_mv_lme(object = fit, newdata = newdata[1:4,], 
                              families, 
                              level = 0.95, IdVar = "id", timeVar = "year",
                              M = 200, times = NULL,
