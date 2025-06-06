@@ -13,6 +13,7 @@ Suggests:
     knitr,
     rmarkdown,
     gifski,
-    lattice
-Depends: JMbayes2, jagsUI
+    lattice,
+    JMbayes2, 
+    jagsUI
 VignetteBuilder: knitr
