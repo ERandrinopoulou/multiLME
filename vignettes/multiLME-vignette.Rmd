@@ -211,7 +211,7 @@ Now, let us consider the scenario where individualized predictions are desired:
 library(gifski)
 ```
 
-```{r predictions, cache = TRUE, animation.hook='gifski'}
+```{r predictions, cache = TRUE, animation.hook='gifski', dev='png'}
 object = fit
 newdata_all = data[data$id == 1, ]
 newdata <- newdata_all[1:6,]
