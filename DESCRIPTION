@@ -12,5 +12,7 @@ LazyData: true
 Suggests: 
     knitr,
     rmarkdown,
-    gifski
+    gifski,
+    lattice
+Depends: JMbayes2, jagsUI
 VignetteBuilder: knitr
