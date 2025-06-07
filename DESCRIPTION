@@ -13,5 +13,6 @@ Suggests:
     rmarkdown,
     lattice,
     JMbayes2, 
-    jagsUI
+    jagsUI,
+    pkgdown
 VignetteBuilder: knitr
