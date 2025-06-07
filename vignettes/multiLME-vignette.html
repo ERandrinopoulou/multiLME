@@ -344,23 +344,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h2>Installation</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;ERandrinopoulou/multiLME&quot;</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>, <span class="at">force =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(JMbayes2)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt; Loading required package: survival</span></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; Loading required package: nlme</span></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; Loading required package: GLMMadaptive</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; Loading required package: splines</span></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="fu">library</span>(jagsUI)</span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;jagsUI&#39;</span></span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:JMbayes2&#39;:</span></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt;     traceplot</span></span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="fu">library</span>(multiLME)</span>
-<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="fu">library</span>(lattice)</span>
-<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;lattice&#39;</span></span>
-<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:jagsUI&#39;:</span></span>
-<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt;     densityplot</span></span></code></pre></div>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">library</span>(jagsUI)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">library</span>(multiLME)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="fu">library</span>(lattice)</span></code></pre></div>
 </div>
 <div id="multivariate-mixed-effects-model" class="section level2">
 <h2>Multivariate mixed-effects model</h2>
@@ -370,19 +356,38 @@ outcomes.<br />
 <br />
 </p>
 <p><strong>Value parameterization</strong></p>
-<p>Let’s assume that we want to fit the following multivariate
-mixed-effects model:</p>
+<p>Let’s assume that we want to fit the following <strong>multivariate
+mixed-effects model</strong>:</p>
 <p><span class="math display">\[
-y_{i2}(t) = x_{i2}^\top (t) \beta_2 + z_{i2}^\top (t) b_{i2} +
-\epsilon_{i2} = m_{i2}(t) + \epsilon_{i2}(t),\\
-y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} +
-\epsilon_{i1} = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
+\begin{align}
+y_{i2}(t) &amp;= x_{i2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} +
+\epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
+y_{i1}(t) &amp;= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} +
+\epsilon_{i1}(t) = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
+\end{align}
 \]</span></p>
-<p>In particular, in includes the underlying value of outcome 2 in the
-mixed-effects model of outcome 1.</p>
-</div>
-<div id="simulation" class="section level2">
-<h2>Simulation</h2>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(y_{i1}(t)\)</span> and <span class="math inline">\(y_{i2}(t)\)</span> are the longitudinal outcomes 1
+and 2, respectively, for individual <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span>,</li>
+<li><span class="math inline">\(x_{ij}(t)\)</span> and <span class="math inline">\(z_{ij}(t)\)</span> are the design vectors for the
+fixed and random effects of outcome <span class="math inline">\(j \in
+\{1, 2\}\)</span>,</li>
+<li><span class="math inline">\(\beta_j\)</span> are the fixed effect
+coefficients, <span class="math inline">\(b_{ij}\)</span> are the
+individual-specific random effects, and <span class="math inline">\(\epsilon_{ij}(t)\)</span> are residual error
+terms,</li>
+<li><span class="math inline">\(m_{ij}(t) = x_{ij}^\top(t) \beta_j +
+z_{ij}^\top(t) b_{ij}\)</span> denotes the mean (noise-free) trajectory
+of outcome <span class="math inline">\(j\)</span>.</li>
+</ul>
+<p>Notably, the model for outcome 1 includes the <strong>underlying
+value</strong> of outcome 2 at time <span class="math inline">\(t\)</span>, represented by the term</p>
+<p><span class="math display">\[
+m_{i2}(t),
+\]</span></p>
+<p>which captures the <strong>instantaneous level</strong> of outcome 2.
+Its effect on outcome 1 is scaled by the parameter <span class="math inline">\(\alpha\)</span>.</p>
 <p>First we simulate some data:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span> </span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
@@ -565,7 +570,7 @@ are desired:</p>
 <div id="argument-details-dynpred_mv_lme" class="section level2">
 <h2>Argument Details <code>DynPred_mv_lme</code></h2>
 <p>Below is a detailed explanation of the function arguments:</p>
-<p><code>object</code>: An <code>mv_glm</code> object.</p>
+<p><code>object</code>: An <code>mv_lme</code> object.</p>
 <p><code>newdata</code>: The dataset of the new subject to predict.</p>
 <p><code>families</code>: Distributions for the outcomes (currently only
 “gaussian” is supported).</p>
@@ -594,20 +599,43 @@ truncated period of the association. Default is NULL.</p>
 <p><br />
 </p>
 </div>
-<div id="examples-for-other-association-parameters" class="section level2">
-<h2>Examples for other association parameters</h2>
+<div id="alternative-association-parameter-models" class="section level2">
+<h2>Alternative Association Parameter Models</h2>
 <p><strong>Slope parameterization</strong></p>
-<p>Let’s assume that we want to fit the following multivariate
-mixed-effects model:</p>
+<p>We aim to fit the following <strong>multivariate mixed-effects
+model</strong>:</p>
 <p><span class="math display">\[
-y_{i2}(t) = x_{i2}^\top (t) \beta_2 + z_{i2}^\top (t) b_{i2} +
-\epsilon_{i2} = m_{i2}(t) + \epsilon_{i2}(t),\\
-y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} +
-\epsilon_{i1} = m_{i1}(t) + \alpha \frac{d}{dt}m_{i2}(t) +
+\begin{align}
+y_{i2}(t) &amp;= x_{i2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} +
+\epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
+y_{i1}(t) &amp;= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} +
+\epsilon_{i1}(t) = m_{i1}(t) + \alpha \frac{d}{dt} m_{i2}(t) +
 \epsilon_{i1}(t)
+\end{align}
 \]</span></p>
-<p>In particular, in includes the derivative of outcome 2 in the
-mixed-effects model of outcome 1.</p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(y_{i1}(t)\)</span> and <span class="math inline">\(y_{i2}(t)\)</span> are the longitudinal outcomes 1
+and 2, respectively, for individual <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span>,</li>
+<li><span class="math inline">\(x_{ij}(t)\)</span> and <span class="math inline">\(z_{ij}(t)\)</span> are the design vectors for the
+fixed and random effects of outcome <span class="math inline">\(j \in
+\{1, 2\}\)</span>,</li>
+<li><span class="math inline">\(\beta_j\)</span> are the fixed effect
+coefficients, <span class="math inline">\(b_{ij}\)</span> are the
+individual-specific random effects, and <span class="math inline">\(\epsilon_{ij}(t)\)</span> are residual error
+terms,</li>
+<li><span class="math inline">\(m_{ij}(t) = x_{ij}^\top(t) \beta_j +
+z_{ij}^\top(t) b_{ij}\)</span> denotes the mean (noise-free) trajectory
+of outcome <span class="math inline">\(j\)</span>.</li>
+</ul>
+<p>Notably, the model for outcome 1 includes the <strong>instantaneous
+rate of change</strong> of outcome 2: specifically, the derivative
+term</p>
+<p><span class="math display">\[
+\frac{d}{dt} m_{i2}(t)
+\]</span></p>
+<p>represents the <strong>slope</strong> of outcome 2 at time <span class="math inline">\(t\)</span>, capturing its dynamic influence on
+outcome 1. This effect is scaled by the parameter <span class="math inline">\(\alpha\)</span>.</p>
 <p>First we simulate some data:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span> </span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a></span>
@@ -695,17 +723,39 @@ mixed-effects model of outcome 1.</p>
 <span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>                     <span class="at">extraForm =</span> extraForm,</span>
 <span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>                     <span class="at">time_var =</span> <span class="st">&quot;year&quot;</span>)</span></code></pre></div>
 <p><strong>Truncated area parameterization</strong></p>
-<p>Let’s assume that we want to fit the following multivariate
-mixed-effects model:</p>
+<p>We aim to fit the following <strong>multivariate mixed-effects
+model</strong>:</p>
 <p><span class="math display">\[
-y_{i2}(t) = x_{i2}^\top (t) \beta_2 + z_{i2}^\top (t) b_{i2} +
-\epsilon_{i2} = m_{i2}(t) + \epsilon_{i2}(t),\\
-y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} +
-\epsilon_{i1} = m_{i1}(t) + \alpha \int_{t-2}^{t}m_{i2}(s)ds +
+\begin{align}
+y_{i2}(t) &amp;= x_{i2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} +
+\epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
+y_{i1}(t) &amp;= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} +
+\epsilon_{i1}(t) = m_{i1}(t) + \alpha \int_{t-2}^{t} m_{i2}(s) \, ds +
 \epsilon_{i1}(t)
+\end{align}
+\]</span> where:</p>
+<ul>
+<li><span class="math inline">\(y_{i1}(t)\)</span> and <span class="math inline">\(y_{i2}(t)\)</span> are the longitudinal outcomes 1
+and 2, respectively, for individual <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span>,</li>
+<li><span class="math inline">\(x_{ij}(t)\)</span> and <span class="math inline">\(z_{ij}(t)\)</span> are the design vectors for the
+fixed and random effects of outcome <span class="math inline">\(j \in
+\{1, 2\}\)</span>,</li>
+<li><span class="math inline">\(\beta_j\)</span> are the fixed effect
+coefficients, <span class="math inline">\(b_{ij}\)</span> are the
+individual-specific random effects, and <span class="math inline">\(\epsilon_{ij}(t)\)</span> are residual error
+terms,</li>
+<li><span class="math inline">\(m_{ij}(t) = x_{ij}^\top(t) \beta_j +
+z_{ij}^\top(t) b_{ij}\)</span> denotes the mean (noise-free) trajectory
+of outcome <span class="math inline">\(j\)</span>.</li>
+</ul>
+<p>Notably, the model for outcome 1 includes a <strong>historical
+effect</strong> of outcome 2: specifically, the integral term</p>
+<p><span class="math display">\[
+\int_{t-2}^{t} m_{i2}(s) \, ds
 \]</span></p>
-<p>In particular, in includes the truncated area under the curve of
-outcome 2 in the mixed-effects model of outcome 1.</p>
+<p>represents the <strong>area under the trajectory</strong> of outcome
+2 over the two years preceding time <span class="math inline">\(t\)</span>, capturing its cumulative influence.
+This term is scaled by the parameter <span class="math inline">\(\alpha\)</span>.</p>
 <p>First we simulate some data:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span></span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
@@ -810,16 +860,38 @@ outcome 2 in the mixed-effects model of outcome 1.</p>
 <span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a>                     <span class="at">extraForm_tr =</span> extraForm_tr,</span>
 <span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a>                     <span class="at">time_var =</span> <span class="st">&quot;year&quot;</span>)</span></code></pre></div>
 <p><strong>Value (polynomials) parameterization</strong></p>
-<p>Let’s assume that we want to fit the following multivariate
-mixed-effects model:</p>
+<p>We aim to fit the following <strong>multivariate mixed-effects
+model</strong>:</p>
 <p><span class="math display">\[
-y_{i2}(t) = x_{i2}^\top (t) \beta_2 + z_{i2}^\top (t) b_{i2} +
-\epsilon_{i2} = m_{i2}(t) + \epsilon_{i2}(t),\\
-y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} +
-\epsilon_{i1} = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
+\begin{align}
+y_{i2}(t) &amp;= x_{i2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} +
+\epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
+y_{i1}(t) &amp;= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} +
+\epsilon_{i1}(t) = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
+\end{align}
 \]</span></p>
-<p>In particular, in includes the underlying value of outcome 2 in the
-mixed-effects model of outcome 1.</p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(y_{i1}(t)\)</span> and <span class="math inline">\(y_{i2}(t)\)</span> are the longitudinal outcomes 1
+and 2, respectively, for individual <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span>,</li>
+<li><span class="math inline">\(x_{ij}(t)\)</span> and <span class="math inline">\(z_{ij}(t)\)</span> are the design vectors for the
+fixed and random effects of outcome <span class="math inline">\(j \in
+\{1, 2\}\)</span>,</li>
+<li><span class="math inline">\(\beta_j\)</span> are the fixed effect
+coefficients, <span class="math inline">\(b_{ij}\)</span> are the
+individual-specific random effects, and <span class="math inline">\(\epsilon_{ij}(t)\)</span> are residual error
+terms,</li>
+<li><span class="math inline">\(m_{ij}(t) = x_{ij}^\top(t) \beta_j +
+z_{ij}^\top(t) b_{ij}\)</span> denotes the mean (noise-free) trajectory
+of outcome <span class="math inline">\(j\)</span>.</li>
+</ul>
+<p>Notably, the model for outcome 1 includes the <strong>underlying
+value</strong> of outcome 2 at time <span class="math inline">\(t\)</span>, represented by the term</p>
+<p><span class="math display">\[
+m_{i2}(t),
+\]</span></p>
+<p>which captures the <strong>instantaneous level</strong> of outcome 2.
+Its effect on outcome 1 is scaled by the parameter <span class="math inline">\(\alpha\)</span>.</p>
 <p>First we simulate some data:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span> </span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a></span>

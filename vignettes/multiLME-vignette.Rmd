@@ -2,9 +2,9 @@
 title: "multiLME-vignette"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{multiLME-vignette}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  \VignetteIndexEntry{multiLME-vignette}
+  \VignetteEngine{knitr::rmarkdown}
+  \VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
@@ -16,12 +16,12 @@ knitr::opts_chunk$set(
 
 ## Installation
 
-```{r setup_package, message = FALSE, eval = FALSE, results='hide'}
+```{r setup_package, message=FALSE, warning=FALSE, eval = FALSE, results='hide'}
 devtools::install_github("ERandrinopoulou/multiLME", dependencies = TRUE, force = TRUE)
 ```
 
 
-```{r setup, warning = FALSE, echo = TRUE, results = 'hide'}
+```{r setup, message=FALSE, warning=FALSE, echo = TRUE, results = 'hide'}
 library(JMbayes2)
 library(jagsUI)
 library(multiLME)
@@ -36,16 +36,30 @@ This package fits a multivariate mixed-effects model, assuming different associa
 
 **Value parameterization**
 
-Let's assume that we want to fit the following multivariate mixed-effects model:
+Let's assume that we want to fit the following **multivariate mixed-effects model**:
 
 $$
-y_{i2}(t) = x_{i2}^\top (t) \beta_2 + z_{i2}^\top (t) b_{i2} + \epsilon_{i2} = m_{i2}(t) + \epsilon_{i2}(t),\\
-y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} + \epsilon_{i1} = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
+\begin{align}
+y_{i2}(t) &= x_{i2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} + \epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
+y_{i1}(t) &= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} + \epsilon_{i1}(t) = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
+\end{align}
 $$
 
-In particular, in includes the underlying value of outcome 2 in the mixed-effects model of outcome 1.
+where:
 
-## Simulation
+- \( y_{i1}(t) \) and \( y_{i2}(t) \) are the longitudinal outcomes 1 and 2, respectively, for individual \( i \) at time \( t \),
+- \( x_{ij}(t) \) and \( z_{ij}(t) \) are the design vectors for the fixed and random effects of outcome \( j \in \{1, 2\} \),
+- \( \beta_j \) are the fixed effect coefficients, \( b_{ij} \) are the individual-specific random effects, and \( \epsilon_{ij}(t) \) are residual error terms,
+- \( m_{ij}(t) = x_{ij}^\top(t) \beta_j + z_{ij}^\top(t) b_{ij} \) denotes the mean (noise-free) trajectory of outcome \( j \).
+
+Notably, the model for outcome 1 includes the **underlying value** of outcome 2 at time \( t \), represented by the term
+
+$$
+m_{i2}(t),
+$$
+
+which captures the **instantaneous level** of outcome 2. Its effect on outcome 1 is scaled by the parameter \( \alpha \).
+
 
 First we simulate some data:
 ```{r simulate_value, cache = TRUE}
@@ -110,6 +124,7 @@ data <- dat
 ```
 
 Then, we can run the multivariate model as follows:
+
 ```{r model_value, cache = TRUE}
 formulas <- list(y1 ~ year + drug + (year | id),
                  y2 ~ year + (year | id))
@@ -251,7 +266,7 @@ print(p1)
 
 Below is a detailed explanation of the function arguments:
 
-<code>object</code>: An <code>mv_glm</code> object.
+<code>object</code>: An <code>mv_lme</code> object.
 
 <code>newdata</code>: The dataset of the new subject to predict.
 
@@ -283,21 +298,37 @@ Below is a detailed explanation of the function arguments:
 \
 
 
-## Examples for other association parameters
+## Alternative Association Parameter Models
 
 
 **Slope parameterization**
 
-Let's assume that we want to fit the following multivariate mixed-effects model:
+We aim to fit the following **multivariate mixed-effects model**:
 
 $$
-y_{i2}(t) = x_{i2}^\top (t) \beta_2 + z_{i2}^\top (t) b_{i2} + \epsilon_{i2} = m_{i2}(t) + \epsilon_{i2}(t),\\
-y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} + \epsilon_{i1} = m_{i1}(t) + \alpha \frac{d}{dt}m_{i2}(t) + \epsilon_{i1}(t)
+\begin{align}
+y_{i2}(t) &= x_{i2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} + \epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
+y_{i1}(t) &= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} + \epsilon_{i1}(t) = m_{i1}(t) + \alpha \frac{d}{dt} m_{i2}(t) + \epsilon_{i1}(t)
+\end{align}
 $$
 
-In particular, in includes the derivative of outcome 2 in the mixed-effects model of outcome 1.
+where:
+
+- \( y_{i1}(t) \) and \( y_{i2}(t) \) are the longitudinal outcomes 1 and 2, respectively, for individual \( i \) at time \( t \),
+- \( x_{ij}(t) \) and \( z_{ij}(t) \) are the design vectors for the fixed and random effects of outcome \( j \in \{1, 2\} \),
+- \( \beta_j \) are the fixed effect coefficients, \( b_{ij} \) are the individual-specific random effects, and \( \epsilon_{ij}(t) \) are residual error terms,
+- \( m_{ij}(t) = x_{ij}^\top(t) \beta_j + z_{ij}^\top(t) b_{ij} \) denotes the mean (noise-free) trajectory of outcome \( j \).
+
+Notably, the model for outcome 1 includes the **instantaneous rate of change** of outcome 2: specifically, the derivative term
+
+$$
+\frac{d}{dt} m_{i2}(t)
+$$
+
+represents the **slope** of outcome 2 at time \( t \), capturing its dynamic influence on outcome 1. This effect is scaled by the parameter \( \alpha \).
 
 First we simulate some data:
+
 ```{r simulate_slope, cache = TRUE}
 n = 100 
 
@@ -393,14 +424,28 @@ fit <- mv_lme(formulas = formulas, data = data,
 
 **Truncated area parameterization**
 
-Let's assume that we want to fit the following multivariate mixed-effects model:
+We aim to fit the following **multivariate mixed-effects model**:
 
 $$
-y_{i2}(t) = x_{i2}^\top (t) \beta_2 + z_{i2}^\top (t) b_{i2} + \epsilon_{i2} = m_{i2}(t) + \epsilon_{i2}(t),\\
-y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} + \epsilon_{i1} = m_{i1}(t) + \alpha \int_{t-2}^{t}m_{i2}(s)ds + \epsilon_{i1}(t)
+\begin{align}
+y_{i2}(t) &= x_{i2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} + \epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
+y_{i1}(t) &= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} + \epsilon_{i1}(t) = m_{i1}(t) + \alpha \int_{t-2}^{t} m_{i2}(s) \, ds + \epsilon_{i1}(t)
+\end{align}
+$$
+where:
+
+- \( y_{i1}(t) \) and \( y_{i2}(t) \) are the longitudinal outcomes 1 and 2, respectively, for individual \( i \) at time \( t \),
+- \( x_{ij}(t) \) and \( z_{ij}(t) \) are the design vectors for the fixed and random effects of outcome \( j \in \{1, 2\} \),
+- \( \beta_j \) are the fixed effect coefficients, \( b_{ij} \) are the individual-specific random effects, and \( \epsilon_{ij}(t) \) are residual error terms,
+- \( m_{ij}(t) = x_{ij}^\top(t) \beta_j + z_{ij}^\top(t) b_{ij} \) denotes the mean (noise-free) trajectory of outcome \( j \).
+
+Notably, the model for outcome 1 includes a **historical effect** of outcome 2: specifically, the integral term
+
+$$
+\int_{t-2}^{t} m_{i2}(s) \, ds
 $$
 
-In particular, in includes the truncated area under the curve of outcome 2 in the mixed-effects model of outcome 1.
+represents the **area under the trajectory** of outcome 2 over the two years preceding time \( t \), capturing its cumulative influence. This term is scaled by the parameter \( \alpha \).
 
 First we simulate some data:
 ```{r simulate_trun_area, cache = TRUE}
@@ -512,16 +557,32 @@ fit <- mv_lme(formulas = formulas, data = data,
 ```
 
 
+
 **Value (polynomials) parameterization**
 
-Let's assume that we want to fit the following multivariate mixed-effects model:
+We aim to fit the following **multivariate mixed-effects model**:
 
 $$
-y_{i2}(t) = x_{i2}^\top (t) \beta_2 + z_{i2}^\top (t) b_{i2} + \epsilon_{i2} = m_{i2}(t) + \epsilon_{i2}(t),\\
-y_{i1}(t) = x_{i1}^\top (t) \beta_1 + z_{i1}^\top (t) b_{i1} + \epsilon_{i1} = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
+\begin{align}
+y_{i2}(t) &= x_{i2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} + \epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
+y_{i1}(t) &= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} + \epsilon_{i1}(t) = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
+\end{align}
 $$
 
-In particular, in includes the underlying value of outcome 2 in the mixed-effects model of outcome 1.
+where:
+
+- \( y_{i1}(t) \) and \( y_{i2}(t) \) are the longitudinal outcomes 1 and 2, respectively, for individual \( i \) at time \( t \),
+- \( x_{ij}(t) \) and \( z_{ij}(t) \) are the design vectors for the fixed and random effects of outcome \( j \in \{1, 2\} \),
+- \( \beta_j \) are the fixed effect coefficients, \( b_{ij} \) are the individual-specific random effects, and \( \epsilon_{ij}(t) \) are residual error terms,
+- \( m_{ij}(t) = x_{ij}^\top(t) \beta_j + z_{ij}^\top(t) b_{ij} \) denotes the mean (noise-free) trajectory of outcome \( j \).
+
+Notably, the model for outcome 1 includes the **underlying value** of outcome 2 at time \( t \), represented by the term
+
+$$
+m_{i2}(t),
+$$
+
+which captures the **instantaneous level** of outcome 2. Its effect on outcome 1 is scaled by the parameter \( \alpha \).
 
 First we simulate some data:
 ```{r simulate_poly_value, cache = TRUE}
