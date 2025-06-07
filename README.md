@@ -11,4 +11,4 @@ Install the package and get the vignette using the following code:
 <code>devtools::install_github("ERandrinopoulou/multiLME", dependencies = TRUE)</code>
 \
 \
-The vignette can be found [here](https://erandrinopoulou.github.io/multiLME/multiLME-vignette.htm
+The vignette can be found [here](https://erandrinopoulou.github.io/multiLME/multiLME-vignette.html)
