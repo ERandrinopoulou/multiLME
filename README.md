@@ -6,7 +6,7 @@ Useful functions:
 - mv_lme: multivariate mixed effects models with association parameters
 - DynPred_mv_lme: dynamic individual predictions
 
-Install the package and get the vignette using the following code: 
+Install the package using the following code: 
 
 <code>devtools::install_github("ERandrinopoulou/multiLME", dependencies = TRUE)</code>
 \
