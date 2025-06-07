@@ -14,11 +14,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup_package, message = FALSE, echo = FALSE, results='hide'}
+## Installation
+
+```{r setup_package, message = FALSE, eval = FALSE, results='hide'}
 devtools::install_github("ERandrinopoulou/multiLME", dependencies = TRUE, force = TRUE)
 ```
 
-## Load packages
 
 ```{r setup, warning = FALSE, echo = TRUE, results = 'hide'}
 library(JMbayes2)
@@ -28,6 +29,10 @@ library(lattice)
 ```
 
 ## Multivariate mixed-effects model 
+
+This package fits a multivariate mixed-effects model, assuming different association structures between the longitudinal outcomes. 
+\
+\
 
 **Value parameterization**
 
@@ -217,7 +222,7 @@ newdata_all = data[data$id == 1, ]
 newdata <- newdata_all[1:6,]
 
 
-res_pred <- DynPred_mv_lme(object = fit, newdata = newdata[1:4,], 
+res_pred <- DynPred_mv_lme(object = fit, newdata = newdata, 
                              families, 
                              level = 0.95, IdVar = "id", timeVar = "year",
                              M = 200, times = NULL,
@@ -239,6 +244,7 @@ p1 <- xyplot(res_pred$Mean1 + res_pred$Lower1 + res_pred$Upper1 ~ res_pred$Time,
            panel.points(newdata_all$year, newdata_all$y1, pch = 16, cex = 0.8, col = "blue")
            })
 
+print(p1)
 ```
 
 ## Argument Details <code>DynPred_mv_lme</code>
