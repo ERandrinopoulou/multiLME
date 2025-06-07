@@ -8,7 +8,8 @@ Useful functions:
 
 Install the package and get the vignette using the following code: 
 
-<code>devtools::install_github("ERandrinopoulou/multiLME", dependencies = TRUE, force = TRUE, build_vignettes = TRUE)</code>
+<code>devtools::install_github("ERandrinopoulou/multiLME", dependencies = TRUE)</code>
 \
 \
-<code>browseVignettes("multiLME")</code>
+The vignette can be found here:
+url{https://erandrinopoulou.github.io/multiLME/multiLME-vignette.html}
