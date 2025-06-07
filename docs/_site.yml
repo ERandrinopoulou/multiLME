@@ -1,0 +1,7 @@
+name: "Vignette multiLME"
+output_dir: "."
+navbar:
+  title: "multiLME"
+  left:
+    - text: ""
+      href: multiLME-vignette.html
