@@ -361,9 +361,9 @@ outcomes.<br />
 mixed-effects model</strong>:</p>
 <p><span class="math display">\[
 \begin{align}
-y_{i2}(t) &amp;= x_{i2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} +
+y_{i2}(t) &amp;= x_{2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} +
 \epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
-y_{i1}(t) &amp;= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} +
+y_{i1}(t) &amp;= x_{1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} +
 \epsilon_{i1}(t) = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
 \end{align}
 \]</span></p>
@@ -371,14 +371,14 @@ y_{i1}(t) &amp;= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} +
 <ul>
 <li><span class="math inline">\(y_{i1}(t)\)</span> and <span class="math inline">\(y_{i2}(t)\)</span> are the longitudinal outcomes 1
 and 2, respectively, for individual <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span>,</li>
-<li><span class="math inline">\(x_{ij}(t)\)</span> and <span class="math inline">\(z_{ij}(t)\)</span> are the design vectors for the
+<li><span class="math inline">\(x_{j}(t)\)</span> and <span class="math inline">\(z_{ij}(t)\)</span> are the design vectors for the
 fixed and random effects of outcome <span class="math inline">\(j \in
 \{1, 2\}\)</span>,</li>
 <li><span class="math inline">\(\beta_j\)</span> are the fixed effect
 coefficients, <span class="math inline">\(b_{ij}\)</span> are the
 individual-specific random effects, and <span class="math inline">\(\epsilon_{ij}(t)\)</span> are residual error
 terms,</li>
-<li><span class="math inline">\(m_{ij}(t) = x_{ij}^\top(t) \beta_j +
+<li><span class="math inline">\(m_{ij}(t) = x_{j}^\top(t) \beta_j +
 z_{ij}^\top(t) b_{ij}\)</span> denotes the mean (noise-free) trajectory
 of outcome <span class="math inline">\(j\)</span>.</li>
 </ul>
@@ -529,9 +529,9 @@ posterior means with the 95/% prediction interval.</p>
 model</strong>:</p>
 <p><span class="math display">\[
 \begin{align}
-y_{i2}(t) &amp;= x_{i2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} +
+y_{i2}(t) &amp;= x_{2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} +
 \epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
-y_{i1}(t) &amp;= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} +
+y_{i1}(t) &amp;= x_{1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} +
 \epsilon_{i1}(t) = m_{i1}(t) + \alpha \frac{d}{dt} m_{i2}(t) +
 \epsilon_{i1}(t)
 \end{align}
@@ -540,14 +540,14 @@ y_{i1}(t) &amp;= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} +
 <ul>
 <li><span class="math inline">\(y_{i1}(t)\)</span> and <span class="math inline">\(y_{i2}(t)\)</span> are the longitudinal outcomes 1
 and 2, respectively, for individual <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span>,</li>
-<li><span class="math inline">\(x_{ij}(t)\)</span> and <span class="math inline">\(z_{ij}(t)\)</span> are the design vectors for the
+<li><span class="math inline">\(x_{j}(t)\)</span> and <span class="math inline">\(z_{ij}(t)\)</span> are the design vectors for the
 fixed and random effects of outcome <span class="math inline">\(j \in
 \{1, 2\}\)</span>,</li>
 <li><span class="math inline">\(\beta_j\)</span> are the fixed effect
 coefficients, <span class="math inline">\(b_{ij}\)</span> are the
 individual-specific random effects, and <span class="math inline">\(\epsilon_{ij}(t)\)</span> are residual error
 terms,</li>
-<li><span class="math inline">\(m_{ij}(t) = x_{ij}^\top(t) \beta_j +
+<li><span class="math inline">\(m_{ij}(t) = x_{j}^\top(t) \beta_j +
 z_{ij}^\top(t) b_{ij}\)</span> denotes the mean (noise-free) trajectory
 of outcome <span class="math inline">\(j\)</span>.</li>
 </ul>
@@ -654,9 +654,9 @@ outcome 1. This effect is scaled by the parameter <span class="math inline">\(\a
 model</strong>:</p>
 <p><span class="math display">\[
 \begin{align}
-y_{i2}(t) &amp;= x_{i2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} +
+y_{i2}(t) &amp;= x_{2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} +
 \epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
-y_{i1}(t) &amp;= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} +
+y_{i1}(t) &amp;= x_{1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} +
 \epsilon_{i1}(t) = m_{i1}(t) + \alpha \int_{t-2}^{t} m_{i2}(s) \, ds +
 \epsilon_{i1}(t)
 \end{align}
@@ -664,14 +664,14 @@ y_{i1}(t) &amp;= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} +
 <ul>
 <li><span class="math inline">\(y_{i1}(t)\)</span> and <span class="math inline">\(y_{i2}(t)\)</span> are the longitudinal outcomes 1
 and 2, respectively, for individual <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span>,</li>
-<li><span class="math inline">\(x_{ij}(t)\)</span> and <span class="math inline">\(z_{ij}(t)\)</span> are the design vectors for the
+<li><span class="math inline">\(x_{j}(t)\)</span> and <span class="math inline">\(z_{ij}(t)\)</span> are the design vectors for the
 fixed and random effects of outcome <span class="math inline">\(j \in
 \{1, 2\}\)</span>,</li>
 <li><span class="math inline">\(\beta_j\)</span> are the fixed effect
 coefficients, <span class="math inline">\(b_{ij}\)</span> are the
 individual-specific random effects, and <span class="math inline">\(\epsilon_{ij}(t)\)</span> are residual error
 terms,</li>
-<li><span class="math inline">\(m_{ij}(t) = x_{ij}^\top(t) \beta_j +
+<li><span class="math inline">\(m_{ij}(t) = x_{j}^\top(t) \beta_j +
 z_{ij}^\top(t) b_{ij}\)</span> denotes the mean (noise-free) trajectory
 of outcome <span class="math inline">\(j\)</span>.</li>
 </ul>
@@ -796,9 +796,9 @@ This term is scaled by the parameter <span class="math inline">\(\alpha\)</span>
 model</strong>:</p>
 <p><span class="math display">\[
 \begin{align}
-y_{i2}(t) &amp;= x_{i2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} +
+y_{i2}(t) &amp;= x_{2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} +
 \epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
-y_{i1}(t) &amp;= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} +
+y_{i1}(t) &amp;= x_{1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} +
 \epsilon_{i1}(t) = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
 \end{align}
 \]</span></p>
@@ -806,14 +806,14 @@ y_{i1}(t) &amp;= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} +
 <ul>
 <li><span class="math inline">\(y_{i1}(t)\)</span> and <span class="math inline">\(y_{i2}(t)\)</span> are the longitudinal outcomes 1
 and 2, respectively, for individual <span class="math inline">\(i\)</span> at time <span class="math inline">\(t\)</span>,</li>
-<li><span class="math inline">\(x_{ij}(t)\)</span> and <span class="math inline">\(z_{ij}(t)\)</span> are the design vectors for the
+<li><span class="math inline">\(x_{j}(t)\)</span> and <span class="math inline">\(z_{ij}(t)\)</span> are the design vectors for the
 fixed and random effects of outcome <span class="math inline">\(j \in
 \{1, 2\}\)</span>,</li>
 <li><span class="math inline">\(\beta_j\)</span> are the fixed effect
 coefficients, <span class="math inline">\(b_{ij}\)</span> are the
 individual-specific random effects, and <span class="math inline">\(\epsilon_{ij}(t)\)</span> are residual error
 terms,</li>
-<li><span class="math inline">\(m_{ij}(t) = x_{ij}^\top(t) \beta_j +
+<li><span class="math inline">\(m_{ij}(t) = x_{j}^\top(t) \beta_j +
 z_{ij}^\top(t) b_{ij}\)</span> denotes the mean (noise-free) trajectory
 of outcome <span class="math inline">\(j\)</span>.</li>
 </ul>

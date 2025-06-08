@@ -40,17 +40,17 @@ Let's assume that we want to fit the following **multivariate mixed-effects mode
 
 $$
 \begin{align}
-y_{i2}(t) &= x_{i2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} + \epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
-y_{i1}(t) &= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} + \epsilon_{i1}(t) = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
+y_{i2}(t) &= x_{2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} + \epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
+y_{i1}(t) &= x_{1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} + \epsilon_{i1}(t) = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
 \end{align}
 $$
 
 where:
 
 - \( y_{i1}(t) \) and \( y_{i2}(t) \) are the longitudinal outcomes 1 and 2, respectively, for individual \( i \) at time \( t \),
-- \( x_{ij}(t) \) and \( z_{ij}(t) \) are the design vectors for the fixed and random effects of outcome \( j \in \{1, 2\} \),
+- \( x_{j}(t) \) and \( z_{ij}(t) \) are the design vectors for the fixed and random effects of outcome \( j \in \{1, 2\} \),
 - \( \beta_j \) are the fixed effect coefficients, \( b_{ij} \) are the individual-specific random effects, and \( \epsilon_{ij}(t) \) are residual error terms,
-- \( m_{ij}(t) = x_{ij}^\top(t) \beta_j + z_{ij}^\top(t) b_{ij} \) denotes the mean (noise-free) trajectory of outcome \( j \).
+- \( m_{ij}(t) = x_{j}^\top(t) \beta_j + z_{ij}^\top(t) b_{ij} \) denotes the mean (noise-free) trajectory of outcome \( j \).
 
 The model for outcome 1 includes the **underlying value** of outcome 2 at time \( t \), represented by the term
 
@@ -208,17 +208,17 @@ We aim to fit the following **multivariate mixed-effects model**:
 
 $$
 \begin{align}
-y_{i2}(t) &= x_{i2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} + \epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
-y_{i1}(t) &= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} + \epsilon_{i1}(t) = m_{i1}(t) + \alpha \frac{d}{dt} m_{i2}(t) + \epsilon_{i1}(t)
+y_{i2}(t) &= x_{2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} + \epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
+y_{i1}(t) &= x_{1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} + \epsilon_{i1}(t) = m_{i1}(t) + \alpha \frac{d}{dt} m_{i2}(t) + \epsilon_{i1}(t)
 \end{align}
 $$
 
 where:
 
 - \( y_{i1}(t) \) and \( y_{i2}(t) \) are the longitudinal outcomes 1 and 2, respectively, for individual \( i \) at time \( t \),
-- \( x_{ij}(t) \) and \( z_{ij}(t) \) are the design vectors for the fixed and random effects of outcome \( j \in \{1, 2\} \),
+- \( x_{j}(t) \) and \( z_{ij}(t) \) are the design vectors for the fixed and random effects of outcome \( j \in \{1, 2\} \),
 - \( \beta_j \) are the fixed effect coefficients, \( b_{ij} \) are the individual-specific random effects, and \( \epsilon_{ij}(t) \) are residual error terms,
-- \( m_{ij}(t) = x_{ij}^\top(t) \beta_j + z_{ij}^\top(t) b_{ij} \) denotes the mean (noise-free) trajectory of outcome \( j \).
+- \( m_{ij}(t) = x_{j}^\top(t) \beta_j + z_{ij}^\top(t) b_{ij} \) denotes the mean (noise-free) trajectory of outcome \( j \).
 
 The model for outcome 1 includes the **instantaneous rate of change** of outcome 2: specifically, the derivative term
 
@@ -331,16 +331,16 @@ We aim to fit the following **multivariate mixed-effects model**:
 
 $$
 \begin{align}
-y_{i2}(t) &= x_{i2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} + \epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
-y_{i1}(t) &= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} + \epsilon_{i1}(t) = m_{i1}(t) + \alpha \int_{t-2}^{t} m_{i2}(s) \, ds + \epsilon_{i1}(t)
+y_{i2}(t) &= x_{2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} + \epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
+y_{i1}(t) &= x_{1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} + \epsilon_{i1}(t) = m_{i1}(t) + \alpha \int_{t-2}^{t} m_{i2}(s) \, ds + \epsilon_{i1}(t)
 \end{align}
 $$
 where:
 
 - \( y_{i1}(t) \) and \( y_{i2}(t) \) are the longitudinal outcomes 1 and 2, respectively, for individual \( i \) at time \( t \),
-- \( x_{ij}(t) \) and \( z_{ij}(t) \) are the design vectors for the fixed and random effects of outcome \( j \in \{1, 2\} \),
+- \( x_{j}(t) \) and \( z_{ij}(t) \) are the design vectors for the fixed and random effects of outcome \( j \in \{1, 2\} \),
 - \( \beta_j \) are the fixed effect coefficients, \( b_{ij} \) are the individual-specific random effects, and \( \epsilon_{ij}(t) \) are residual error terms,
-- \( m_{ij}(t) = x_{ij}^\top(t) \beta_j + z_{ij}^\top(t) b_{ij} \) denotes the mean (noise-free) trajectory of outcome \( j \).
+- \( m_{ij}(t) = x_{j}^\top(t) \beta_j + z_{ij}^\top(t) b_{ij} \) denotes the mean (noise-free) trajectory of outcome \( j \).
 
 The model for outcome 1 includes a **historical effect** of outcome 2: specifically, the integral term
 
@@ -470,17 +470,17 @@ We aim to fit the following **multivariate mixed-effects model**:
 
 $$
 \begin{align}
-y_{i2}(t) &= x_{i2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} + \epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
-y_{i1}(t) &= x_{i1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} + \epsilon_{i1}(t) = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
+y_{i2}(t) &= x_{2}^\top(t) \beta_2 + z_{i2}^\top(t) b_{i2} + \epsilon_{i2}(t) = m_{i2}(t) + \epsilon_{i2}(t) \\
+y_{i1}(t) &= x_{1}^\top(t) \beta_1 + z_{i1}^\top(t) b_{i1} + \epsilon_{i1}(t) = m_{i1}(t) + \alpha m_{i2}(t) + \epsilon_{i1}(t)
 \end{align}
 $$
 
 where:
 
 - \( y_{i1}(t) \) and \( y_{i2}(t) \) are the longitudinal outcomes 1 and 2, respectively, for individual \( i \) at time \( t \),
-- \( x_{ij}(t) \) and \( z_{ij}(t) \) are the design vectors for the fixed and random effects of outcome \( j \in \{1, 2\} \),
+- \( x_{j}(t) \) and \( z_{ij}(t) \) are the design vectors for the fixed and random effects of outcome \( j \in \{1, 2\} \),
 - \( \beta_j \) are the fixed effect coefficients, \( b_{ij} \) are the individual-specific random effects, and \( \epsilon_{ij}(t) \) are residual error terms,
-- \( m_{ij}(t) = x_{ij}^\top(t) \beta_j + z_{ij}^\top(t) b_{ij} \) denotes the mean (noise-free) trajectory of outcome \( j \).
+- \( m_{ij}(t) = x_{j}^\top(t) \beta_j + z_{ij}^\top(t) b_{ij} \) denotes the mean (noise-free) trajectory of outcome \( j \).
 
 The model for outcome 1 includes the **underlying value** of outcome 2 at time \( t \), represented by the term
 
