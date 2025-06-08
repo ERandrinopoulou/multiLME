@@ -1,7 +1,0 @@
-name: "Vignette multiLME"
-output_dir: "docs"
-navbar:
-  title: "multiLME"
-  left:
-    - text: "Vignette"
-      href: multiLME-vignette.html
