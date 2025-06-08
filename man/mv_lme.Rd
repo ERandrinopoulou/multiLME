@@ -6,14 +6,10 @@
 
 }
 \usage{
-  mv_lme(formulas = formulas, data = data, 
-                     families = families, 
-                     corr_RE = FALSE,
-                     assoc = TRUE,
-                     assoc_from = 2,
-                     assoc_to = 1,
-                     extraForm = NULL,
-                     time_var = "year")
+  mv_lme(formulas, data, families, hc = FALSE, predicted = FALSE,
+    corr_RE = TRUE, engine = "JAGS", parameters.b = FALSE, assoc = TRUE,
+    assoc_from, assoc_to, extraForm = NULL, extraForm_tr = NULL,
+    norm_area = FALSE, time_var, control = list(), ...)
 }
 \arguments{
   \item{formulas}{A list of formulas specifying the longitudinal submodels (excluding the association structure).}
@@ -46,17 +42,17 @@
   \item{n.cores}{1L}
 }
 \value{
-  Results can be accessed via the fit object. 
-  
-  Posterior means are available through fit$postMeans.
-  
-  Corresponding 95\% credible intervals, computed from the 2.5th and 97.5th percentiles of the posterior distributions, can be retrieved using fit$CIs.
-  
-  Additional output elements, such as mcmc.info, Deviance Information Criterion (DIC), effective number of parameters (pD), and convergence diagnostics (Rhat), are returned by jagsUI::jags() function.
+  Results can be accessed via the \code{fit} object.
+
+  Posterior means are available through \code{fit$postMeans}.
+
+  Corresponding 95\% credible intervals, computed from the 2.5th and 97.5th percentiles of the posterior distributions, can be retrieved using \code{fit$CIs}.
+
+  Additional output elements, such as mcmc.info, Deviance Information Criterion (DIC), effective number of parameters (pD), and convergence diagnostics (Rhat), are returned by \code{jagsUI::jags() function}.
 }
 \examples{
 # Simulate data
-n = 100 
+n = 100
 
 K <- 10  # number of planned repeated measurements per subject, per outcome
 t.max <- 10 # maximum follow-up time
@@ -82,7 +78,7 @@ invDmat <- matrix(invDvec, 4, 4)
 D <- solve(invDmat)
 
 # design matrices for the longitudinal measurement model
-times <- c(replicate(n, c(0, sort(runif(K-1, 0, t.max))))) 
+times <- c(replicate(n, c(0, sort(runif(K-1, 0, t.max)))))
 group <- sample(c(0,1), n, replace = TRUE)
 
 DF <- data.frame(year = times, drug = factor(rep(group, each = K)))
@@ -101,10 +97,10 @@ b <- mvrnorm(n, rep(0, nrow(D)), D)
 # simulate longitudinal responses
 id <- rep(1:n, each = K)
 
-eta.y2 <- as.vector(X2 %*% betaa2 + rowSums(Z2 * b[id, 3:4])) 
+eta.y2 <- as.vector(X2 %*% betaa2 + rowSums(Z2 * b[id, 3:4]))
 y2 <- rnorm(n * K, eta.y2, sigma2.y)
 
-eta.y1 <- as.vector(X1 %*% betaa1 + rowSums(Z1 * b[id, 1:2])) + alphaa * eta.y2 
+eta.y1 <- as.vector(X1 %*% betaa1 + rowSums(Z1 * b[id, 1:2])) + alphaa * eta.y2
 y1 <- rnorm(n * K, eta.y1, sigma1.y)
 
 dat <- DF[, ]
@@ -119,9 +115,9 @@ formulas <- list(y1 ~ year + drug + (year | id),
                  y2 ~ year + (year | id))
 families <- c("gaussian", "gaussian")
 
-  
-fit <- mv_lme(formulas = formulas, data = data, 
-                     families = families, 
+
+fit <- mv_lme(formulas = formulas, data = data,
+                     families = families,
                      corr_RE = FALSE,
                      assoc = TRUE,
                      assoc_from = 2,
