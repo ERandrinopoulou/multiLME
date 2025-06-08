@@ -355,7 +355,8 @@ different association structures between the longitudinal
 outcomes.<br />
 <br />
 </p>
-<p><strong>Value parameterization</strong></p>
+<div id="value-parameterization" class="section level3">
+<h3>Value parameterization</h3>
 <p>Let’s assume that we want to fit the following <strong>multivariate
 mixed-effects model</strong>:</p>
 <p><span class="math display">\[
@@ -381,13 +382,15 @@ terms,</li>
 z_{ij}^\top(t) b_{ij}\)</span> denotes the mean (noise-free) trajectory
 of outcome <span class="math inline">\(j\)</span>.</li>
 </ul>
-<p>Notably, the model for outcome 1 includes the <strong>underlying
+<p>The model for outcome 1 includes the <strong>underlying
 value</strong> of outcome 2 at time <span class="math inline">\(t\)</span>, represented by the term</p>
 <p><span class="math display">\[
 m_{i2}(t),
 \]</span></p>
 <p>which captures the <strong>instantaneous level</strong> of outcome 2.
 Its effect on outcome 1 is scaled by the parameter <span class="math inline">\(\alpha\)</span>.</p>
+<div id="example" class="section level4">
+<h4>Example</h4>
 <p>First we simulate some data:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span> </span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
@@ -447,7 +450,7 @@ Its effect on outcome 1 is scaled by the parameter <span class="math inline">\(\
 <span id="cb3-56"><a href="#cb3-56" tabindex="-1"></a></span>
 <span id="cb3-57"><a href="#cb3-57" tabindex="-1"></a><span class="fu">names</span>(dat) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;drug&quot;</span>, <span class="st">&quot;id&quot;</span>, <span class="st">&quot;y1&quot;</span>, <span class="st">&quot;y2&quot;</span>)</span>
 <span id="cb3-58"><a href="#cb3-58" tabindex="-1"></a>data <span class="ot">&lt;-</span> dat</span></code></pre></div>
-<p>Then, we can run the multivariate model as follows:</p>
+<p>Then, we run the multivariate model as follows:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>formulas <span class="ot">&lt;-</span> <span class="fu">list</span>(y1 <span class="sc">~</span> year <span class="sc">+</span> drug <span class="sc">+</span> (year <span class="sc">|</span> id),</span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>                 y2 <span class="sc">~</span> year <span class="sc">+</span> (year <span class="sc">|</span> id))</span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>families <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;gaussian&quot;</span>, <span class="st">&quot;gaussian&quot;</span>)</span>
@@ -462,63 +465,9 @@ Its effect on outcome 1 is scaled by the parameter <span class="math inline">\(\
 <span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>                     <span class="at">extraForm =</span> <span class="cn">NULL</span>,</span>
 <span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>                     <span class="at">time_var =</span> <span class="st">&quot;year&quot;</span>)</span></code></pre></div>
 </div>
-<div id="argument-details-mv_lme" class="section level2">
-<h2>Argument Details <code>mv_lme</code></h2>
-<p>Below is a detailed explanation of the function arguments:</p>
-<p><code>formulas</code>: A list of formulas specifying the longitudinal
-submodels (excluding the association structure).</p>
-<p><code>data</code>: The dataset containing all variables used in the
-models.</p>
-<p><code>families</code>: Distributions for the outcomes (currently only
-“gaussian” is supported).</p>
-<p><code>hc</code>: Logical; whether hierarchical centering is applied.
-Default is FALSE. (Note: TRUE option under development)</p>
-<p><code>predicted</code>: Logical; whether to save predicted values.
-Default is FALSE.</p>
-<p><code>corr_RE</code>: Logical; whether to assume correlated random
-effects via a shared variance-covariance matrix. Default is TRUE.</p>
-<p><code>engine</code>: Currently, only “JAGS” is supported.</p>
-<p><code>parameters.b</code>: Logical; whether to save the random
-effects. Default is FALSE.</p>
-<p><code>assoc</code>: Logical; whether to include an association
-parameter between longitudinal outcomes. Default is TRUE.</p>
-<p><code>assoc_from</code>: Index of the longitudinal outcome used as a
-covariate in the association structure.</p>
-<p><code>assoc_to</code>: Index of the longitudinal outcome model to
-which other outcomes are added as covariates.</p>
-<p><code>extraForm</code>: Specifies the functional form of the
-association. Default is NULL. If NULL, the underlying value association
-structure is assumed (see examples below for other structures).</p>
-<p><code>extraForm_tr</code>: Specifies the functional form for the
-truncated period of the association. Default is NULL.</p>
-<p><code>norm_area</code>: Logical; whether to use the normalized area
-under the curve. Default is FALSE. (Note: feature under development for
-predictions)</p>
-<p><code>time_var</code>: The time variable used in the longitudinal
-models.</p>
-<p><br />
-</p>
-<div id="control-parameters-via-jagsuijags" class="section level3">
-<h3><em>Control Parameters (via <code>jagsUI::jags</code>)</em></h3>
-<p>The following control options can be customized; defaults are:</p>
-<p><code>n.processors</code>: parallel::detectCores() - 1</p>
-<p><code>working.directory</code>: getwd()</p>
-<p><code>clear.model</code>: TRUE</p>
-<p><code>seed</code>: 1L</p>
-<p><code>optimize_only</code>: FALSE</p>
-<p><code>verbose</code>: FALSE</p>
-<p><code>n.iter</code>: 28000L</p>
-<p><code>n.burnin</code>: 3000L</p>
-<p><code>n.thin</code>: 50L</p>
-<p><code>n.adapt</code>: 3000L</p>
-<p><code>n.chains</code>: 2L</p>
-<p><code>n.cores</code>: 1L</p>
-<p><br />
-</p>
 </div>
-</div>
-<div id="accessing-results" class="section level2">
-<h2><strong>Accessing Results</strong></h2>
+<div id="accessing-results" class="section level3">
+<h3>Accessing Results</h3>
 <p>Once the model is fitted, results can be accessed via the fit object.
 For example:</p>
 <p>Posterior means are available through <code>fit$postMeans</code>.</p>
@@ -532,9 +481,11 @@ function.</p>
 <p><br />
 </p>
 </div>
+</div>
 <div id="individualized-predictions" class="section level2">
 <h2>Individualized Predictions</h2>
-<p><strong>Value parameterization</strong></p>
+<div id="value-parameterization-1" class="section level3">
+<h3>Value parameterization</h3>
 <p>Now, let us consider the scenario where individualized predictions
 are desired:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>object <span class="ot">=</span> fit</span>
@@ -566,42 +517,14 @@ are desired:</p>
 <span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a></span>
 <span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="fu">print</span>(p1)</span></code></pre></div>
 <p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<p>The object <code>res_pred</code> returns a data frame including the
+posterior means with the 95/% prediction interval.</p>
 </div>
-<div id="argument-details-dynpred_mv_lme" class="section level2">
-<h2>Argument Details <code>DynPred_mv_lme</code></h2>
-<p>Below is a detailed explanation of the function arguments:</p>
-<p><code>object</code>: An <code>mv_lme</code> object.</p>
-<p><code>newdata</code>: The dataset of the new subject to predict.</p>
-<p><code>families</code>: Distributions for the outcomes (currently only
-“gaussian” is supported).</p>
-<p><code>hc</code>: Logical; whether hierarchical centering is applied.
-Default is FALSE. (Note: TRUE option under development)</p>
-<p><code>level</code>: The confidence interval level. Default is
-0.95.</p>
-<p><code>IdVar</code>: The variable name of the Id column.</p>
-<p><code>time_var</code>: The time variable used in the longitudinal
-models.</p>
-<p><code>M</code>: The number of posterior samples. Default is 200.</p>
-<p><code>times</code>: The times to obtain future predictions. Default
-is NULL. In that case the maximum of a sequence of times until the
-maximum time in the whole data set will be assumed.</p>
-<p><code>assoc</code>: Logical; whether to include an association
-parameter between longitudinal outcomes. Default is TRUE.</p>
-<p><code>assoc_from</code>: Index of the longitudinal outcome used as a
-covariate in the association structure.</p>
-<p><code>assoc_to</code>: Index of the longitudinal outcome model to
-which other outcomes are added as covariates.</p>
-<p><code>extraForm</code>: Specifies the functional form of the
-association. Default is NULL. If NULL, the underlying value association
-structure is assumed (see examples below for other structures).</p>
-<p><code>extraForm_tr</code>: Specifies the functional form for the
-truncated period of the association. Default is NULL.</p>
-<p><br />
-</p>
 </div>
 <div id="alternative-association-parameter-models" class="section level2">
 <h2>Alternative Association Parameter Models</h2>
-<p><strong>Slope parameterization</strong></p>
+<div id="slope-parameterization" class="section level3">
+<h3>Slope parameterization</h3>
 <p>We aim to fit the following <strong>multivariate mixed-effects
 model</strong>:</p>
 <p><span class="math display">\[
@@ -628,14 +551,15 @@ terms,</li>
 z_{ij}^\top(t) b_{ij}\)</span> denotes the mean (noise-free) trajectory
 of outcome <span class="math inline">\(j\)</span>.</li>
 </ul>
-<p>Notably, the model for outcome 1 includes the <strong>instantaneous
-rate of change</strong> of outcome 2: specifically, the derivative
-term</p>
+<p>The model for outcome 1 includes the <strong>instantaneous rate of
+change</strong> of outcome 2: specifically, the derivative term</p>
 <p><span class="math display">\[
 \frac{d}{dt} m_{i2}(t)
 \]</span></p>
 <p>represents the <strong>slope</strong> of outcome 2 at time <span class="math inline">\(t\)</span>, capturing its dynamic influence on
 outcome 1. This effect is scaled by the parameter <span class="math inline">\(\alpha\)</span>.</p>
+<div id="example-1" class="section level4">
+<h4>Example</h4>
 <p>First we simulate some data:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span> </span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a></span>
@@ -706,7 +630,7 @@ outcome 1. This effect is scaled by the parameter <span class="math inline">\(\a
 <span id="cb6-67"><a href="#cb6-67" tabindex="-1"></a></span>
 <span id="cb6-68"><a href="#cb6-68" tabindex="-1"></a><span class="fu">names</span>(dat) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;drug&quot;</span>, <span class="st">&quot;id&quot;</span>, <span class="st">&quot;y1&quot;</span>, <span class="st">&quot;y2&quot;</span>)</span>
 <span id="cb6-69"><a href="#cb6-69" tabindex="-1"></a>data <span class="ot">&lt;-</span> dat</span></code></pre></div>
-<p>Then, we can run the multivariate model as follows:</p>
+<p>Then, we run the multivariate model as follows:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>formulas <span class="ot">&lt;-</span> <span class="fu">list</span>(y1 <span class="sc">~</span> year <span class="sc">+</span> drug <span class="sc">+</span> (year <span class="sc">|</span> id),</span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>                 y2 <span class="sc">~</span> year <span class="sc">+</span> (year <span class="sc">|</span> id))</span>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>families <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;gaussian&quot;</span>, <span class="st">&quot;gaussian&quot;</span>)</span>
@@ -722,7 +646,10 @@ outcome 1. This effect is scaled by the parameter <span class="math inline">\(\a
 <span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>                     <span class="at">assoc_to =</span> <span class="dv">1</span>,</span>
 <span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>                     <span class="at">extraForm =</span> extraForm,</span>
 <span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>                     <span class="at">time_var =</span> <span class="st">&quot;year&quot;</span>)</span></code></pre></div>
-<p><strong>Truncated area parameterization</strong></p>
+</div>
+</div>
+<div id="truncated-area-parameterization" class="section level3">
+<h3>Truncated area parameterization</h3>
 <p>We aim to fit the following <strong>multivariate mixed-effects
 model</strong>:</p>
 <p><span class="math display">\[
@@ -748,14 +675,16 @@ terms,</li>
 z_{ij}^\top(t) b_{ij}\)</span> denotes the mean (noise-free) trajectory
 of outcome <span class="math inline">\(j\)</span>.</li>
 </ul>
-<p>Notably, the model for outcome 1 includes a <strong>historical
-effect</strong> of outcome 2: specifically, the integral term</p>
+<p>The model for outcome 1 includes a <strong>historical effect</strong>
+of outcome 2: specifically, the integral term</p>
 <p><span class="math display">\[
 \int_{t-2}^{t} m_{i2}(s) \, ds
 \]</span></p>
 <p>represents the <strong>area under the trajectory</strong> of outcome
 2 over the two years preceding time <span class="math inline">\(t\)</span>, capturing its cumulative influence.
 This term is scaled by the parameter <span class="math inline">\(\alpha\)</span>.</p>
+<div id="example-2" class="section level4">
+<h4>Example</h4>
 <p>First we simulate some data:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span></span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
@@ -837,7 +766,7 @@ This term is scaled by the parameter <span class="math inline">\(\alpha\)</span>
 <span id="cb8-78"><a href="#cb8-78" tabindex="-1"></a></span>
 <span id="cb8-79"><a href="#cb8-79" tabindex="-1"></a><span class="fu">names</span>(dat) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;drug&quot;</span>, <span class="st">&quot;id&quot;</span>, <span class="st">&quot;y1&quot;</span>, <span class="st">&quot;y2&quot;</span>)</span>
 <span id="cb8-80"><a href="#cb8-80" tabindex="-1"></a>data <span class="ot">&lt;-</span> dat</span></code></pre></div>
-<p>Then, we can run the multivariate model as follows:</p>
+<p>Then, we run the multivariate model as follows:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>formulas <span class="ot">&lt;-</span> <span class="fu">list</span>(y1 <span class="sc">~</span> year <span class="sc">+</span> drug <span class="sc">+</span> (year <span class="sc">|</span> id),</span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>                 y2 <span class="sc">~</span> year <span class="sc">+</span> (year <span class="sc">|</span> id))</span>
 <span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>families <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;gaussian&quot;</span>, <span class="st">&quot;gaussian&quot;</span>)</span>
@@ -859,7 +788,10 @@ This term is scaled by the parameter <span class="math inline">\(\alpha\)</span>
 <span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a>                     <span class="at">extraForm =</span> extraForm,</span>
 <span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a>                     <span class="at">extraForm_tr =</span> extraForm_tr,</span>
 <span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a>                     <span class="at">time_var =</span> <span class="st">&quot;year&quot;</span>)</span></code></pre></div>
-<p><strong>Value (polynomials) parameterization</strong></p>
+</div>
+</div>
+<div id="value-polynomials-parameterization" class="section level3">
+<h3>Value (polynomials) parameterization</h3>
 <p>We aim to fit the following <strong>multivariate mixed-effects
 model</strong>:</p>
 <p><span class="math display">\[
@@ -885,13 +817,15 @@ terms,</li>
 z_{ij}^\top(t) b_{ij}\)</span> denotes the mean (noise-free) trajectory
 of outcome <span class="math inline">\(j\)</span>.</li>
 </ul>
-<p>Notably, the model for outcome 1 includes the <strong>underlying
+<p>The model for outcome 1 includes the <strong>underlying
 value</strong> of outcome 2 at time <span class="math inline">\(t\)</span>, represented by the term</p>
 <p><span class="math display">\[
 m_{i2}(t),
 \]</span></p>
 <p>which captures the <strong>instantaneous level</strong> of outcome 2.
 Its effect on outcome 1 is scaled by the parameter <span class="math inline">\(\alpha\)</span>.</p>
+<div id="example-3" class="section level4">
+<h4>Example</h4>
 <p>First we simulate some data:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">100</span> </span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a></span>
@@ -952,7 +886,7 @@ Its effect on outcome 1 is scaled by the parameter <span class="math inline">\(\
 <span id="cb10-57"><a href="#cb10-57" tabindex="-1"></a></span>
 <span id="cb10-58"><a href="#cb10-58" tabindex="-1"></a><span class="fu">names</span>(dat) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;drug&quot;</span>, <span class="st">&quot;id&quot;</span>, <span class="st">&quot;y1&quot;</span>, <span class="st">&quot;y2&quot;</span>)</span>
 <span id="cb10-59"><a href="#cb10-59" tabindex="-1"></a>data <span class="ot">&lt;-</span> dat</span></code></pre></div>
-<p>Then, we can run the multivariate model as follows:</p>
+<p>Then, we run the multivariate model as follows:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>formulas <span class="ot">&lt;-</span> <span class="fu">list</span>(y1 <span class="sc">~</span> drug <span class="sc">+</span> year <span class="sc">+</span> <span class="fu">I</span>(year<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span></span>
 <span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>                     (  year <span class="sc">+</span> <span class="fu">I</span>(year<span class="sc">^</span><span class="dv">2</span>) <span class="sc">|</span> id),</span>
 <span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>                   y2 <span class="sc">~</span> year <span class="sc">+</span> (year <span class="sc">|</span> id))</span>
@@ -967,6 +901,8 @@ Its effect on outcome 1 is scaled by the parameter <span class="math inline">\(\
 <span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a>                     <span class="at">assoc_to =</span> <span class="dv">1</span>,</span>
 <span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a>                     <span class="at">extraForm =</span> <span class="cn">NULL</span>,</span>
 <span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a>                     <span class="at">time_var =</span> <span class="st">&quot;year&quot;</span>)</span></code></pre></div>
+</div>
+</div>
 </div>
 
 
