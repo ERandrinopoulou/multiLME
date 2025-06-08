@@ -4,4 +4,4 @@ navbar:
   title: "Vignette multiLME"
   left:
     - text: ""
-      href: index.html
+      href: multiLME-vignette.html
