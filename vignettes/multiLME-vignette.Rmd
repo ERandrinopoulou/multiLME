@@ -62,7 +62,7 @@ which captures the **instantaneous level** of outcome 2. Its effect on outcome 1
 
 #### Example
 
-First we simulate some data:
+First we simulate data:
 ```{r simulate_value, cache = TRUE}
 n = 100 
 
@@ -230,7 +230,7 @@ represents the **slope** of outcome 2 at time \( t \), capturing its dynamic inf
 
 #### Example
 
-First we simulate some data:
+First we simulate data:
 
 ```{r simulate_slope, cache = TRUE}
 n = 100 
@@ -352,7 +352,8 @@ represents the **area under the trajectory** of outcome 2 over the two years pre
 
 #### Example
 
-First we simulate some data:
+First we simulate data:
+
 ```{r simulate_trun_area, cache = TRUE}
 n = 100
 
@@ -491,7 +492,7 @@ which captures the **instantaneous level** of outcome 2. Its effect on outcome 1
 
 #### Example
 
-First we simulate some data:
+First we simulate data:
 ```{r simulate_poly_value, cache = TRUE}
 n = 100 
 
