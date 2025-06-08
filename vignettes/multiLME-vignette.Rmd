@@ -34,7 +34,7 @@ This package fits a multivariate mixed-effects model, assuming different associa
 \
 \
 
-**Value parameterization**
+### Value parameterization
 
 Let's assume that we want to fit the following **multivariate mixed-effects model**:
 
@@ -60,6 +60,7 @@ $$
 
 which captures the **instantaneous level** of outcome 2. Its effect on outcome 1 is scaled by the parameter \( \alpha \).
 
+#### Example
 
 First we simulate some data:
 ```{r simulate_value, cache = TRUE}
@@ -123,7 +124,7 @@ names(dat) <- c("year", "drug", "id", "y1", "y2")
 data <- dat
 ```
 
-Then, we can run the multivariate model as follows:
+Then, we run the multivariate model as follows:
 
 ```{r model_value, cache = TRUE}
 formulas <- list(y1 ~ year + drug + (year | id),
@@ -141,73 +142,8 @@ fit <- mv_lme(formulas = formulas, data = data,
                      time_var = "year")
 ```
 
-## Argument Details <code>mv_lme</code>
 
-Below is a detailed explanation of the function arguments:
-
-<code>formulas</code>: A list of formulas specifying the longitudinal submodels (excluding the association structure).
-
-<code>data</code>: The dataset containing all variables used in the models.
-
-<code>families</code>: Distributions for the outcomes (currently only "gaussian" is supported).
-
-<code>hc</code>: Logical; whether hierarchical centering is applied. Default is FALSE. (Note: TRUE option under development)
-
-<code>predicted</code>: Logical; whether to save predicted values. Default is FALSE.
-
-<code>corr_RE</code>: Logical; whether to assume correlated random effects via a shared variance-covariance matrix. Default is TRUE.
-
-<code>engine</code>: Currently, only "JAGS" is supported.
-
-<code>parameters.b</code>: Logical; whether to save the random effects. Default is FALSE.
-
-<code>assoc</code>: Logical; whether to include an association parameter between longitudinal outcomes. Default is TRUE.
-
-<code>assoc_from</code>: Index of the longitudinal outcome used as a covariate in the association structure.
-
-<code>assoc_to</code>: Index of the longitudinal outcome model to which other outcomes are added as covariates. 
-
-<code>extraForm</code>: Specifies the functional form of the association. Default is NULL. If NULL, the underlying value association structure is assumed (see examples below for other structures).
-
-<code>extraForm_tr</code>: Specifies the functional form for the truncated period of the association. Default is NULL.
-
-<code>norm_area</code>: Logical; whether to use the normalized area under the curve. Default is FALSE. (Note: feature under development for predictions)
-
-<code>time_var</code>: The time variable used in the longitudinal models.
-
-\
-
-### _Control Parameters (via <code>jagsUI::jags</code>)_
-
-The following control options can be customized; defaults are:
-
-<code>n.processors</code>: parallel::detectCores() - 1
-
-<code>working.directory</code>: getwd()
-
-<code>clear.model</code>: TRUE
-
-<code>seed</code>: 1L
-
-<code>optimize_only</code>: FALSE
-
-<code>verbose</code>: FALSE
-
-<code>n.iter</code>: 28000L
-
-<code>n.burnin</code>: 3000L
-
-<code>n.thin</code>: 50L
-
-<code>n.adapt</code>: 3000L
-
-<code>n.chains</code>: 2L
-
-<code>n.cores</code>: 1L
-
-\
-
-## **Accessing Results**
+### Accessing Results
 
 Once the model is fitted, results can be accessed via the fit object. For example:
 
@@ -222,7 +158,7 @@ Additional output elements, such as mcmc.info, Deviance Information Criterion (D
 
 ## Individualized Predictions
 
-**Value parameterization**
+### Value parameterization
 
 Now, let us consider the scenario where individualized predictions are desired:
 
@@ -262,46 +198,11 @@ p1 <- xyplot(res_pred$Mean1 + res_pred$Lower1 + res_pred$Upper1 ~ res_pred$Time,
 print(p1)
 ```
 
-## Argument Details <code>DynPred_mv_lme</code>
-
-Below is a detailed explanation of the function arguments:
-
-<code>object</code>: An <code>mv_lme</code> object.
-
-<code>newdata</code>: The dataset of the new subject to predict.
-
-<code>families</code>: Distributions for the outcomes (currently only "gaussian" is supported).
-
-<code>hc</code>: Logical; whether hierarchical centering is applied. Default is FALSE. (Note: TRUE option under development)
-
-<code>level</code>: The confidence interval level. Default is 0.95.
-
-<code>IdVar</code>: The variable name of the Id column.
-
-<code>time_var</code>: The time variable used in the longitudinal models.
-
-<code>M</code>: The number of posterior samples. Default is 200.
-
-<code>times</code>: The times to obtain future predictions. Default is NULL. In that case the maximum of a sequence of times until the maximum time in the whole data set will be assumed.
-
-<code>assoc</code>: Logical; whether to include an association parameter between longitudinal outcomes. Default is TRUE.
-
-<code>assoc_from</code>: Index of the longitudinal outcome used as a covariate in the association structure.
-
-<code>assoc_to</code>: Index of the longitudinal outcome model to which other outcomes are added as covariates. 
-
-<code>extraForm</code>: Specifies the functional form of the association. Default is NULL. If NULL, the underlying value association structure is assumed (see examples below for other structures).
-
-<code>extraForm_tr</code>: Specifies the functional form for the truncated period of the association. Default is NULL.
-
-
-\
-
+The object <code>res_pred</code> returns a data frame including the posterior means with the 95/% prediction interval.
 
 ## Alternative Association Parameter Models
 
-
-**Slope parameterization**
+### Slope parameterization
 
 We aim to fit the following **multivariate mixed-effects model**:
 
@@ -326,6 +227,8 @@ $$
 $$
 
 represents the **slope** of outcome 2 at time \( t \), capturing its dynamic influence on outcome 1. This effect is scaled by the parameter \( \alpha \).
+
+#### Example
 
 First we simulate some data:
 
@@ -401,7 +304,7 @@ names(dat) <- c("year", "drug", "id", "y1", "y2")
 data <- dat
 ```
 
-Then, we can run the multivariate model as follows:
+Then, we run the multivariate model as follows:
 ```{r model_slope, cache = TRUE}
 formulas <- list(y1 ~ year + drug + (year | id),
                  y2 ~ year + (year | id))
@@ -422,7 +325,7 @@ fit <- mv_lme(formulas = formulas, data = data,
 
 
 
-**Truncated area parameterization**
+### Truncated area parameterization
 
 We aim to fit the following **multivariate mixed-effects model**:
 
@@ -446,6 +349,8 @@ $$
 $$
 
 represents the **area under the trajectory** of outcome 2 over the two years preceding time \( t \), capturing its cumulative influence. This term is scaled by the parameter \( \alpha \).
+
+#### Example
 
 First we simulate some data:
 ```{r simulate_trun_area, cache = TRUE}
@@ -531,7 +436,7 @@ names(dat) <- c("year", "drug", "id", "y1", "y2")
 data <- dat
 ```
 
-Then, we can run the multivariate model as follows:
+Then, we run the multivariate model as follows:
 ```{r model_trun_area, cache = TRUE}
 formulas <- list(y1 ~ year + drug + (year | id),
                  y2 ~ year + (year | id))
@@ -558,7 +463,7 @@ fit <- mv_lme(formulas = formulas, data = data,
 
 
 
-**Value (polynomials) parameterization**
+### Value (polynomials) parameterization
 
 We aim to fit the following **multivariate mixed-effects model**:
 
@@ -583,6 +488,8 @@ m_{i2}(t),
 $$
 
 which captures the **instantaneous level** of outcome 2. Its effect on outcome 1 is scaled by the parameter \( \alpha \).
+
+#### Example
 
 First we simulate some data:
 ```{r simulate_poly_value, cache = TRUE}
@@ -647,7 +554,7 @@ names(dat) <- c("year", "drug", "id", "y1", "y2")
 data <- dat
 ```
 
-Then, we can run the multivariate model as follows:
+Then, we run the multivariate model as follows:
 ```{r model_poly_value, cache = TRUE}
 formulas <- list(y1 ~ drug + year + I(year^2) +
                      (  year + I(year^2) | id),
