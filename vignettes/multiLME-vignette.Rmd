@@ -163,7 +163,7 @@ Additional output elements, such as mcmc.info, Deviance Information Criterion (D
 Now, let us consider the scenario where individualized predictions are desired:
 
 
-```{r animation_library, echo = FALSE}
+```{r animation_library, echo = TRUE}
 library(gifski)
 ```
 
@@ -574,5 +574,5 @@ fit <- mv_lme(formulas = formulas, data = data,
 ```
 
 
-* More details about the specification of the association parameters can be also found also here:
-_Rizopoulos, D. (2012). Joint models for longitudinal and time-to-event data: With applications in R. CRC press. (section 5.1)_
+* More details about the specification of the association parameters can be also found here:
+_Rizopoulos, D. (2012). Joint models for longitudinal and time-to-event data: With applications in R. CRC press. section 5.1_
