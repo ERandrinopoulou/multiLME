@@ -574,3 +574,5 @@ fit <- mv_lme(formulas = formulas, data = data,
 ```
 
 
+* More details about the specification of the association parameters can be also found also here:
+_Rizopoulos, D. (2012). Joint models for longitudinal and time-to-event data: With applications in R. CRC press. (section 5.1)_
